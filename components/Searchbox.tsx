@@ -5,7 +5,7 @@ import { MagnifyingGlassCircleIcon } from "@heroicons/react/24/solid";
 const Searchbox = () => {
   return (
     <div className="scale-150">
-      <form action="" className="w-full max-w-sm" >
+      <form action="" className="w-full max-w-sm">
         <div className="relative flex items-center text-gray-300 focus-within:text-gray-500 ">
           <MagnifyingGlassCircleIcon className="w-7 absolute ml-1 pointer-events-none" />
           <input
