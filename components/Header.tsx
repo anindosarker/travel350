@@ -24,7 +24,7 @@ import logo from "../public/logo_black.png";
 function Header() {
   const { data: session } = useSession();
   return (
-    <div className=" sticky top-0 z-50 flex bg-transparent px-4 py-2 shadow-sm items-center justify-between text-gray-600">
+    <div className=" sticky top-0 z-50 flex bg-white px-4 py-2 shadow-md items-center justify-between text-gray-600">
       <a
         href="http://localhost:3000/"
         className="relative h-10 w-20 flex-shrink-0 cursor-pointer"
