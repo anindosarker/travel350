@@ -4,15 +4,15 @@ import Checklist from "../components/Checklist";
 
 const travelPlanner = () => {
   return (
-    <div>
+    <div className="bg-gray-200">
       <div className="relative w-full h-[220px] bg-[#846075] flex ">
         <div className="w-3/4">
           <div className=" mx-24 flex flex-col my-10">
-            <h2 className=" py-2 text-[#e3dcdc] text-3xl font-bold tracking-wider">
+            <h2 className=" py-2 text-white text-3xl font-bold tracking-wider">
               Travel Planner
             </h2>
             <p className="py-2 text-[#e3dcdc]">
-              Put together a create whishlist
+              Put together a trip whishlist to create a detailed iteranary
             </p>
           </div>
         </div>
@@ -28,7 +28,9 @@ const travelPlanner = () => {
 
       {/* cards section  */}
       <div>
-        <Checklist />
+        <div className="bg-gray-300 mr-12 ml-20">
+          <Checklist />
+        </div>
       </div>
     </div>
   );
