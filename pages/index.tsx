@@ -1,6 +1,8 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
+import type { NextPage } from "next";
+import Head from "next/head";
+import homebg from "../public/homeBackground.png";
+import Image from "next/image";
+import Searchbox from "../components/Searchbox";
 
 const Home: NextPage = () => {
   return (
@@ -8,11 +10,15 @@ const Home: NextPage = () => {
       <Head>
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
+
       </Head>
       
-     Hello world
+      <div>
+      <Image objectFit="cover" src={homebg} layout="fill"  />
+      </div>
+      <Searchbox/>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
