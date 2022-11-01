@@ -10,7 +10,7 @@ const ForumPost = () => {
        <ProfilePicName/>
       
         <div className="px-2">
-          <p className=" focus:outline-none text-xl font-medium leading-5 text-gray-800">
+          <p className="pt-3 focus:outline-none text-xl font-medium leading-5 text-gray-800">
             Post Title
           </p>
           <p className="focus:outline-none text-sm leading-5 py-4 text-gray-600">
