@@ -14,7 +14,7 @@ const Searchbox = () => {
             placeholder="Search"
             autoComplete="off"
             aria-aria-label="Search"
-            className="pr-3 pl-9 py-2 font-normal placeholder-gray-900 placeholder-opacity-100  focus-within:placeholder-gray-600 text-black rounded-3xl ring-2 ring-white focus:ring-gray-500 focus:ring-2 min-w-[500px] focus-within:bg-white bg-gray-50"
+            className="pr-3 pl-9 py-2 font-normal placeholder-gray-900 placeholder-opacity-100  focus-within:placeholder-gray-600 text-black rounded-3xl ring-2 ring-white focus:ring-gray-500 focus:ring-2 min-w-[500px] focus-within:bg-white bg-gray-50 bg-opacity-80  "
           />
         </div>
       </form>
