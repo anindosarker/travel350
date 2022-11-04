@@ -29,7 +29,7 @@ function Header() {
         href="http://localhost:3000/"
         className="relative h-10 w-20 flex-shrink-0 cursor-pointer"
       >
-        <Image objectFit="contain" src={logo} layout="fill" />
+        
       </a>
 
       <div className="flex items-center mx-7 xl:min-w-[300px]">

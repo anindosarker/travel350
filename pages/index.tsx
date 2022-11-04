@@ -14,7 +14,7 @@ const Home: NextPage = () => {
       </Head>
       
       <div>
-      <Image objectFit="cover" src={homebg} layout="fill"  />
+      
       </div>
       <Searchbox/>
     </div>
