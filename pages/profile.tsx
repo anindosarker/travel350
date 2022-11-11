@@ -82,12 +82,33 @@ export default function Profile() {
                   <div className="mt-3 ml-3 space-y-2">
                     <h1 className="text-[18px]">Last Name:</h1>
                     <div className="flex justify-between w-full">
-                      <h1 className="text-[22px] px-2 bg-gray-200 rounded-md">
-                        Singha
-                      </h1>
-                      <button className="ml-3 bt-style px-3 text-white bg-blue-600">
-                        Edit
-                      </button>
+                      {lnametoggle && (
+                        <h1 className="text-[22px] px-2 bg-gray-200 rounded-md">
+                          Singha
+                        </h1>
+                      )}
+                      {!lnametoggle && (
+                        <input
+                          value="Singha"
+                          className="text-[22px] bg-gray-200 outline-none"
+                        />
+                      )}
+                      {lnametoggle && (
+                        <button
+                          onClick={handlelnametoggle}
+                          className="ml-3 bt-style px-3 text-white bg-blue-600"
+                        >
+                          Edit
+                        </button>
+                      )}
+                      {!lnametoggle && (
+                        <button
+                          onClick={handlelnametoggle}
+                          className="ml-3 bt-style px-3 text-white bg-green-600"
+                        >
+                          Done
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
