@@ -19,7 +19,6 @@ type Props = {
 
 function PostBox({ subreddit }: Props) {
   const { data: session } = useSession();
-  
 
   const [imageBoxOpen, setImageBoxOpen] = useState<boolean>(false);
 
@@ -31,12 +30,10 @@ function PostBox({ subreddit }: Props) {
     formState: { errors },
   } = useForm<FormData>();
 
-
   return (
-    <form
-      
-      className="sticky top-20 z-50 bg-white border rounded-md border-gray-300 p-2 "
-    >
+    <form className="sticky top-20 z-50 bg-white border rounded-md border-gray-300 p-2 ">
+      <div>Share Trip Expereinces</div>
+
       <div className="flex items-center space-x-3">
         <input
           {...register("postTitle", { required: true })}
@@ -47,7 +44,7 @@ function PostBox({ subreddit }: Props) {
             session
               ? subreddit
                 ? `Create a post in r/${subreddit}`
-                : `Create a post by entering a title`
+                : `Share your trip experience`
               : `Sign in you fool`
           }
         />
@@ -58,26 +55,57 @@ function PostBox({ subreddit }: Props) {
             imageBoxOpen && `text-blue-300`
           }`}
         />
-        <LinkIcon className="h-6 text-gray-300 cursor-pointer" />
       </div>
 
       {!!watch("postTitle") && (
         <div className="flex flex-col py-2">
+          {/* Date */}
+
+          <div className="flex items-center px-2">
+            <p className=" min-w-[90px]">Start Date</p>
+            <input
+              type="date"
+              {...register("postBody")}
+              className="m-2 bg-blue-50 p-2 outline-none"
+              placeholder="Text (optional)"
+            />
+
+            <p className=" min-w-[90px]">End Date</p>
+            <input
+              type="date"
+              {...register("postBody")}
+              className="m-2 bg-blue-50 p-2 outline-none"
+              placeholder="Text (optional)"
+            />
+          </div>
+
+          {/* Location*/}
+          {!subreddit && (
+            <div className="flex items-center px-2">
+              <p className=" min-w-[90px]">Location</p>
+              <input
+                type="text"
+                {...register("subreddit", { required: true })}
+                className="flex-1 m-2 bg-blue-50 p-2 outline-none"
+                placeholder="i.e. React"
+              />
+            </div>
+          )}
           {/* Body */}
           <div className="flex items-center px-2">
-            <p className=" min-w-[90px]">Body:</p>
+            <p className=" min-w-[90px]">Details</p>
             <input
               type="text"
               {...register("postBody")}
               className="flex-1 m-2 bg-blue-50 p-2 outline-none"
-              placeholder="Text (optional)"
+              placeholder="Text (optional) box lomba hobe"
             />
           </div>
 
           {/* subreddit */}
           {!subreddit && (
             <div className="flex items-center px-2">
-              <p className=" min-w-[90px]">Subreddit:</p>
+              <p className=" min-w-[90px]">Forum</p>
               <input
                 type="text"
                 {...register("subreddit", { required: true })}
@@ -114,12 +142,19 @@ function PostBox({ subreddit }: Props) {
           )}
 
           {!!watch("postTitle") && (
-            <button
-              type="submit"
-              className="w-full rounded-full bg-blue-400 p-2 text-white"
-            >
-              Create Post
-            </button>
+            <div className="flex">
+              <button
+                className="w-full rounded-full bg-red-400 p-2 text-white"
+              >
+                Add another location
+              </button>
+              <button
+                type="submit"
+                className="w-full rounded-full bg-blue-400 p-2 text-white"
+              >
+                Create Post
+              </button>
+            </div>
           )}
         </div>
       )}
