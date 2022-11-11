@@ -57,7 +57,7 @@ function Header() {
           {/* sign in sign out */}
           {session ? (
             <Link href="/profile">
-              <div className="hidden lg:flex items-center cursor-pointer space-x-2 border border-gray-400 p-2 rounded-md">
+              <div className="hidden lg:flex items-center cursor-pointer space-x-2 border border-gray-400 p-2 rounded-md hover:bg-gray-200">
                 <p className="truncate font-semibold">{session?.user?.name}</p>
                 <XCircleIcon
                   className="h-5 flex-shrink-0 hover:text-red-500"
