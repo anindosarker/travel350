@@ -46,6 +46,10 @@ function Header() {
           <Link href="/travelplanner" className=" m-2 hidden flex-1 lg:inline">
             Travel Planner
           </Link>
+
+          <Link href="/profile" className=" m-2 hidden flex-1 lg:inline">
+            Profile
+          </Link>
         </ul>
 
         <div className="mx-2">
