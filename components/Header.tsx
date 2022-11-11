@@ -17,6 +17,7 @@ import {
   StarIcon,
   UserCircleIcon,
   VideoCameraIcon,
+  XCircleIcon,
 } from "@heroicons/react/24/outline";
 import { signIn, signOut, useSession } from "next-auth/react";
 import logo from "../public/logo_black.png";
@@ -55,21 +56,15 @@ function Header() {
         <div className="mx-2">
           {/* sign in sign out */}
           {session ? (
-            <div
-              onClick={() => signOut()}
-              className="hidden lg:flex items-center cursor-pointer space-x-2 border border-r-gray-700 p-2"
-            >
-              <div className="relative h-5 w-5 flex-shrink-0">
-                <div className="relative h-5 w-5 flex-shrink-0">
-                  <UserCircleIcon />
-                </div>
+            <Link href="/profile">
+              <div className="hidden lg:flex items-center cursor-pointer space-x-2 border border-gray-400 p-2 rounded-md">
+                <p className="truncate font-semibold">{session?.user?.name}</p>
+                <XCircleIcon
+                  className="h-5 flex-shrink-0 hover:text-red-500"
+                  onClick={() => signOut()}
+                />
               </div>
-              <div>
-                <p className="truncate">{session?.user?.name}</p>
-                <p className="text-gray-400">1 karma</p>
-              </div>
-              <ChevronDownIcon className="h-5 flex-shrink-0" />
-            </div>
+            </Link>
           ) : (
             <div
               onClick={() => signIn()}
