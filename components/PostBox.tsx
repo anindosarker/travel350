@@ -35,6 +35,7 @@ function PostBox({ subreddit }: Props) {
       <div>Share Trip Expereinces</div>
 
       <div className="flex items-center space-x-3">
+        <div>Post Title</div>
         <input
           {...register("postTitle", { required: true })}
           type="text"
