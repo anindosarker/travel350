@@ -1,0 +1,1101 @@
+"""
+Table 'city' aliased as GQLName: 'City'
+"""
+type City {
+  created_at: DateTime
+  description: String
+  hotel: [Hotel] @materializer(query: "getHotelUsingHotel_city_id_fkey")
+  id: ID!
+  name: String
+  places: [Places] @materializer(query: "getPlacesUsingPlaces_city_id_fkey")
+}
+
+"""
+Table 'comment' aliased as GQLName: 'Comment'
+"""
+type Comment {
+  created_at: DateTime
+  id: ID!
+  post: Post @materializer(query: "getPostUsingComment_post_id_fkey")
+  post_id: ID
+  text: String
+  user: User @materializer(query: "getUserUsingComment_user_id_fkey")
+  user_id: ID
+}
+
+"""
+Table 'forum' aliased as GQLName: 'Forum'
+"""
+type Forum {
+  created_at: DateTime
+  id: ID!
+  moderator: [Moderator]
+    @materializer(query: "getModeratorUsingModerator_forum_id_fkey")
+  place: ID
+  places: Places @materializer(query: "getPlacesUsingForum_place_fkey")
+  post: [Post] @materializer(query: "getPostUsingPost_forum_id_fkey")
+}
+
+"""
+Table 'hotel' aliased as GQLName: 'Hotel'
+"""
+type Hotel {
+  city: City @materializer(query: "getCityUsingHotel_city_id_fkey")
+  city_id: ID
+  created_at: DateTime
+  description: String
+  id: ID!
+  name: String
+  place_id: ID
+  places: Places @materializer(query: "getPlacesUsingHotel_place_id_fkey")
+}
+
+"""
+Table 'moderator' aliased as GQLName: 'Moderator'
+"""
+type Moderator {
+  created_at: DateTime
+  forum: Forum @materializer(query: "getForumUsingModerator_forum_id_fkey")
+  forum_id: ID
+  id: ID!
+  role: String
+  user: User @materializer(query: "getUserUsingModerator_user_id_fkey")
+  user_id: ID
+}
+
+"""
+Table 'places' aliased as GQLName: 'Places'
+"""
+type Places {
+  city: City @materializer(query: "getCityUsingPlaces_city_id_fkey")
+  city_id: ID
+  created_at: DateTime
+  description: String
+  forum: [Forum] @materializer(query: "getForumUsingForum_place_fkey")
+  hotel: [Hotel] @materializer(query: "getHotelUsingHotel_place_id_fkey")
+  id: ID!
+  name: String!
+  trip: [Trip] @materializer(query: "getTripUsingTrip_place_id_fkey")
+}
+
+"""
+Table 'post' aliased as GQLName: 'Post'
+"""
+type Post {
+  comment: [Comment] @materializer(query: "getCommentUsingComment_post_id_fkey")
+  created_at: DateTime
+  forum: Forum @materializer(query: "getForumUsingPost_forum_id_fkey")
+  forum_id: ID
+  id: ID!
+  trip: [Trip] @materializer(query: "getTripUsingTrip_post_id_fkey")
+  user: User @materializer(query: "getUserUsingPost_user_id_fkey")
+  user_id: ID
+  vote: [Vote] @materializer(query: "getVoteUsingVote_post_id_fkey")
+}
+
+"""
+Table 'trip' aliased as GQLName: 'Trip'
+"""
+type Trip {
+  created_at: DateTime
+  description: String
+  end: Date
+  id: ID!
+  image: String
+  place_id: ID
+  places: Places @materializer(query: "getPlacesUsingTrip_place_id_fkey")
+  post: Post @materializer(query: "getPostUsingTrip_post_id_fkey")
+  post_id: ID
+  start: Date
+  user: User @materializer(query: "getUserUsingTrip_user_id_fkey")
+  user_id: ID
+}
+
+"""
+Table 'user' aliased as GQLName: 'User'
+"""
+type User {
+  comment: [Comment] @materializer(query: "getCommentUsingComment_user_id_fkey")
+  created_at: DateTime
+  email: String
+  first_Name: String
+  id: ID!
+  last_Name: String
+  moderator: [Moderator]
+    @materializer(query: "getModeratorUsingModerator_user_id_fkey")
+  password: String
+  phone_num: Float
+  post: [Post] @materializer(query: "getPostUsingPost_user_id_fkey")
+  trip: [Trip] @materializer(query: "getTripUsingTrip_user_id_fkey")
+  username: String
+  vote: [Vote] @materializer(query: "getVoteUsingVote_user_id_fkey")
+}
+
+"""
+Table 'vote' aliased as GQLName: 'Vote'
+"""
+type Vote {
+  created_at: DateTime
+  id: ID!
+  post: Post @materializer(query: "getPostUsingVote_post_id_fkey")
+  post_id: ID
+  upvote: Boolean
+  user: User @materializer(query: "getUserUsingVote_user_id_fkey")
+  user_id: ID
+}
+
+"""
+The following queries are just a set of examples of how to access your schema.
+Feel free to modify them or aggregate more.
+"""
+type Query {
+  " Queries for type 'City' "
+  getCity(id: ID!): City
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "city"
+      configuration: "postgresql_config"
+    )
+  getCityList: [City]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "city"
+      configuration: "postgresql_config"
+    )
+  getCityPaginatedList(first: Int, after: Int): [City]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "description", "id", "name" FROM "city" ORDER BY "id" LIMIT $1 OFFSET $2
+      """
+      configuration: "postgresql_config"
+    )
+  getCityUsingHotel_city_id_fkey(city_id: ID!): City
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "description", "id", "name" FROM "city" WHERE "id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getCityUsingPlaces_city_id_fkey(city_id: ID!): City
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "description", "id", "name" FROM "city" WHERE "id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  " Queries for type 'Comment' "
+  getComment(id: ID!): Comment
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "comment"
+      configuration: "postgresql_config"
+    )
+  getCommentList: [Comment]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "comment"
+      configuration: "postgresql_config"
+    )
+  getCommentPaginatedList(first: Int, after: Int): [Comment]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "id", "post_id", "text", "user_id" FROM "comment" ORDER BY "id" LIMIT $1 OFFSET $2
+      """
+      configuration: "postgresql_config"
+    )
+  getCommentUsingComment_post_id_fkey(id: ID!): [Comment]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "id", "post_id", "text", "user_id" FROM "comment" WHERE "post_id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getCommentUsingComment_user_id_fkey(id: ID!): [Comment]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "id", "post_id", "text", "user_id" FROM "comment" WHERE "user_id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  " Queries for type 'Forum' "
+  getForum(id: ID!): Forum
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "forum"
+      configuration: "postgresql_config"
+    )
+  getForumList: [Forum]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "forum"
+      configuration: "postgresql_config"
+    )
+  getForumPaginatedList(first: Int, after: Int): [Forum]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "id", "place" FROM "forum" ORDER BY "id" LIMIT $1 OFFSET $2
+      """
+      configuration: "postgresql_config"
+    )
+  getForumUsingForum_place_fkey(id: ID!): [Forum]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "id", "place" FROM "forum" WHERE "place" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getForumUsingModerator_forum_id_fkey(forum_id: ID!): Forum
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "id", "place" FROM "forum" WHERE "id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getForumUsingPost_forum_id_fkey(forum_id: ID!): Forum
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "id", "place" FROM "forum" WHERE "id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  " Queries for type 'Hotel' "
+  getHotel(id: ID!): Hotel
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "hotel"
+      configuration: "postgresql_config"
+    )
+  getHotelList: [Hotel]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "hotel"
+      configuration: "postgresql_config"
+    )
+  getHotelPaginatedList(first: Int, after: Int): [Hotel]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "city_id", "created_at", "description", "id", "name", "place_id" FROM "hotel" ORDER BY "id" LIMIT $1 OFFSET $2
+      """
+      configuration: "postgresql_config"
+    )
+  getHotelUsingHotel_city_id_fkey(id: ID!): [Hotel]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "city_id", "created_at", "description", "id", "name", "place_id" FROM "hotel" WHERE "city_id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getHotelUsingHotel_place_id_fkey(id: ID!): [Hotel]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "city_id", "created_at", "description", "id", "name", "place_id" FROM "hotel" WHERE "place_id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  " Queries for type 'Moderator' "
+  getModerator(id: ID!): Moderator
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "moderator"
+      configuration: "postgresql_config"
+    )
+  getModeratorList: [Moderator]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "moderator"
+      configuration: "postgresql_config"
+    )
+  getModeratorPaginatedList(first: Int, after: Int): [Moderator]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "forum_id", "id", "role", "user_id" FROM "moderator" ORDER BY "id" LIMIT $1 OFFSET $2
+      """
+      configuration: "postgresql_config"
+    )
+  getModeratorUsingModerator_forum_id_fkey(id: ID!): [Moderator]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "forum_id", "id", "role", "user_id" FROM "moderator" WHERE "forum_id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getModeratorUsingModerator_user_id_fkey(id: ID!): [Moderator]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "forum_id", "id", "role", "user_id" FROM "moderator" WHERE "user_id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  " Queries for type 'Places' "
+  getPlaces(id: ID!): Places
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "places"
+      configuration: "postgresql_config"
+    )
+  getPlacesList: [Places]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "places"
+      configuration: "postgresql_config"
+    )
+  getPlacesPaginatedList(first: Int, after: Int): [Places]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "city_id", "created_at", "description", "id", "name" FROM "places" ORDER BY "id" LIMIT $1 OFFSET $2
+      """
+      configuration: "postgresql_config"
+    )
+  getPlacesUsingForum_place_fkey(place: ID!): Places
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "city_id", "created_at", "description", "id", "name" FROM "places" WHERE "id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getPlacesUsingHotel_place_id_fkey(place_id: ID!): Places
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "city_id", "created_at", "description", "id", "name" FROM "places" WHERE "id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getPlacesUsingPlaces_city_id_fkey(id: ID!): [Places]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "city_id", "created_at", "description", "id", "name" FROM "places" WHERE "city_id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getPlacesUsingTrip_place_id_fkey(place_id: ID!): Places
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "city_id", "created_at", "description", "id", "name" FROM "places" WHERE "id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  " Queries for type 'Post' "
+  getPost(id: ID!): Post
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "post"
+      configuration: "postgresql_config"
+    )
+  getPostList: [Post]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "post"
+      configuration: "postgresql_config"
+    )
+  getPostPaginatedList(first: Int, after: Int): [Post]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "forum_id", "id", "user_id" FROM "post" ORDER BY "id" LIMIT $1 OFFSET $2
+      """
+      configuration: "postgresql_config"
+    )
+  getPostUsingComment_post_id_fkey(post_id: ID!): Post
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "forum_id", "id", "user_id" FROM "post" WHERE "id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getPostUsingPost_forum_id_fkey(id: ID!): [Post]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "forum_id", "id", "user_id" FROM "post" WHERE "forum_id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getPostUsingPost_user_id_fkey(id: ID!): [Post]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "forum_id", "id", "user_id" FROM "post" WHERE "user_id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getPostUsingTrip_post_id_fkey(post_id: ID!): Post
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "forum_id", "id", "user_id" FROM "post" WHERE "id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getPostUsingVote_post_id_fkey(post_id: ID!): Post
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "forum_id", "id", "user_id" FROM "post" WHERE "id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  " Queries for type 'Trip' "
+  getTrip(id: ID!): Trip
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "trip"
+      configuration: "postgresql_config"
+    )
+  getTripList: [Trip]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "trip"
+      configuration: "postgresql_config"
+    )
+  getTripPaginatedList(first: Int, after: Int): [Trip]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "description", "end", "id", "image", "place_id", "post_id", "start", "user_id" FROM "trip" ORDER BY "id" LIMIT $1 OFFSET $2
+      """
+      configuration: "postgresql_config"
+    )
+  getTripUsingTrip_place_id_fkey(id: ID!): [Trip]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "description", "end", "id", "image", "place_id", "post_id", "start", "user_id" FROM "trip" WHERE "place_id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getTripUsingTrip_post_id_fkey(id: ID!): [Trip]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "description", "end", "id", "image", "place_id", "post_id", "start", "user_id" FROM "trip" WHERE "post_id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getTripUsingTrip_user_id_fkey(id: ID!): [Trip]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "description", "end", "id", "image", "place_id", "post_id", "start", "user_id" FROM "trip" WHERE "user_id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  " Queries for type 'User' "
+  getUser(id: ID!): User
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "user"
+      configuration: "postgresql_config"
+    )
+  getUserList: [User]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "user"
+      configuration: "postgresql_config"
+    )
+  getUserPaginatedList(first: Int, after: Int): [User]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "email", "first_Name", "id", "last_Name", "password", "phone_num", "username" FROM "user" ORDER BY "id" LIMIT $1 OFFSET $2
+      """
+      configuration: "postgresql_config"
+    )
+  getUserUsingComment_user_id_fkey(user_id: ID!): User
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "email", "first_Name", "id", "last_Name", "password", "phone_num", "username" FROM "user" WHERE "id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getUserUsingModerator_user_id_fkey(user_id: ID!): User
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "email", "first_Name", "id", "last_Name", "password", "phone_num", "username" FROM "user" WHERE "id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getUserUsingPost_user_id_fkey(user_id: ID!): User
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "email", "first_Name", "id", "last_Name", "password", "phone_num", "username" FROM "user" WHERE "id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getUserUsingTrip_user_id_fkey(user_id: ID!): User
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "email", "first_Name", "id", "last_Name", "password", "phone_num", "username" FROM "user" WHERE "id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getUserUsingVote_user_id_fkey(user_id: ID!): User
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "email", "first_Name", "id", "last_Name", "password", "phone_num", "username" FROM "user" WHERE "id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  " Queries for type 'Vote' "
+  getVote(id: ID!): Vote
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "vote"
+      configuration: "postgresql_config"
+    )
+  getVoteList: [Vote]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "vote"
+      configuration: "postgresql_config"
+    )
+  getVotePaginatedList(first: Int, after: Int): [Vote]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "id", "post_id", "upvote", "user_id" FROM "vote" ORDER BY "id" LIMIT $1 OFFSET $2
+      """
+      configuration: "postgresql_config"
+    )
+  getVoteUsingVote_post_id_fkey(id: ID!): [Vote]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "id", "post_id", "upvote", "user_id" FROM "vote" WHERE "post_id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getVoteUsingVote_user_id_fkey(id: ID!): [Vote]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "id", "post_id", "upvote", "user_id" FROM "vote" WHERE "user_id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+}
+
+"""
+The following mutations are just a set of examples of how to access your schema.
+Feel free to modify them or aggregate more.
+"""
+type Mutation {
+  " Mutations for type 'City' "
+  deleteCity(id: ID!): City
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "city"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+  insertCity(description: String, name: String, created_at: DateTime): City
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "city"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+  updateCity(
+    id: ID!
+    created_at: DateTime
+    description: String
+    name: String
+  ): City
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      UPDATE "city" SET
+        "created_at" = COALESCE($2, "created_at"),
+        "description" = COALESCE($3, "description"),
+        "name" = COALESCE($4, "name")
+      WHERE
+        "id" = $1
+      RETURNING *
+      """
+      configuration: "postgresql_config"
+    )
+  " Mutations for type 'Comment' "
+  deleteComment(id: ID!): Comment
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "comment"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+  insertComment(
+    post_id: ID
+    text: String
+    user_id: ID
+    created_at: DateTime
+  ): Comment
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "comment"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+  updateComment(
+    id: ID!
+    created_at: DateTime
+    post_id: ID
+    text: String
+    user_id: ID
+  ): Comment
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      UPDATE "comment" SET
+        "created_at" = COALESCE($2, "created_at"),
+        "post_id" = COALESCE($3, "post_id"),
+        "text" = COALESCE($4, "text"),
+        "user_id" = COALESCE($5, "user_id")
+      WHERE
+        "id" = $1
+      RETURNING *
+      """
+      configuration: "postgresql_config"
+    )
+  " Mutations for type 'Forum' "
+  deleteForum(id: ID!): Forum
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "forum"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+  insertForum(place: ID, created_at: DateTime): Forum
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "forum"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+  updateForum(id: ID!, created_at: DateTime, place: ID): Forum
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      UPDATE "forum" SET
+        "created_at" = COALESCE($2, "created_at"),
+        "place" = COALESCE($3, "place")
+      WHERE
+        "id" = $1
+      RETURNING *
+      """
+      configuration: "postgresql_config"
+    )
+  " Mutations for type 'Hotel' "
+  deleteHotel(id: ID!): Hotel
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "hotel"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+  insertHotel(
+    name: String
+    description: String
+    created_at: DateTime
+    city_id: ID
+    place_id: ID
+  ): Hotel
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "hotel"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+  updateHotel(
+    id: ID!
+    city_id: ID
+    created_at: DateTime
+    description: String
+    name: String
+    place_id: ID
+  ): Hotel
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      UPDATE "hotel" SET
+        "city_id" = COALESCE($2, "city_id"),
+        "created_at" = COALESCE($3, "created_at"),
+        "description" = COALESCE($4, "description"),
+        "name" = COALESCE($5, "name"),
+        "place_id" = COALESCE($6, "place_id")
+      WHERE
+        "id" = $1
+      RETURNING *
+      """
+      configuration: "postgresql_config"
+    )
+  " Mutations for type 'Moderator' "
+  deleteModerator(id: ID!): Moderator
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "moderator"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+  insertModerator(
+    role: String
+    forum_id: ID
+    user_id: ID
+    created_at: DateTime
+  ): Moderator
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "moderator"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+  updateModerator(
+    id: ID!
+    created_at: DateTime
+    forum_id: ID
+    role: String
+    user_id: ID
+  ): Moderator
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      UPDATE "moderator" SET
+        "created_at" = COALESCE($2, "created_at"),
+        "forum_id" = COALESCE($3, "forum_id"),
+        "role" = COALESCE($4, "role"),
+        "user_id" = COALESCE($5, "user_id")
+      WHERE
+        "id" = $1
+      RETURNING *
+      """
+      configuration: "postgresql_config"
+    )
+  " Mutations for type 'Places' "
+  deletePlaces(id: ID!): Places
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "places"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+  insertPlaces(
+    name: String!
+    description: String
+    created_at: DateTime
+    city_id: ID
+  ): Places
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "places"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+  updatePlaces(
+    id: ID!
+    city_id: ID
+    created_at: DateTime
+    description: String
+    name: String
+  ): Places
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      UPDATE "places" SET
+        "city_id" = COALESCE($2, "city_id"),
+        "created_at" = COALESCE($3, "created_at"),
+        "description" = COALESCE($4, "description"),
+        "name" = COALESCE($5, "name")
+      WHERE
+        "id" = $1
+      RETURNING *
+      """
+      configuration: "postgresql_config"
+    )
+  " Mutations for type 'Post' "
+  deletePost(id: ID!): Post
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "post"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+  insertPost(user_id: ID, forum_id: ID, created_at: DateTime): Post
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "post"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+  updatePost(id: ID!, created_at: DateTime, forum_id: ID, user_id: ID): Post
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      UPDATE "post" SET
+        "created_at" = COALESCE($2, "created_at"),
+        "forum_id" = COALESCE($3, "forum_id"),
+        "user_id" = COALESCE($4, "user_id")
+      WHERE
+        "id" = $1
+      RETURNING *
+      """
+      configuration: "postgresql_config"
+    )
+  " Mutations for type 'Trip' "
+  deleteTrip(id: ID!): Trip
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "trip"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+  insertTrip(
+    image: String
+    user_id: ID
+    start: Date
+    place_id: ID
+    description: String
+    post_id: ID
+    end: Date
+    created_at: DateTime
+  ): Trip
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "trip"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+  updateTrip(
+    id: ID!
+    created_at: DateTime
+    description: String
+    end: Date
+    image: String
+    place_id: ID
+    post_id: ID
+    start: Date
+    user_id: ID
+  ): Trip
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      UPDATE "trip" SET
+        "created_at" = COALESCE($2, "created_at"),
+        "description" = COALESCE($3, "description"),
+        "end" = COALESCE($4, "end"),
+        "image" = COALESCE($5, "image"),
+        "place_id" = COALESCE($6, "place_id"),
+        "post_id" = COALESCE($7, "post_id"),
+        "start" = COALESCE($8, "start"),
+        "user_id" = COALESCE($9, "user_id")
+      WHERE
+        "id" = $1
+      RETURNING *
+      """
+      configuration: "postgresql_config"
+    )
+  " Mutations for type 'User' "
+  deleteUser(id: ID!): User
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "user"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+  insertUser(
+    first_Name: String
+    email: String
+    username: String
+    phone_num: Float
+    password: String
+    created_at: DateTime
+    last_Name: String
+  ): User
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "user"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+  updateUser(
+    id: ID!
+    created_at: DateTime
+    email: String
+    first_Name: String
+    last_Name: String
+    password: String
+    phone_num: Float
+    username: String
+  ): User
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      UPDATE "user" SET
+        "created_at" = COALESCE($2, "created_at"),
+        "email" = COALESCE($3, "email"),
+        "first_Name" = COALESCE($4, "first_Name"),
+        "last_Name" = COALESCE($5, "last_Name"),
+        "password" = COALESCE($6, "password"),
+        "phone_num" = COALESCE($7, "phone_num"),
+        "username" = COALESCE($8, "username")
+      WHERE
+        "id" = $1
+      RETURNING *
+      """
+      configuration: "postgresql_config"
+    )
+  " Mutations for type 'Vote' "
+  deleteVote(id: ID!): Vote
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "vote"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+  insertVote(
+    post_id: ID
+    user_id: ID
+    created_at: DateTime
+    upvote: Boolean
+  ): Vote
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "vote"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+  updateVote(
+    id: ID!
+    created_at: DateTime
+    post_id: ID
+    upvote: Boolean
+    user_id: ID
+  ): Vote
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      UPDATE "vote" SET
+        "created_at" = COALESCE($2, "created_at"),
+        "post_id" = COALESCE($3, "post_id"),
+        "upvote" = COALESCE($4, "upvote"),
+        "user_id" = COALESCE($5, "user_id")
+      WHERE
+        "id" = $1
+      RETURNING *
+      """
+      configuration: "postgresql_config"
+    )
+}
