@@ -20,6 +20,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { signIn, signOut, useSession } from "next-auth/react";
 import logo from "../public/logo_black.png";
+import Link from "next/link";
 
 function Header() {
   const { data: session } = useSession();
@@ -33,19 +34,22 @@ function Header() {
       </a>
 
       <div className="flex items-center mx-7 xl:min-w-[300px]">
-        <ul>
-          <a href="" className=" m-2 hidden flex-1 lg:inline">
+        <ul className="space-x-4">
+          <Link href="/" className=" m-2 hidden flex-1 lg:inline">
             Home
-          </a>
-          <a href="" className=" m-2 hidden flex-1 lg:inline">
+          </Link>
+
+          <Link href="/forum" className=" m-2 hidden flex-1 lg:inline">
             Forum
-          </a>
-          <a href="" className=" m-2 hidden flex-1 lg:inline">
-            Map
-          </a>
-          <a href="" className=" m-2 hidden flex-1 lg:inline">
+          </Link>
+
+          <Link href="/travelplanner" className=" m-2 hidden flex-1 lg:inline">
             Travel Planner
-          </a>
+          </Link>
+
+          <Link href="/profile" className=" m-2 hidden flex-1 lg:inline">
+            Profile
+          </Link>
         </ul>
 
         <div className="mx-2">
