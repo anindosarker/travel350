@@ -51,12 +51,12 @@ type Post = {
   comment: Comment[];
   created_at: string;
   description: string;
-  end: Date;
+  end: string;
   id: number;
   image: string;
   place_id: number;
   places: Places;
-  start: Date;
+  start: string;
   title: string;
   user: User;
   user_id: number;
