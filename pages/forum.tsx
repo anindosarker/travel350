@@ -1,5 +1,6 @@
 import React from "react";
 import ForumPost from "../components/ForumPost";
+import Post from "../components/Post";
 import PostBox from "../components/PostBox";
 
 function forum() {
@@ -8,6 +9,7 @@ function forum() {
       <PostBox />
       <div className="space-y-2 mt-10">
         <ForumPost />
+        <Post/>
       </div>
     </div>
   );
