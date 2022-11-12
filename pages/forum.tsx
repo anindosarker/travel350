@@ -9,7 +9,7 @@ function forum() {
       <PostBox />
       <div className="space-y-2 mt-10">
         <ForumPost />
-        <Post/>
+        <Post />
       </div>
     </div>
   );
