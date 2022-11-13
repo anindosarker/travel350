@@ -1,36 +1,37 @@
 import React from "react";
-import CreatePost from "../components/CreatePost";
-import Image from "next/image";
-import PostBox from "../components/PostBox";
+import PlaceCard from "../components/PlaceCard";
+import { gql, useQuery } from "@apollo/client";
 
-const forum = () => {
+const GET_QUERY = gql`
+  query MyQuery {
+    getPlacesList {
+      created_at
+      description
+      name
+      id
+    }
+  }
+`;
+
+function placesList() {
+  const { loading, error, data } = useQuery(GET_QUERY);
+  console.log(data?.getPlacesList[0]);
   return (
-    <div>
-      <div className="relative w-full h-[220px] bg-slate-400 flex ">
-        <div className="w-3/4">
-          <div className=" mx-24 flex flex-col my-10">
-            <h2 className=" py-2 text-white text-3xl font-bold tracking-wider">
-              Travel Planner
-            </h2>
-            <p className="py-2 text-[#e3dcdc]">
-              Put together a trip whishlist to create a detailed iteranary
-            </p>
+    <div className="bg-white w-screen">
+      <h1 className="text-center mt-5 text-[22px] font-bold mb-5">
+        Here are all the places in this site:
+      </h1>
+      <div className="flex justify-center">
+        <div className="w-11/12 h-[800px space-y-3 flex justify-center">
+          <div>
+            {data?.getPlacesList.map((b) => (
+              <PlaceCard place={b} />
+            ))}
           </div>
         </div>
-        <div className="absolute top-0 right-0  h-3/4 w-2/4 cursor-pointer flex">
-          <Image
-            width="200"
-            height="200"
-            src="/../public/Online world-pana 1.png"
-            alt=""
-            objectFit="contain"
-            layout="fill"
-          />
-        </div>
       </div>
-      <PostBox />
     </div>
   );
-};
+}
 
-export default forum;
+export default placesList;

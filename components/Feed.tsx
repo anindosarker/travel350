@@ -1,25 +1,69 @@
-import { useQuery } from '@apollo/client'
-import React from 'react'
-import { GET_ALL_POST } from '../graphql/queries'
-import Post from './Post';
+import { gql, useQuery } from "@apollo/client";
+
+const GET_QUERY = gql`
+  query MyQuery {
+    getPostList {
+      created_at
+      description
+      end
+      id
+      image
+      place_id
+      start
+      user_id
+      places {
+        name
+        city {
+          name
+          created_at
+          description
+          id
+        }
+        city_id
+        created_at
+        description
+        id
+      }
+      user {
+        username
+        created_at
+        email
+        first_Name
+        id
+        last_Name
+        password
+        phone_num
+      }
+      vote {
+        upvote
+        post_id
+        id
+        created_at
+        user_id
+      }
+      comment {
+        created_at
+        id
+        post_id
+        text
+        user_id
+      }
+      title
+    }
+  }
+`;
 
 function Feed() {
+  const { loading, error, data } = useQuery(GET_QUERY);
 
-  const { data, error} = useQuery(GET_ALL_POST);
-
-  const posts: Post[] = data?.getPostList;
-
-  console.log("post", posts,"data", data,"error", error);
-
+  console.log(data);
   
-  return (
-    <div>
-      Feed
-      {posts?.map((post) => (
-        <Post key={post.id} post={post} />
-      ))}
-    </div>
-  );
+
+  if (loading) return <p>Loading ...</p>;
+
+  if (error) return <pre>{JSON.stringify(error, null, 2)}</pre>;
+
+  return <pre>{JSON.stringify(data, null, 2)}</pre>;
 }
 
-export default Feed
+export default Feed;
