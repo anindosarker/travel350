@@ -4,10 +4,10 @@ const GET_QUERY = gql`
   query MyQuery {
     getPlacesList {
       city_id
-      name
-      id
-      description
       created_at
+      description
+      id
+      name
     }
   }
 `;

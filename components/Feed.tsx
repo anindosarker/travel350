@@ -6,17 +6,6 @@ const GET_QUERY = gql`
       created_at
       description
       end_date
-      id
-      place_id
-      title
-      start_date
-      user_id
-      places {
-        name
-        city {
-          name
-        }
-      }
     }
   }
 `;
