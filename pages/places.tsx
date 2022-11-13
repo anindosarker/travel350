@@ -12,6 +12,7 @@ const GET_QUERY = gql`
   }
 `;
 
+
 function places() {
   const { loading, error, data } = useQuery(GET_QUERY);
 

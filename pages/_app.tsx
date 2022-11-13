@@ -7,6 +7,7 @@ import Header from "../components/Header";
 import { Toaster } from "react-hot-toast";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: any) {
+  // client.clearStore();
   return (
     <ApolloProvider client={client}>
       <SessionProvider session={session}>
