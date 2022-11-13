@@ -88,13 +88,10 @@ type User {
   comment: [Comment] @materializer(query: "getCommentUsingComment_user_id_fkey")
   created_at: DateTime
   email: String
-  first_Name: String
   id: ID!
-  last_Name: String
   moderator: [Moderator]
     @materializer(query: "getModeratorUsingModerator_user_id_fkey")
   password: String
-  phone_num: Float
   post: [Post] @materializer(query: "getPostUsingPost_user_id_fkey")
   username: String
   vote: [Vote] @materializer(query: "getVoteUsingVote_user_id_fkey")
@@ -408,7 +405,7 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "email", "first_Name", "id", "last_Name", "password", "phone_num", "username" FROM "user" ORDER BY "id" LIMIT $1 OFFSET $2
+      SELECT "created_at", "email", "id", "password", "username" FROM "user" ORDER BY "id" LIMIT $1 OFFSET $2
       """
       configuration: "postgresql_config"
     )
@@ -417,7 +414,7 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "email", "first_Name", "id", "last_Name", "password", "phone_num", "username" FROM "user" WHERE "id" = $1
+      SELECT "created_at", "email", "id", "password", "username" FROM "user" WHERE "id" = $1
       """
       configuration: "postgresql_config"
     )
@@ -426,7 +423,7 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "email", "first_Name", "id", "last_Name", "password", "phone_num", "username" FROM "user" WHERE "id" = $1
+      SELECT "created_at", "email", "id", "password", "username" FROM "user" WHERE "id" = $1
       """
       configuration: "postgresql_config"
     )
@@ -435,7 +432,7 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "email", "first_Name", "id", "last_Name", "password", "phone_num", "username" FROM "user" WHERE "id" = $1
+      SELECT "created_at", "email", "id", "password", "username" FROM "user" WHERE "id" = $1
       """
       configuration: "postgresql_config"
     )
@@ -444,7 +441,7 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "email", "first_Name", "id", "last_Name", "password", "phone_num", "username" FROM "user" WHERE "id" = $1
+      SELECT "created_at", "email", "id", "password", "username" FROM "user" WHERE "id" = $1
       """
       configuration: "postgresql_config"
     )
@@ -772,13 +769,10 @@ type Mutation {
       configuration: "postgresql_config"
     )
   insertUser(
-    first_Name: String
     email: String
     username: String
-    phone_num: Float
-    password: String
     created_at: DateTime
-    last_Name: String
+    password: String
   ): User
     @dbquery(
       type: "postgresql"
@@ -791,10 +785,7 @@ type Mutation {
     id: ID!
     created_at: DateTime
     email: String
-    first_Name: String
-    last_Name: String
     password: String
-    phone_num: Float
     username: String
   ): User
     @dbquery(
@@ -804,11 +795,8 @@ type Mutation {
       UPDATE "user" SET
         "created_at" = COALESCE($2, "created_at"),
         "email" = COALESCE($3, "email"),
-        "first_Name" = COALESCE($4, "first_Name"),
-        "last_Name" = COALESCE($5, "last_Name"),
-        "password" = COALESCE($6, "password"),
-        "phone_num" = COALESCE($7, "phone_num"),
-        "username" = COALESCE($8, "username")
+        "password" = COALESCE($4, "password"),
+        "username" = COALESCE($5, "username")
       WHERE
         "id" = $1
       RETURNING *
