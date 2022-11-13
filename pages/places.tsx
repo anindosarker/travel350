@@ -2,12 +2,24 @@ import { gql, useQuery } from "@apollo/client";
 
 const GET_QUERY = gql`
   query MyQuery {
-    getPlacesList {
-      city_id
+    getPostList {
       created_at
       description
+      end_date
       id
-      name
+      place_id
+      start_date
+      title
+      user_id
+      comment {
+        text
+      }
+      places {
+        name
+        city {
+          name
+        }
+      }
     }
   }
 `;
