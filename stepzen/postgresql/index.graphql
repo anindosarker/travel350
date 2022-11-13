@@ -75,6 +75,7 @@ type Post {
   place_id: ID
   places: Places @materializer(query: "getPlacesUsingPost_place_id_fkey")
   start: Date
+  title: String
   user: User @materializer(query: "getUserUsingPost_user_id_fkey")
   user_id: ID
   vote: [Vote] @materializer(query: "getVoteUsingVote_post_id_fkey")
@@ -87,13 +88,10 @@ type User {
   comment: [Comment] @materializer(query: "getCommentUsingComment_user_id_fkey")
   created_at: DateTime
   email: String
-  first_Name: String
   id: ID!
-  last_Name: String
   moderator: [Moderator]
     @materializer(query: "getModeratorUsingModerator_user_id_fkey")
   password: String
-  phone_num: Float
   post: [Post] @materializer(query: "getPostUsingPost_user_id_fkey")
   username: String
   vote: [Vote] @materializer(query: "getVoteUsingVote_user_id_fkey")
@@ -347,7 +345,7 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "description", "end", "id", "image", "place_id", "start", "user_id" FROM "post" ORDER BY "id" LIMIT $1 OFFSET $2
+      SELECT "created_at", "description", "end", "id", "image", "place_id", "start", "title", "user_id" FROM "post" ORDER BY "id" LIMIT $1 OFFSET $2
       """
       configuration: "postgresql_config"
     )
@@ -356,7 +354,7 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "description", "end", "id", "image", "place_id", "start", "user_id" FROM "post" WHERE "id" = $1
+      SELECT "created_at", "description", "end", "id", "image", "place_id", "start", "title", "user_id" FROM "post" WHERE "id" = $1
       """
       configuration: "postgresql_config"
     )
@@ -365,7 +363,7 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "description", "end", "id", "image", "place_id", "start", "user_id" FROM "post" WHERE "place_id" = $1
+      SELECT "created_at", "description", "end", "id", "image", "place_id", "start", "title", "user_id" FROM "post" WHERE "place_id" = $1
       """
       configuration: "postgresql_config"
     )
@@ -374,7 +372,7 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "description", "end", "id", "image", "place_id", "start", "user_id" FROM "post" WHERE "user_id" = $1
+      SELECT "created_at", "description", "end", "id", "image", "place_id", "start", "title", "user_id" FROM "post" WHERE "user_id" = $1
       """
       configuration: "postgresql_config"
     )
@@ -383,7 +381,7 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "description", "end", "id", "image", "place_id", "start", "user_id" FROM "post" WHERE "id" = $1
+      SELECT "created_at", "description", "end", "id", "image", "place_id", "start", "title", "user_id" FROM "post" WHERE "id" = $1
       """
       configuration: "postgresql_config"
     )
@@ -407,7 +405,7 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "email", "first_Name", "id", "last_Name", "password", "phone_num", "username" FROM "user" ORDER BY "id" LIMIT $1 OFFSET $2
+      SELECT "created_at", "email", "id", "password", "username" FROM "user" ORDER BY "id" LIMIT $1 OFFSET $2
       """
       configuration: "postgresql_config"
     )
@@ -416,7 +414,7 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "email", "first_Name", "id", "last_Name", "password", "phone_num", "username" FROM "user" WHERE "id" = $1
+      SELECT "created_at", "email", "id", "password", "username" FROM "user" WHERE "id" = $1
       """
       configuration: "postgresql_config"
     )
@@ -425,7 +423,7 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "email", "first_Name", "id", "last_Name", "password", "phone_num", "username" FROM "user" WHERE "id" = $1
+      SELECT "created_at", "email", "id", "password", "username" FROM "user" WHERE "id" = $1
       """
       configuration: "postgresql_config"
     )
@@ -434,7 +432,7 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "email", "first_Name", "id", "last_Name", "password", "phone_num", "username" FROM "user" WHERE "id" = $1
+      SELECT "created_at", "email", "id", "password", "username" FROM "user" WHERE "id" = $1
       """
       configuration: "postgresql_config"
     )
@@ -443,7 +441,7 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "email", "first_Name", "id", "last_Name", "password", "phone_num", "username" FROM "user" WHERE "id" = $1
+      SELECT "created_at", "email", "id", "password", "username" FROM "user" WHERE "id" = $1
       """
       configuration: "postgresql_config"
     )
@@ -505,7 +503,7 @@ type Mutation {
       dml: DELETE
       configuration: "postgresql_config"
     )
-  insertCity(description: String, name: String): City
+  insertCity(description: String, name: String, created_at: DateTime): City
     @dbquery(
       type: "postgresql"
       schema: "public"
@@ -673,6 +671,7 @@ type Mutation {
   insertPlaces(
     name: String!
     description: String
+    created_at: DateTime
     city_id: ID
   ): Places
     @dbquery(
@@ -717,9 +716,11 @@ type Mutation {
     image: String
     description: String
     user_id: ID
+    title: String
     start: Date
     place_id: ID
     end: Date
+    created_at: DateTime
   ): Post
     @dbquery(
       type: "postgresql"
@@ -736,6 +737,7 @@ type Mutation {
     image: String
     place_id: ID
     start: Date
+    title: String
     user_id: ID
   ): Post
     @dbquery(
@@ -749,7 +751,8 @@ type Mutation {
         "image" = COALESCE($5, "image"),
         "place_id" = COALESCE($6, "place_id"),
         "start" = COALESCE($7, "start"),
-        "user_id" = COALESCE($8, "user_id")
+        "title" = COALESCE($8, "title"),
+        "user_id" = COALESCE($9, "user_id")
       WHERE
         "id" = $1
       RETURNING *
@@ -766,12 +769,10 @@ type Mutation {
       configuration: "postgresql_config"
     )
   insertUser(
-    first_Name: String
     email: String
     username: String
-    phone_num: Float
+    created_at: DateTime
     password: String
-    last_Name: String
   ): User
     @dbquery(
       type: "postgresql"
@@ -784,10 +785,7 @@ type Mutation {
     id: ID!
     created_at: DateTime
     email: String
-    first_Name: String
-    last_Name: String
     password: String
-    phone_num: Float
     username: String
   ): User
     @dbquery(
@@ -797,11 +795,8 @@ type Mutation {
       UPDATE "user" SET
         "created_at" = COALESCE($2, "created_at"),
         "email" = COALESCE($3, "email"),
-        "first_Name" = COALESCE($4, "first_Name"),
-        "last_Name" = COALESCE($5, "last_Name"),
-        "password" = COALESCE($6, "password"),
-        "phone_num" = COALESCE($7, "phone_num"),
-        "username" = COALESCE($8, "username")
+        "password" = COALESCE($4, "password"),
+        "username" = COALESCE($5, "username")
       WHERE
         "id" = $1
       RETURNING *
