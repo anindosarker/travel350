@@ -5,14 +5,14 @@ const GET_QUERY = gql`
     getPlacesList {
       city_id
       created_at
+      description
       id
       name
-      description
     }
   }
 `;
 
-function ComponentName() {
+function places() {
   const { loading, error, data } = useQuery(GET_QUERY);
 
   if (loading) return <p>Loading ...</p>;
@@ -22,4 +22,4 @@ function ComponentName() {
   return <pre>{JSON.stringify(data, null, 2)}</pre>;
 }
 
-export default ComponentName;
+export default places;
