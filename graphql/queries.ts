@@ -42,3 +42,17 @@ export const GET_ALL_POST = gql`
     }
   }
 `;
+
+
+
+export const GET_COMMENT_LIST = gql`
+  query MyQuery {
+    getCommentList {
+      created_at
+      id
+      post_id
+      text
+      user_id
+    }
+  }
+`;
