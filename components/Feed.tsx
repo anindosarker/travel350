@@ -1,36 +1,28 @@
 import { gql, useQuery } from "@apollo/client";
 
-const GET_POSTS = gql`
+const GET_QUERY = gql`
   query MyQuery {
     getPostList {
       created_at
+      description
+      end_date
       id
+      place_id
+      title
+      start_date
       user_id
-      user {
-        username
-        created_at
-        email
-      }
-      vote {
-        upvote
-        post_id
-        id
-        created_at
-        user_id
-      }
-      comment {
-        created_at
-        id
-        post_id
-        text
-        user_id
+      places {
+        name
+        city {
+          name
+        }
       }
     }
   }
 `;
 
 function Feed() {
-  const { loading, error, data } = useQuery(GET_POSTS);
+  const { loading, error, data } = useQuery(GET_QUERY);
 
   if (loading) return <p>Loading ...</p>;
 
