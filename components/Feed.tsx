@@ -1,38 +1,15 @@
 import { gql, useQuery } from "@apollo/client";
 
-const GET_QUERY = gql`
+const GET_POSTS = gql`
   query MyQuery {
     getPostList {
       created_at
-      description
-      end
       id
-      image
-      place_id
-      start
       user_id
-      places {
-        name
-        city {
-          name
-          created_at
-          description
-          id
-        }
-        city_id
-        created_at
-        description
-        id
-      }
       user {
         username
         created_at
         email
-        first_Name
-        id
-        last_Name
-        password
-        phone_num
       }
       vote {
         upvote
@@ -48,16 +25,12 @@ const GET_QUERY = gql`
         text
         user_id
       }
-      title
     }
   }
 `;
 
 function Feed() {
-  const { loading, error, data } = useQuery(GET_QUERY);
-
-  console.log(data);
-  
+  const { loading, error, data } = useQuery(GET_POSTS);
 
   if (loading) return <p>Loading ...</p>;
 
