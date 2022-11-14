@@ -6,25 +6,11 @@ const GET_QUERY = gql`
       created_at
       description
       end_date
-      id
-      place_id
-      start_date
-      title
-      user_id
-      comment {
-        text
-      }
-      places {
-        name
-        city {
-          name
-        }
-      }
     }
   }
 `;
 
-function places() {
+function Feed() {
   const { loading, error, data } = useQuery(GET_QUERY);
 
   if (loading) return <p>Loading ...</p>;
@@ -34,4 +20,4 @@ function places() {
   return <pre>{JSON.stringify(data, null, 2)}</pre>;
 }
 
-export default places;
+export default Feed;

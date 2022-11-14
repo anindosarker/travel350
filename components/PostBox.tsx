@@ -101,18 +101,7 @@ function PostBox({ subreddit }: Props) {
             />
           </div>
 
-          {/* subreddit */}
-          {!subreddit && (
-            <div className="flex items-center px-2">
-              <p className=" min-w-[90px]">Forum</p>
-              <input
-                type="text"
-                {...register("subreddit", { required: true })}
-                className="flex-1 m-2 bg-blue-50 p-2 outline-none"
-                placeholder="i.e. React"
-              />
-            </div>
-          )}
+         
 
           {/* imagebox */}
           {imageBoxOpen && (
