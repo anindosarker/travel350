@@ -2,11 +2,14 @@ import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/24/solid";
 import React from "react";
 import Avatar from "./Avatar";
 
+type Props = {
+  post: Post;
+};
 
 
 
 
-function Post() {
+function Post({post}: Props) {
   return (
     <div>
       {/* <div>Post Title</div> */}
