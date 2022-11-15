@@ -38,3 +38,16 @@ export const GET_PLACES_LIST = gql`
     }
   }
 `;
+
+
+
+export const GET_CITY_LIST = gql`
+  query MyQuery   {
+    getCityList {
+      created_at
+      description
+      id
+      name
+    }
+  }
+`;
