@@ -15,7 +15,7 @@ function Feed() {
       {posts?.map((post) => (
         <Post key={post.id} post={post} />
       ))}
-     
+      <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
   );
 }
