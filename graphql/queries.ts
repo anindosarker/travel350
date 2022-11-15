@@ -23,3 +23,13 @@ export const GET_POST_LIST = gql`
     }
   }
 `;
+
+
+export const GET_CITY_LIST = gql`
+  query MyQuery {
+    getCityList {
+      id
+      name
+    }
+  }
+`;

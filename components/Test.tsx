@@ -2,35 +2,17 @@ import { LinkIcon, PhotoIcon, PlusIcon } from "@heroicons/react/24/solid";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import client from "../apollo-client";
 import { toast } from "react-hot-toast";
 import CreatePost from "./CreatePost";
-import { GET_CITY_LIST } from "../graphql/queries";
 
 type Props = {
   subreddit?: string;
 };
 
-type FormData = {
-  postTitle: string;
-  startDate: string;
-  endDate: string;
-  place: string;
-  city: string;
-  postBody: string;
-  postImage: string;
-  subreddit: string;
-};
-
 function PostBox({ subreddit }: Props) {
   const { data: session } = useSession();
-
-  const {loading, data: cityData, error} = useQuery(GET_CITY_LIST)
-
-  const cities: City[] = cityData?.getCityList;
-  console.log(cityData);
-  
 
   const [imageBoxOpen, setImageBoxOpen] = useState<boolean>(false);
   const [isShown, setIsShown] = useState(false);
@@ -99,20 +81,13 @@ function PostBox({ subreddit }: Props) {
           {/* Location*/}
           {!subreddit && (
             <div className="flex items-center px-2">
-              <p className=" min-w-[90px]">Place</p>
+              <p className=" min-w-[90px]">Location</p>
               <input
                 type="text"
                 {...register("location", { required: true })}
                 className="flex-1 m-2 bg-blue-50 p-2 outline-none"
                 placeholder="i.e. React"
               />
-              <p className=" min-w-[90px]">city</p>
-              <select {...register("city")}>
-                {cities?.map((city) => (
-
-                <option key={city.id} value={city.name}>{city.name}</option>
-                ))}
-              </select>
             </div>
           )}
           {/* Body */}
