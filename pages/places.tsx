@@ -2,27 +2,29 @@ import { gql, useQuery } from "@apollo/client";
 
 const GET_QUERY = gql`
   query MyQuery {
-    getUsertable(id: "1") {
+    getPostList {
       created_at
-      email
+      description
+      end_date
       id
-      name
-      password
-      post {
-        id
-        description
-        end_date
-        created_at
-        place_id
-        start_date
-        title
-        user_id
+      place_id
+      start_date
+      title
+      user_id
+      comment {
+        text
+      }
+      places {
+        name
+        city {
+          name
+        }
       }
     }
   }
 `;
 
-function ComponentName() {
+function places() {
   const { loading, error, data } = useQuery(GET_QUERY);
 
   if (loading) return <p>Loading ...</p>;
@@ -32,4 +34,4 @@ function ComponentName() {
   return <pre>{JSON.stringify(data, null, 2)}</pre>;
 }
 
-export default ComponentName;
+export default places;
