@@ -6,7 +6,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import client from "../apollo-client";
 import { toast } from "react-hot-toast";
 import CreatePost from "./CreatePost";
-import { GET_CITY_LIST } from "../graphql/queries";
+import { GET_CITY_LIST, GET_PLACES_LIST } from "../graphql/queries";
 
 type Props = {
   subreddit?: string;
@@ -20,17 +20,14 @@ type FormData = {
   city: string;
   postBody: string;
   postImage: string;
-  subreddit: string;
 };
 
 function PostBox({ subreddit }: Props) {
   const { data: session } = useSession();
 
-  const {loading, data: cityData, error} = useQuery(GET_CITY_LIST)
+  const { loading, data: cityData, error } = useQuery(GET_CITY_LIST);
 
   const cities: City[] = cityData?.getCityList;
-  console.log(cityData);
-  
 
   const [imageBoxOpen, setImageBoxOpen] = useState<boolean>(false);
   const [isShown, setIsShown] = useState(false);
@@ -46,7 +43,17 @@ function PostBox({ subreddit }: Props) {
   const onSubmit = handleSubmit(async (formData) => {
     console.log(formData);
     const notification = toast.loading("Creating new post...");
+
+    try {
+    } catch (error) {}
   });
+
+  const { data: placeData } = useQuery(GET_PLACES_LIST);
+  console.log(placeData?.getPlacesList);
+  const places: Places[] = placeData?.getPlacesList;
+
+  const [search, setSearch] = useState("");
+  console.log(search);
 
   return (
     <div className="flex flex-row justify-center w-full mt-5">
@@ -59,13 +66,7 @@ function PostBox({ subreddit }: Props) {
             type="text"
             disabled={!session}
             className="rounded-md flex-1 bg-gray-50 p-2 pl-5 outline-none"
-            placeholder={
-              session
-                ? subreddit
-                  ? `Create a post in r/${subreddit}`
-                  : `Share your trip experience`
-                : `Sign in you fool`
-            }
+            placeholder="Add Title"
           />
 
           <PhotoIcon
@@ -78,11 +79,11 @@ function PostBox({ subreddit }: Props) {
         <div className="flex flex-col py-2">
           {/* Date */}
 
-          <div className="flex items-center px-2">
+          <div className="flex items-center justify-between px-2">
             <p className=" min-w-[90px]">Start Date</p>
             <input
               type="date"
-              {...register("postBody")}
+              {...register("startDate")}
               className="m-2 bg-blue-50 p-2 outline-none"
               placeholder="Text (optional)"
             />
@@ -90,31 +91,52 @@ function PostBox({ subreddit }: Props) {
             <p className=" min-w-[90px]">End Date</p>
             <input
               type="date"
-              {...register("postBody")}
+              {...register("endDate")}
               className="m-2 bg-blue-50 p-2 outline-none"
               placeholder="Text (optional)"
             />
           </div>
 
           {/* Location*/}
-          {!subreddit && (
-            <div className="flex items-center px-2">
+
+          <div className="flex items-center justify-between px-2">
+            <div className="flex items-center">
               <p className=" min-w-[90px]">Place</p>
               <input
-                type="text"
-                {...register("location", { required: true })}
+                type="search"
+                {...register("place", { required: true })}
                 className="flex-1 m-2 bg-blue-50 p-2 outline-none"
                 placeholder="i.e. React"
+                onChange={(e) => setSearch(e.target.value)}
               />
-              <p className=" min-w-[90px]">city</p>
-              <select {...register("city")}>
-                {cities?.map((city) => (
+            </div>
 
-                <option key={city.id} value={city.name}>{city.name}</option>
+            <div>
+              {places
+                .filter((item) => {
+                  return search.toLowerCase() === ""
+                    ? item
+                    : item.name.toLowerCase().includes(search);
+                })
+                ?.map((place) => (
+                  <p key={place.id}>{place.name}</p>
+                ))}
+            </div>
+
+            <div className="flex items-center">
+              <p className=" min-w-[90px]">City</p>
+              <select
+                {...register("city")}
+                className="flex-1 m-2 bg-blue-50 p-2 outline-none"
+              >
+                {cities?.map((city) => (
+                  <option key={city.id} value={city.name}>
+                    {city.name}
+                  </option>
                 ))}
               </select>
             </div>
-          )}
+          </div>
           {/* Body */}
           <div className="flex items-center px-2">
             <p className=" min-w-[90px]">Details</p>
@@ -146,8 +168,8 @@ function PostBox({ subreddit }: Props) {
                 <p>- A post title is required</p>
               )}
 
-              {errors.subreddit?.type === "required" && (
-                <p>-Subreddit is required</p>
+              {errors.place?.type === "required" && (
+                <p>At least add the spot name...</p>
               )}
             </div>
           )}
