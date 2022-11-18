@@ -37,7 +37,6 @@ function PostBox({ subreddit }: Props) {
 
         <div className="flex items-center space-x-3">
           <input
-            {...register("postTitle", { required: true })}
             type="text"
             disabled={!session}
             className="rounded-md flex-1 bg-gray-50 p-2 pl-5 outline-none"
@@ -64,7 +63,6 @@ function PostBox({ subreddit }: Props) {
             <p className=" min-w-[90px]">Start Date</p>
             <input
               type="date"
-              {...register("postBody")}
               className="m-2 bg-blue-50 p-2 outline-none"
               placeholder="Text (optional)"
             />
@@ -72,7 +70,6 @@ function PostBox({ subreddit }: Props) {
             <p className=" min-w-[90px]">End Date</p>
             <input
               type="date"
-              {...register("postBody")}
               className="m-2 bg-blue-50 p-2 outline-none"
               placeholder="Text (optional)"
             />
@@ -84,7 +81,6 @@ function PostBox({ subreddit }: Props) {
               <p className=" min-w-[90px]">Location</p>
               <input
                 type="text"
-                {...register("location", { required: true })}
                 className="flex-1 m-2 bg-blue-50 p-2 outline-none"
                 placeholder="i.e. React"
               />
@@ -95,7 +91,6 @@ function PostBox({ subreddit }: Props) {
             <p className=" min-w-[90px]">Details</p>
             <input
               type="text"
-              {...register("postBody")}
               className="flex-1 m-2 bg-blue-50 p-2 outline-none"
               placeholder="Text (optional) box lomba hobe"
             />
@@ -109,7 +104,6 @@ function PostBox({ subreddit }: Props) {
               <p className=" min-w-[90px]">Image URL:</p>
               <input
                 type="text"
-                {...register("postImage")}
                 className="flex-1 m-2 bg-blue-50 p-2 outline-none"
                 placeholder="optional"
               />
@@ -117,17 +111,6 @@ function PostBox({ subreddit }: Props) {
           )}
 
           {/* Errors */}
-          {Object.keys(errors).length > 0 && (
-            <div className="space-y-2 p-2 text-red-500">
-              {errors.postTitle?.type === "required" && (
-                <p>- A post title is required</p>
-              )}
-
-              {errors.subreddit?.type === "required" && (
-                <p>-Subreddit is required</p>
-              )}
-            </div>
-          )}
         </div>
         <div>
           <button

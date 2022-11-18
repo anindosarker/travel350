@@ -54,7 +54,7 @@ function Post({post}: Props) {
             <p className="text-xs font-bold text-black">0</p>
             <ArrowDownIcon
               className={`voteButtons hover:text-blue-400 h-5 ${
-                vote === false && "text-blue-400"
+                vote === true && "text-blue-400"
               }`}
             />
             <div className="flex items-center justify-evenly space-x-4">
