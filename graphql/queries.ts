@@ -39,11 +39,33 @@ export const GET_PLACES_LIST = gql`
   }
 `;
 
-
-
 export const GET_CITY_LIST = gql`
-  query MyQuery   {
+  query MyQuery {
     getCityList {
+      created_at
+      description
+      id
+      name
+    }
+  }
+`;
+
+export const GET_PLACES_BY_NAME = gql`
+  query MyQuery($name: String!) {
+    getPlacesByPlaceName(name: $name) {
+      name
+      id
+      city_id
+      city {
+        name
+      }
+    }
+  }
+`;
+
+export const GET_CITY_BY_NAME = gql`
+  query MyQuery($name: String!) {
+    getCityByCityName(name: $name) {
       created_at
       description
       id

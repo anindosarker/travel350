@@ -111,6 +111,16 @@ type Query {
       table: "city"
       configuration: "postgresql_config"
     )
+
+  getCityByCityName(name: String!): [City]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT * FROM "city" WHERE "name" = $1
+      """
+      configuration: "postgresql_config"
+    )
   getCityList: [City]
     @dbquery(
       type: "postgresql"
@@ -226,6 +236,16 @@ type Query {
       type: "postgresql"
       schema: "public"
       table: "places"
+      configuration: "postgresql_config"
+    )
+
+  getPlacesByPlaceName(name: String!): [Places]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT * FROM "places" WHERE "name" = $1
+      """
       configuration: "postgresql_config"
     )
   getPlacesList: [Places]
@@ -556,12 +576,7 @@ type Mutation {
       dml: DELETE
       configuration: "postgresql_config"
     )
-  insertPlaces(
-    name: String
-    description: String
-    created_at: DateTime
-    city_id: ID
-  ): Places
+  insertPlaces(name: String, description: String, city_id: ID): Places
     @dbquery(
       type: "postgresql"
       schema: "public"

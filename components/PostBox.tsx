@@ -6,7 +6,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import client from "../apollo-client";
 import { toast } from "react-hot-toast";
 import CreatePost from "./CreatePost";
-import { GET_CITY_LIST, GET_PLACES_LIST } from "../graphql/queries";
+import { GET_CITY_BY_NAME, GET_CITY_LIST, GET_PLACES_BY_NAME, GET_PLACES_LIST } from "../graphql/queries";
 
 type Props = {
   subreddit?: string;
@@ -42,22 +42,62 @@ function PostBox({ subreddit }: Props) {
 
   const onSubmit = handleSubmit(async (formData) => {
     console.log(formData);
-    const notification = toast.loading("Creating new post...");
+    // const notification = toast.loading("Creating new post...");
 
     try {
-    } catch (error) {}
+      const{data: {getPlacesByPlaceName : placeNameData}} = await client.query({
+        query: GET_PLACES_BY_NAME,
+        variables: {
+          name : formData.place
+        }
+      })
+
+
+      const placeExists = placeNameData.length > 0;
+      console.log("place exists", placeExists);
+      console.log(placeNameData);
+
+      const{data: {getCityByCityName: cityNameData}} = await client.query({
+        query: GET_CITY_BY_NAME,
+        variables: {
+          name : formData.city
+        }
+      })
+
+      console.log(formData.city);
+      
+      const cityExists = cityNameData.length > 0;
+      console.log("city exists", cityExists);
+      console.log(cityNameData);
+
+      
+
+      if (!placeExists) {
+        //create new place
+        console.log("Creating new place -> ");
+
+       
+      }
+      
+      
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
   });
 
   const { data: placeData } = useQuery(GET_PLACES_LIST);
   const places: Places[] = placeData?.getPlacesList;
 
   const [search, setSearch] = useState("");
-  console.log(search);
-
 
   return (
     <div className="flex flex-row justify-center w-full mt-5">
-      <form className="focus:outline-none lg:w-1/2 lg:mr-7 lg:mb-0 mb-7 bg-white p-6 shadow rounded-lg border-gray-200 border-2 ">
+      <form
+        onSubmit={onSubmit}
+        className="focus:outline-none lg:w-1/2 lg:mr-7 lg:mb-0 mb-7 bg-white p-6 shadow rounded-lg border-gray-200 border-2 "
+      >
         <div>Share Trip Expereinces</div>
 
         <div className="flex items-center space-x-3">
@@ -107,36 +147,23 @@ function PostBox({ subreddit }: Props) {
                 {...register("place", { required: true })}
                 className="flex-1 m-2 bg-blue-50 p-2 outline-none"
                 placeholder="i.e. React"
-                onChange={(e) => setSearch(e.target.value)}
               />
             </div>
 
-            {(
-              <div>
-                {places
-                  ?.filter((item) => {
-                    return search === ""
-                      ? item
-                      : item.name.toLowerCase().includes(search.toLowerCase());
-                  })
-                  ?.map((place) => (
-                    <p key={place.id}>{place.name}</p>
-                  ))}
-              </div>
-            )}
+           
 
             <div className="flex items-center">
               <p className=" min-w-[90px]">City</p>
-              <select
+              <input
                 {...register("city")}
                 className="flex-1 m-2 bg-blue-50 p-2 outline-none"
-              >
-                {cities?.map((city) => (
+              />
+                {/* {cities?.map((city) => (
                   <option key={city.id} value={city.name}>
                     {city.name}
                   </option>
-                ))}
-              </select>
+                ))} */}
+              
             </div>
           </div>
           {/* Body */}
