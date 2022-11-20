@@ -49,11 +49,11 @@ function PostBox({ subreddit }: Props) {
   });
 
   const { data: placeData } = useQuery(GET_PLACES_LIST);
-  console.log(placeData?.getPlacesList);
   const places: Places[] = placeData?.getPlacesList;
 
   const [search, setSearch] = useState("");
   console.log(search);
+
 
   return (
     <div className="flex flex-row justify-center w-full mt-5">
@@ -111,17 +111,19 @@ function PostBox({ subreddit }: Props) {
               />
             </div>
 
-            <div>
-              {places
-                .filter((item) => {
-                  return search.toLowerCase() === ""
-                    ? item
-                    : item.name.toLowerCase().includes(search);
-                })
-                ?.map((place) => (
-                  <p key={place.id}>{place.name}</p>
-                ))}
-            </div>
+            {(
+              <div>
+                {places
+                  ?.filter((item) => {
+                    return search === ""
+                      ? item
+                      : item.name.toLowerCase().includes(search.toLowerCase());
+                  })
+                  ?.map((place) => (
+                    <p key={place.id}>{place.name}</p>
+                  ))}
+              </div>
+            )}
 
             <div className="flex items-center">
               <p className=" min-w-[90px]">City</p>
