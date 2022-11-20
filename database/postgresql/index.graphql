@@ -239,7 +239,7 @@ type Query {
       configuration: "postgresql_config"
     )
 
-  getPlacesByPlaceName(name: String!): [Places]
+  getPlacesByPlaceName(name: String!): Places
     @dbquery(
       type: "postgresql"
       schema: "public"
@@ -335,6 +335,7 @@ type Query {
       """
       configuration: "postgresql_config"
     )
+
   getPostUsingVote_post_id_fkey(post_id: ID!): Post
     @dbquery(
       type: "postgresql"

@@ -50,18 +50,7 @@ export const GET_CITY_LIST = gql`
   }
 `;
 
-export const GET_PLACES_BY_NAME = gql`
-  query MyQuery($name: String!) {
-    getPlacesByPlaceName(name: $name) {
-      name
-      id
-      city_id
-      city {
-        name
-      }
-    }
-  }
-`;
+
 
 export const GET_CITY_BY_NAME = gql`
   query MyQuery($name: String!) {
@@ -90,6 +79,53 @@ export const GET_POST_BY_POST_ID = gql`
         name
         city {
           name
+        }
+      }
+    }
+  }
+`;
+
+
+export const GET_CITY_BY_CITY_ID = gql`
+  query MyQuery($id: ID!) {
+    getCity(id: $id) {
+      description
+      id
+      name
+      created_at
+    }
+  }
+`;
+
+
+export const GET_PLACES_BY_NAME = gql`
+  query MyQuery($name: String!) {
+    getPlacesByPlaceName(name: $name) {
+      name
+      id
+      description
+      created_at
+      city_id
+      city {
+        name
+      }
+      post {
+        created_at
+        description
+        id
+        end_date
+        place_id
+        start_date
+        title
+        user_id
+        usertable {
+          name
+        }
+        places {
+          name
+          city {
+            name
+          }
         }
       }
     }
