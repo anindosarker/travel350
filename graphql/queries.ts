@@ -73,3 +73,25 @@ export const GET_CITY_BY_NAME = gql`
     }
   }
 `;
+
+
+export const GET_POST_BY_POST_ID = gql`
+  query MyQuery($id: ID!) {
+    getPost(id: $id) {
+      created_at
+      description
+      end_date
+      id
+      place_id
+      start_date
+      title
+      user_id
+      places {
+        name
+        city {
+          name
+        }
+      }
+    }
+  }
+`;
