@@ -251,7 +251,7 @@ function PostBox({ subreddit }: Props) {
             <div className="flex items-center px-2">
               <p className=" min-w-[90px]">Image URL:</p>
               <input
-                type="text"
+                type="file"
                 {...register("postImage")}
                 className="flex-1 m-2 bg-blue-50 p-2 outline-none"
                 placeholder="optional"
