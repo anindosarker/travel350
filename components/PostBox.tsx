@@ -50,6 +50,60 @@ function PostBox({ subreddit }: Props) {
     watch,
     formState: { errors },
   } = useForm<FormData>();
+  {
+    /*cpoudinary Implementation */
+    //
+  }
+
+  const [imageSource, setImageSource] = useState();
+  const [uploadData, setUploadData] = useState();
+
+  function handleOnChange(changeEvent: any) {
+    const reader = new FileReader();
+
+    const fallBack = undefined;
+    changeEvent.Target = fallBack || {};
+    const file: any = (changeEvent.target.files = fallBack || []);
+
+    reader.onload = function (onloadEvent: any) {
+      setImageSource(onloadEvent.target.result);
+      setUploadData(undefined);
+    };
+    reader.readAsDataURL(file[0]);
+  }
+
+  async function handleOnSubmit(event: any) {
+    event.preventDefault();
+    console.log(event.current);
+
+    const form = event.currentTarget;
+    const fileInput: any = Array.from(form.elements).find(
+      ({ name }: any) => name === "file"
+    );
+    const formData = new FormData();
+
+    for (const file of fileInput.files) {
+      formData.append("file", file);
+    }
+    formData.append("upload_preset", "pcewt9hd"); //process.env.CLOUDINARY_PRESET_NAME);
+
+    const data = await fetch(
+      "https://api.cloudinary.com/v1_1/didbh2t1p/image/upload", //process.env.CLOUDINARY_CLOUDNAME
+      {
+        method: "POST",
+        body: formData,
+      }
+    ).then((res) => res.json());
+    console.log("data", data);
+
+    setImageSource(data.secure_url);
+    setUploadData(data);
+  }
+
+  {
+    //
+    /*cloudinary Implementation */
+  }
 
   const onSubmit = handleSubmit(async (formData) => {
     console.log(formData);
@@ -166,7 +220,8 @@ function PostBox({ subreddit }: Props) {
   return (
     <div className="flex flex-row justify-center w-full mt-5">
       <form
-        onSubmit={onSubmit}
+        onChange={handleOnChange}
+        onSubmit={onSubmit || handleOnSubmit}
         className="focus:outline-none lg:w-1/2 lg:mr-7 lg:mb-0 mb-7 bg-white p-6 shadow rounded-lg border-gray-200 border-2 "
       >
         <div>Share Trip Expereinces</div>
@@ -235,6 +290,7 @@ function PostBox({ subreddit }: Props) {
               </select>
             </div>
           </div>
+
           {/* Body */}
           <div className="flex items-center px-2">
             <p className=" min-w-[90px]">Details</p>
@@ -246,16 +302,23 @@ function PostBox({ subreddit }: Props) {
             />
           </div>
 
+          {/* WORK HERE fro cloudinary handle*}
           {/* imagebox */}
           {imageBoxOpen && (
             <div className="flex items-center px-2">
-              <p className=" min-w-[90px]">Image URL:</p>
               <input
                 type="file"
                 {...register("postImage")}
                 className="flex-1 m-2 bg-blue-50 p-2 outline-none"
                 placeholder="optional"
               />
+              <button
+                onClick={handleOnChange}
+                type="submit"
+                className="w-full rounded-full bg-blue-400 p-2 text-white"
+              >
+                Upload Images
+              </button>
             </div>
           )}
 
