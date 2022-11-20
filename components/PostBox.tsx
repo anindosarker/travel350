@@ -6,8 +6,13 @@ import { useMutation, useQuery } from "@apollo/client";
 import client from "../apollo-client";
 import { toast } from "react-hot-toast";
 import CreatePost from "./CreatePost";
-import { GET_CITY_BY_NAME, GET_CITY_LIST, GET_PLACES_BY_NAME, GET_PLACES_LIST } from "../graphql/queries";
-import { INSERT_PLACE } from "../graphql/mutations";
+import {
+  GET_CITY_BY_NAME,
+  GET_CITY_LIST,
+  GET_PLACES_BY_NAME,
+  GET_PLACES_LIST,
+} from "../graphql/queries";
+import { INSERT_PLACE, INSERT_POST } from "../graphql/mutations";
 
 type Props = {
   subreddit?: string;
@@ -31,6 +36,7 @@ function PostBox({ subreddit }: Props) {
   const cities: City[] = cityData?.getCityList;
 
   const [addPlace] = useMutation(INSERT_PLACE);
+  const [addPost] = useMutation(INSERT_POST);
 
   const [imageBoxOpen, setImageBoxOpen] = useState<boolean>(false);
   const [isShown, setIsShown] = useState(false);
@@ -48,60 +54,71 @@ function PostBox({ subreddit }: Props) {
     // const notification = toast.loading("Creating new post...");
 
     try {
-      const{data: {getPlacesByPlaceName : placeNameData}} = await client.query({
+      const {
+        data: { getPlacesByPlaceName: placeNameData },
+      } = await client.query({
         query: GET_PLACES_BY_NAME,
         variables: {
-          name : formData.place
-        }
-      })
-
+          name: formData.place,
+        },
+      });
 
       const placeExists = placeNameData.length > 0;
       console.log("place exists", placeExists);
       console.log(placeNameData);
 
-      const{data: {getCityByCityName: cityNameData}} = await client.query({
+      const {
+        data: { getCityByCityName: cityNameData },
+      } = await client.query({
         query: GET_CITY_BY_NAME,
         variables: {
-          name : formData.city
-        }
-      })
+          name: formData.city,
+        },
+      });
 
       console.log(formData.city);
-      
+
       const cityExists = cityNameData.length > 0;
       console.log("city exists", cityExists);
       console.log(cityNameData);
-
-      
 
       if (!placeExists) {
         //create new place
         console.log("Creating new place -> ");
 
-        const {data: {insertPlaces: newPlace}} = await addPlace({
+        const {
+          data: { insertPlaces: newPlace },
+        } = await addPlace({
           variables: {
             name: formData.place,
             description: formData.description,
-            city_id: cityNameData.id
-          }
-        })
+            city_id: cityNameData.id,
+          },
+        });
 
         console.log("Creating new post with new place", formData);
 
         const image = formData.postImage || "";
 
-        await 
-        
+        const {data: {insertPost: newPost}} = await addPost({
+          variables: {
+            description: formData.description,
+            place_id: newPlace.id,
+            title: formData.postTitle,
+            user_id: 1,
+            end_date: formData.endDate,
+            start_date: formData.startDate,
+          },
+        });
 
-       
+        console.log("New post added", newPost);
+        
       }
-      
-      
-      
+      else{
+        //use existing
+      }
     } catch (error) {
       console.log(error);
-      
     }
   });
 
@@ -168,20 +185,17 @@ function PostBox({ subreddit }: Props) {
               />
             </div>
 
-           
-
             <div className="flex items-center">
               <p className=" min-w-[90px]">City</p>
               <input
                 {...register("city")}
                 className="flex-1 m-2 bg-blue-50 p-2 outline-none"
               />
-                {/* {cities?.map((city) => (
+              {/* {cities?.map((city) => (
                   <option key={city.id} value={city.name}>
                     {city.name}
                   </option>
                 ))} */}
-              
             </div>
           </div>
           {/* Body */}

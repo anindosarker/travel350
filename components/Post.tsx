@@ -24,7 +24,7 @@ function Post({post}: Props) {
               <Link href={`/subreddit/`}>
                 <span className="font-bold text-black hover:text-blue-400">
                    <p>Place : {post.places.name}</p>
-        <p>City : {post.places.city.name}</p>
+        <p>City : {post?.places?.city?.name}</p>
                 </span>
               </Link>{" "}
             </div>
