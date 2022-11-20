@@ -294,7 +294,9 @@ type Query {
     @dbquery(
       type: "postgresql"
       schema: "public"
-      table: "post"
+      query: """
+      SELECT * FROM "post" order by "created_at" desc
+      """
       configuration: "postgresql_config"
     )
   getPostPaginatedList(first: Int, after: Int): [Post]

@@ -1,11 +1,10 @@
-import { LinkIcon, PhotoIcon, PlusIcon } from "@heroicons/react/24/solid";
+import { PhotoIcon } from "@heroicons/react/24/solid";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery } from "@apollo/client";
 import client from "../apollo-client";
 import { toast } from "react-hot-toast";
-import CreatePost from "./CreatePost";
 import {
   GET_CITY_BY_NAME,
   GET_CITY_LIST,
@@ -51,7 +50,7 @@ function PostBox({ subreddit }: Props) {
 
   const onSubmit = handleSubmit(async (formData) => {
     console.log(formData);
-    // const notification = toast.loading("Creating new post...");
+    const notification = toast.loading("Creating new post...");
 
     try {
       const {
@@ -100,7 +99,9 @@ function PostBox({ subreddit }: Props) {
 
         const image = formData.postImage || "";
 
-        const {data: {insertPost: newPost}} = await addPost({
+        const {
+          data: { insertPost: newPost },
+        } = await addPost({
           variables: {
             description: formData.description,
             place_id: newPlace.id,
@@ -112,13 +113,45 @@ function PostBox({ subreddit }: Props) {
         });
 
         console.log("New post added", newPost);
-        
-      }
-      else{
+      } else {
         //use existing
+        console.log("Using existing");
+        console.log(placeNameData);
+
+        const image = formData.postImage || "";
+
+        const {
+          data: { insertPost: newPost },
+        } = await addPost({
+          variables: {
+            description: formData.description,
+            place_id: placeNameData[0].id,
+            title: formData.postTitle,
+            user_id: 1,
+            end_date: formData.endDate,
+            start_date: formData.startDate,
+          },
+        });
+
+        console.log("New post added with old place", newPost);
       }
+
+      setValue("city", "");
+      setValue("place", "");
+      setValue("description", "");
+      setValue("startDate", "");
+      setValue("endDate", "");
+      setValue("postTitle", "");
+      setValue("postImage", "");
+
+      toast.success("New Post created!", {
+        id: notification,
+      });
     } catch (error) {
       console.log(error);
+      toast.error("GG! Something went wrong!", {
+        id: notification,
+      });
     }
   });
 
