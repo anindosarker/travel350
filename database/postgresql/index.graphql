@@ -431,7 +431,7 @@ type Mutation {
       dml: DELETE
       configuration: "postgresql_config"
     )
-  insertCity(description: String, name: String, created_at: DateTime): City
+  insertCity(description: String, name: String): City
     @dbquery(
       type: "postgresql"
       schema: "public"
