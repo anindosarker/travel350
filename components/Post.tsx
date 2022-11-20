@@ -1,4 +1,5 @@
 import { ArrowDownIcon, ArrowUpIcon, ChatBubbleOvalLeftIcon } from "@heroicons/react/24/solid";
+import { NewtonsCradle } from "@uiball/loaders";
 import Link from "next/link";
 import React from "react";
 import ReactTimeago from "react-timeago";
@@ -12,6 +13,14 @@ const vote = true;
 
 
 function Post({post}: Props) {
+    // if (!post) {
+    //   return (
+    //     <div className="flex w-full items-center justify-center p-10 text-xl">
+    //       <NewtonsCradle size={50} />
+    //     </div>
+    //   );
+    // }
+  
   return (
     <Link href={`/post/${post?.id}`}>
       <div className="flex flex-row justify-center w-full py-4">
