@@ -620,7 +620,6 @@ type Mutation {
     description: String
     user_id: ID
     end_date: Date
-    created_at: DateTime
     title: String
     place_id: ID
   ): Post

@@ -7,6 +7,7 @@ import client from "../apollo-client";
 import { toast } from "react-hot-toast";
 import CreatePost from "./CreatePost";
 import { GET_CITY_BY_NAME, GET_CITY_LIST, GET_PLACES_BY_NAME, GET_PLACES_LIST } from "../graphql/queries";
+import { INSERT_PLACE } from "../graphql/mutations";
 
 type Props = {
   subreddit?: string;
@@ -18,7 +19,7 @@ type FormData = {
   endDate: string;
   place: string;
   city: string;
-  postBody: string;
+  description: string;
   postImage: string;
 };
 
@@ -28,6 +29,8 @@ function PostBox({ subreddit }: Props) {
   const { loading, data: cityData, error } = useQuery(GET_CITY_LIST);
 
   const cities: City[] = cityData?.getCityList;
+
+  const [addPlace] = useMutation(INSERT_PLACE);
 
   const [imageBoxOpen, setImageBoxOpen] = useState<boolean>(false);
   const [isShown, setIsShown] = useState(false);
@@ -75,6 +78,21 @@ function PostBox({ subreddit }: Props) {
       if (!placeExists) {
         //create new place
         console.log("Creating new place -> ");
+
+        const {data: {insertPlaces: newPlace}} = await addPlace({
+          variables: {
+            name: formData.place,
+            description: formData.description,
+            city_id: cityNameData.id
+          }
+        })
+
+        console.log("Creating new post with new place", formData);
+
+        const image = formData.postImage || "";
+
+        await 
+        
 
        
       }
@@ -171,7 +189,7 @@ function PostBox({ subreddit }: Props) {
             <p className=" min-w-[90px]">Details</p>
             <input
               type="text"
-              {...register("postBody")}
+              {...register("description")}
               className="flex-1 m-2 bg-blue-50 p-2 outline-none"
               placeholder="Text (optional) box lomba hobe"
             />
