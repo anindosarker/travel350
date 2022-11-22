@@ -3,19 +3,32 @@ import {
   ArrowUpIcon,
   ChatBubbleOvalLeftIcon,
 } from "@heroicons/react/24/solid";
-import {PencilSquareIcon} from "@heroicons/react/24/outline"
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { NewtonsCradle } from "@uiball/loaders";
 import Link from "next/link";
 import React from "react";
 import ReactTimeago from "react-timeago";
 import Avatar from "./Avatar";
+import { useSession } from "next-auth/react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { type } from "os";
+import { useMutation } from "@apollo/client";
+import { INSERT_COMMENT } from "../graphql/mutations";
+import { GET_POST_BY_POST_ID } from "../graphql/queries";
+import toast from "react-hot-toast";
+import Router from "next/router";
 
 type Props = {
   post: Post;
 };
+type FormData = {
+  comment: string;
+};
 const vote = true;
 
 function Post({ post }: Props) {
+  console.log(post?.id);
+  
   // if (!post) {
   //   return (
   //     <div className="flex w-full items-center justify-center p-10 text-xl">
@@ -23,12 +36,47 @@ function Post({ post }: Props) {
   //     </div>
   //   );
   // }
+  const { data: session } = useSession();
+  const [addComment] = useMutation(INSERT_COMMENT, {
+    refetchQueries: [GET_POST_BY_POST_ID, "getPost"],
+  });
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<FormData>();
+
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    //post comment here
+
+    console.log(data);
+    const notification = toast.loading("Posting your comment...");
+    await addComment({
+      variables: {
+        post_id: post.id,
+
+        user_id:1,
+        text: data.comment,
+      },
+    });
+    setValue("comment", "");
+    toast.success("Comment posted", {
+      id: notification,
+    });
+    console.log(data);
+    
+  };
 
   return (
-    <Link href={`/post/${post?.id}`}>
-      <div className="flex flex-row justify-center w-full py-4">
-        <div className="focus:outline-none lg:w-1/2 lg:mr-7 lg:mb-0 mb-7 bg-white p-6 shadow rounded-lg border-gray-200 border-2">
+    <div>
+      {/* <Link href={`/post/${post?.id}`}> */}
+      <div className="flex flex-col items-center justify-center w-full py-4">
+        <div className="focus:outline-none  lg:w-1/2  lg:mb-0 mb-7 bg-white p-6 rounded-lg border-gray-200 border-2">
           {/* Header */}
+
           <div className="flex items-center justify-between space-x-2">
             <div className="flex justify-end space-x-4 items-center">
               <Avatar seed={post?.usertable?.name} />
@@ -36,7 +84,6 @@ function Post({ post }: Props) {
                 <Link href={`/places/${post?.places?.name}`}>
                   <p>Place : {post?.places?.name}</p>
                 </Link>{" "}
-
                 <Link href={`/cities/${post?.places?.city?.name}`}>
                   <p>City : {post?.places?.city?.name}</p>
                 </Link>
@@ -47,12 +94,14 @@ function Post({ post }: Props) {
                 ⛔️ Posted by u/{post?.usertable?.name}{" "}
                 <ReactTimeago date={post?.created_at} />
               </p>
-              <Link href={`PostEdit/${post?.id}`}><div className="mt-4 flex justify-end">
-                <PencilSquareIcon className="w-5 cursor-pointer"/>
-                <button className="hover:bg-gray-200 p-1 rounded-lg ">Edit</button>
-              </div>
+              <Link href={`PostEdit/${post?.id}`}>
+                <div className="mt-4 flex justify-end">
+                  <PencilSquareIcon className="w-5 cursor-pointer" />
+                  <button className="hover:bg-gray-200 p-1 rounded-lg ">
+                    Edit
+                  </button>
+                </div>
               </Link>
-              
             </div>
           </div>
           <hr className="py-2 mt-2" />
@@ -88,8 +137,45 @@ function Post({ post }: Props) {
             </div>
           </div>
         </div>
+        <div className="-mt-1 rounded-b-lg border-t-0 border-2 border-gray-200 bg-white p-6  w-1/2  ">
+          <p className="text-xs">
+            Comment as{" "}
+            <span className="text-red-500">{session?.user?.name}</span>
+          </p>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col w-full items-center space-y-2"
+          >
+            <textarea
+              {...register("comment")}
+              disabled={!session}
+              className="w-full h-24 rounded-lg border border-gray-200  p-2 my-2 pl-4 outline-none disabled:bg-gray-50"
+              placeholder={
+                session ? "Write your comment" : "Sign in to comment"
+              }
+            />
+            <button
+              type="submit"
+              className="w-1/2  font-semibold bg-blue-400 text-white p-2 rounded-3xl "
+            >
+              Comment
+            </button>
+          </form>
+        </div>
+        <div className="bg-white -my-5 rounded-b-md border-t-0 border-gray-300 py-5 px-10">
+          <hr className="py-2" />
+          {post?.comment.map((comment) => {
+            <div key={post.comment.id}>
+              <hr />
+              <div>
+                <Avatar seed={post.title} />
+              </div>
+            </div>;
+          })}
+        </div>
       </div>
-    </Link>
+      {/* </Link> */}
+    </div>
   );
 }
 

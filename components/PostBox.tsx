@@ -167,7 +167,7 @@ function PostBox({ subreddit }: Props) {
     <div className="flex flex-row justify-center w-full mt-5">
       <form
         onSubmit={onSubmit}
-        className="focus:outline-none lg:w-1/2 lg:mr-7 lg:mb-0 mb-7 bg-white p-6 shadow rounded-lg border-gray-200 border-2 "
+        className="focus:outline-none lg:w-1/2  lg:mb-0 mb-7 bg-white p-6 shadow rounded-lg border-gray-200 border-2 "
       >
         <div>Share Trip Expereinces</div>
 
