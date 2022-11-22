@@ -3,7 +3,6 @@ import {
   ArrowUpIcon,
   ChatBubbleOvalLeftIcon,
 } from "@heroicons/react/24/solid";
-import {PencilSquareIcon} from "@heroicons/react/24/outline"
 import { NewtonsCradle } from "@uiball/loaders";
 import Link from "next/link";
 import React from "react";
@@ -32,12 +31,15 @@ function Post({ post }: Props) {
           <div className="flex items-center justify-between space-x-2">
             <div className="flex justify-end space-x-4 items-center">
               <Avatar seed={post?.usertable?.name} />
-              <Link href={`/subreddit/`}>
-                <span className="font-bold text-black hover:text-blue-400">
+              <span className="font-bold text-black hover:text-blue-400">
+                <Link href={`/places/${post?.places?.name}`}>
                   <p>Place : {post?.places?.name}</p>
+                </Link>{" "}
+
+                <Link href={`/cities/${post?.places?.city?.name}`}>
                   <p>City : {post?.places?.city?.name}</p>
-                </span>
-              </Link>{" "}
+                </Link>
+              </span>
             </div>
             <div className="flex flex-col text-right">
               <p className="text-xs text-gray-400">
