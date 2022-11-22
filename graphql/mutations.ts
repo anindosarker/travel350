@@ -46,3 +46,34 @@ export const INSERT_POST = gql`
     }
   }
 `;
+
+export const UPDATE_POST = gql`
+  mutation MyMutation(
+    $description: String
+    $end_date: Date
+    $id: ID
+    $place_id: ID
+    $start_date: Date
+    $title: String
+    $user_id: ID
+  ) {
+    updatePost(
+      place_id: $place_id
+      start_date: $start_date
+      title: $title
+      end_date: $end_date
+      description: $description
+      id: $id
+      user_id: $user_id
+    ) {
+      description
+      end_date
+      id
+      place_id
+      start_date
+      user_id
+      title
+      created_at
+    }
+  }
+`;

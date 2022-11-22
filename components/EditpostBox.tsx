@@ -1,20 +1,16 @@
+import { useMutation, useQuery } from "@apollo/client";
 import { PhotoIcon } from "@heroicons/react/24/solid";
-import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation, useQuery } from "@apollo/client";
+
 import client from "../apollo-client";
 import { toast } from "react-hot-toast";
-import {
-  GET_CITY_BY_NAME,
-  GET_CITY_LIST,
-  GET_PLACES_BY_NAME,
-  GET_PLACES_LIST,
-  GET_POST_LIST,
-} from "../graphql/queries";
-import { INSERT_PLACE, INSERT_POST } from "../graphql/mutations";
-import Post from "./Post";
-import ForumPost from "./ForumPost";
+import { UPDATE_POST } from "../graphql/mutations";
+import { GET_PLACES_BY_NAME, GET_CITY_BY_NAME,GET_CITY_LIST } from "../graphql/queries";
+import { INSERT_PLACE } from "../graphql/mutations";
+import { useSession } from "next-auth/react";
+
+
 
 type Props = {
   post?: Post;
@@ -32,19 +28,9 @@ type FormData = {
 
 function EditpostBox({ post }: Props) {
   const { data: session } = useSession();
-
   const { loading, data: cityData, error } = useQuery(GET_CITY_LIST);
-
   const cities: City[] = cityData?.getCityList;
-
-  const [addPlace] = useMutation(INSERT_PLACE);
-  const [addPost] = useMutation(INSERT_POST, {
-    refetchQueries: [GET_POST_LIST, "getPostList"],
-  });
-
   const [imageBoxOpen, setImageBoxOpen] = useState<boolean>(false);
-  const [isShown, setIsShown] = useState(false);
-
   const {
     register,
     setValue,
@@ -52,11 +38,12 @@ function EditpostBox({ post }: Props) {
     watch,
     formState: { errors },
   } = useForm<FormData>();
+  const [addPlace] = useMutation(INSERT_PLACE);
+  const [updatePost] = useMutation(UPDATE_POST);
 
   const onSubmit = handleSubmit(async (formData) => {
     console.log(formData);
-    const notification = toast.loading("Saving post...");
-
+    const notification = toast.loading("Updating your post...");
     try {
       const {
         data: { getPlacesByPlaceName: placeNameData },
@@ -70,6 +57,7 @@ function EditpostBox({ post }: Props) {
       const placeExists = placeNameData.length > 0;
       console.log("place exists", placeExists);
       console.log(placeNameData);
+
 
       const {
         data: { getCityByCityName: cityNameData },
@@ -106,7 +94,7 @@ function EditpostBox({ post }: Props) {
 
         const {
           data: { insertPost: newPost },
-        } = await addPost({
+        } = await updatePost({
           variables: {
             description: formData.description,
             place_id: newPlace.id,
@@ -127,7 +115,7 @@ function EditpostBox({ post }: Props) {
 
         const {
           data: { insertPost: newPost },
-        } = await addPost({
+        } = await updatePost({
           variables: {
             description: formData.description,
             place_id: placeNameData[0].id,
@@ -152,18 +140,17 @@ function EditpostBox({ post }: Props) {
       toast.success("New Post created!", {
         id: notification,
       });
+
+
     } catch (error) {
       console.log(error);
       toast.error("GG! Something went wrong!", {
         id: notification,
       });
     }
-  });
-
-  const { data: placeData } = useQuery(GET_PLACES_LIST);
-  const places: Places[] = placeData?.getPlacesList;
-
-  const [search, setSearch] = useState("");
+    
+    
+  })
 
   return (
     <div className="flex flex-row justify-center w-full mt-5">
