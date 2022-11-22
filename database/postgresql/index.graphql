@@ -714,12 +714,7 @@ type Mutation {
       dml: DELETE
       configuration: "postgresql_config"
     )
-  insertVote(
-    post_id: ID
-    user_id: ID
-    created_at: DateTime
-    upvote: Boolean
-  ): Vote
+  insertVote(post_id: ID, user_id: ID, upvote: Boolean): Vote
     @dbquery(
       type: "postgresql"
       schema: "public"

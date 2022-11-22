@@ -50,8 +50,6 @@ export const GET_CITY_LIST = gql`
   }
 `;
 
-
-
 export const GET_CITY_BY_NAME = gql`
   query MyQuery($name: String!) {
     getCityByCityName(name: $name) {
@@ -77,7 +75,6 @@ export const GET_CITY_BY_NAME = gql`
   }
 `;
 
-
 export const GET_POST_BY_POST_ID = gql`
   query MyQuery($id: ID!) {
     getPost(id: $id) {
@@ -99,7 +96,6 @@ export const GET_POST_BY_POST_ID = gql`
   }
 `;
 
-
 export const GET_CITY_BY_CITY_ID = gql`
   query MyQuery($id: ID!) {
     getCity(id: $id) {
@@ -110,7 +106,6 @@ export const GET_CITY_BY_CITY_ID = gql`
     }
   }
 `;
-
 
 export const GET_PLACES_BY_NAME = gql`
   query MyQuery($name: String!) {
@@ -142,6 +137,18 @@ export const GET_PLACES_BY_NAME = gql`
           }
         }
       }
+    }
+  }
+`;
+
+export const GET_VOTE_BY_POST_ID = gql`
+  query MyQuery($id: ID!) {
+    getVoteUsingVote_post_id_fkey(id: $id) {
+      id
+      created_at
+      post_id
+      upvote
+      user_id
     }
   }
 `;

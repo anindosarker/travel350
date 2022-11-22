@@ -4,17 +4,62 @@ import {
   ChatBubbleOvalLeftIcon,
 } from "@heroicons/react/24/solid";
 import { NewtonsCradle } from "@uiball/loaders";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import ReactTimeago from "react-timeago";
 import Avatar from "./Avatar";
+import { useMutation, useQuery } from "@apollo/client";
+import { GET_VOTE_BY_POST_ID } from "../graphql/queries";
+import { ADD_VOTE } from "../graphql/mutations";
 
 type Props = {
   post: Post;
 };
-const vote = true;
+//const vote = true;
 
 function Post({ post }: Props) {
+  const [vote, setVote] = useState<boolean>();
+  const { data: session } = useSession();
+
+  const { data, loading } = useQuery(GET_VOTE_BY_POST_ID, {
+    variables: {
+      postId: post?.id,
+    },
+  });
+
+  const [addVote] = useMutation(ADD_VOTE, {
+    refetchQueries: [GET_VOTE_BY_POST_ID, "getVotesByPostId"],
+  });
+
+  const upVote = async (isUpVote: boolean) => {
+    if (!session) {
+      toast("❌ You need to Sign in ");
+      return;
+    }
+
+    if (vote && isUpVote) return;
+    if (vote === false && !isUpVote) return;
+
+    console.log("Voting", isUpVote);
+
+    await addVote({
+      variables: {
+        post_id: post?.id,
+        user_id: 1,
+        upvote: isUpVote,
+      },
+    });
+  };
+  useEffect(() => {
+    const votes: Vote[] = data?.getVotesByPostId;
+
+    const vote = votes?.find((vote) => vote.user_id == 1)?.upvote;
+
+    setVote(vote);
+  }, [data]);
+
   // if (!post) {
   //   return (
   //     <div className="flex w-full items-center justify-center p-10 text-xl">
@@ -35,7 +80,6 @@ function Post({ post }: Props) {
                 <Link href={`/places/${post?.places?.name}`}>
                   <p>Place : {post?.places?.name}</p>
                 </Link>{" "}
-
                 <Link href={`/cities/${post?.places?.city?.name}`}>
                   <p>City : {post?.places?.city?.name}</p>
                 </Link>
@@ -63,12 +107,14 @@ function Post({ post }: Props) {
           <div className="flex justify-start items-center space-x-4 text-gray-400">
             {/* Votes */}
             <ArrowUpIcon
+              onClick={() => upVote(true)}
               className={`voteButtons hover:text-red-400 h-5 ${
                 vote && "text-red-400"
               }`}
             />
             <p className="text-xs font-bold text-black">0</p>
             <ArrowDownIcon
+              onClick={() => upVote(false)}
               className={`voteButtons hover:text-blue-400 h-5 ${
                 vote === false && "text-blue-400"
               }`}
