@@ -59,6 +59,20 @@ export const GET_CITY_BY_NAME = gql`
       description
       id
       name
+      places {
+        name
+        id
+        post {
+          created_at
+          description
+          end_date
+          id
+          place_id
+          start_date
+          title
+          user_id
+        }
+      }
     }
   }
 `;

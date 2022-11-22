@@ -112,7 +112,7 @@ type Query {
       configuration: "postgresql_config"
     )
 
-  getCityByCityName(name: String!): [City]
+  getCityByCityName(name: String!): City
     @dbquery(
       type: "postgresql"
       schema: "public"
