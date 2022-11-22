@@ -51,16 +51,16 @@ export const UPDATE_POST = gql`
   mutation MyMutation(
     $description: String
     $end_date: Date
-    $id: ID
+    $id: ID!
     $place_id: ID
     $start_date: Date
     $title: String
     $user_id: ID
   ) {
     updatePost(
+      title: $title
       place_id: $place_id
       start_date: $start_date
-      title: $title
       end_date: $end_date
       description: $description
       id: $id

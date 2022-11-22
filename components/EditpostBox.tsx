@@ -1,22 +1,21 @@
-import { useMutation, useQuery } from "@apollo/client";
 import { PhotoIcon } from "@heroicons/react/24/solid";
+import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-
+import { useMutation, useQuery } from "@apollo/client";
 import client from "../apollo-client";
 import { toast } from "react-hot-toast";
-import { UPDATE_POST } from "../graphql/mutations";
 import {
-  GET_PLACES_BY_NAME,
   GET_CITY_BY_NAME,
   GET_CITY_LIST,
+  GET_PLACES_BY_NAME,
+  GET_PLACES_LIST,
+  GET_POST_LIST,
 } from "../graphql/queries";
-import { INSERT_PLACE } from "../graphql/mutations";
-import { useSession } from "next-auth/react";
-import placesList from "../pages/placesList";
+import { INSERT_PLACE, INSERT_POST, UPDATE_POST } from "../graphql/mutations";
 
 type Props = {
-  post?: Post;
+  post: Post;
 };
 
 type FormData = {
@@ -29,11 +28,21 @@ type FormData = {
   postImage: string;
 };
 
-function EditpostBox({ post }: Props) {
+function EditPostBox({ post }: Props) {
   const { data: session } = useSession();
+  console.log(post?.id);
+  
+
   const { loading, data: cityData, error } = useQuery(GET_CITY_LIST);
+
   const cities: City[] = cityData?.getCityList;
+
+  const [addPlace] = useMutation(INSERT_PLACE);
+  const [updatePost] = useMutation(UPDATE_POST);
+
   const [imageBoxOpen, setImageBoxOpen] = useState<boolean>(false);
+  const [isShown, setIsShown] = useState(false);
+
   const {
     register,
     setValue,
@@ -41,12 +50,11 @@ function EditpostBox({ post }: Props) {
     watch,
     formState: { errors },
   } = useForm<FormData>();
-  const [addPlace] = useMutation(INSERT_PLACE);
-  const [updatePost] = useMutation(UPDATE_POST);
 
   const onSubmit = handleSubmit(async (formData) => {
     console.log(formData);
-    const notification = toast.loading("Updating your post...");
+    const notification = toast.loading("Creating new post...");
+
     try {
       const {
         data: { getPlacesByPlaceName: placeNameData },
@@ -57,24 +65,14 @@ function EditpostBox({ post }: Props) {
         },
       });
 
-      const placeExists = placeNameData.length > 0;
+      let placeExists = true;
+      if (placeNameData === null) {
+        placeExists = false;
+      }
       console.log("place exists", placeExists);
       console.log(placeNameData);
 
-      const {
-        data: { getCityByCityName: cityNameData },
-      } = await client.query({
-        query: GET_CITY_BY_NAME,
-        variables: {
-          name: formData.city,
-        },
-      });
-
-      console.log(formData.city);
-
-      const cityExists = cityNameData.length > 0;
-      console.log("city exists", cityExists);
-      console.log(cityNameData);
+      console.log("formdata.city", formData.city);
 
       if (!placeExists) {
         //create new place
@@ -86,51 +84,52 @@ function EditpostBox({ post }: Props) {
           variables: {
             name: formData.place,
             description: formData.description,
-            city_id: cityNameData.id,
+            city_id: formData.city,
           },
         });
 
-        console.log("Creating new post with new place", formData);
+        console.log("New place created -> ", newPlace);
+
+        console.log("Updating new post with new place", formData);
 
         const image = formData.postImage || "";
 
         const {
-          data: { insertPost: newPost },
+          data: { updatePost: newUpdatedPost },
         } = await updatePost({
           variables: {
-            description: formData.description,
-            place_id: newPlace.id,
-
             title: formData.postTitle,
-            user_id: 1,
-            end_date: formData.endDate,
+            place_id: newPlace.id,
             start_date: formData.startDate,
+            end_date: formData.endDate,
+            description: formData.description,
+            id: post.id,
+            user_id: 1,
           },
         });
 
-        console.log("New post added", newPost);
+        console.log("New post added", newUpdatedPost);
       } else {
         //use existing
         console.log("Using existing");
-        console.log(placeNameData);
 
         const image = formData.postImage || "";
 
         const {
-          data: { insertPost: newPost },
+          data: { updatePost: newUpdatedPost },
         } = await updatePost({
           variables: {
-            description: formData.description,
-            place_id: placeNameData[0].id,
             title: formData.postTitle,
-            user_id: 1,
-            
-            end_date: formData.endDate,
+            place_id: placeNameData.id,
             start_date: formData.startDate,
+            end_date: formData.endDate,
+            description: formData.description,
+            id: post.id,
+            user_id: 1,
           },
         });
 
-        console.log("New post added with old place", newPost);
+        console.log("New post added with old place", newUpdatedPost);
       }
 
       setValue("city", "");
@@ -152,6 +151,11 @@ function EditpostBox({ post }: Props) {
     }
   });
 
+  const { data: placeData } = useQuery(GET_PLACES_LIST);
+  const places: Places[] = placeData?.getPlacesList;
+
+  const [search, setSearch] = useState("");
+
   return (
     <div className="flex flex-row justify-center w-full mt-5">
       <form
@@ -166,7 +170,7 @@ function EditpostBox({ post }: Props) {
             type="text"
             disabled={!session}
             className="rounded-md flex-1 bg-gray-50 p-2 pl-5 outline-none"
-            defaultValue={post?.title}
+            placeholder="Add Title"
           />
 
           <PhotoIcon
@@ -185,7 +189,7 @@ function EditpostBox({ post }: Props) {
               type="date"
               {...register("startDate")}
               className="m-2 bg-blue-50 p-2 outline-none"
-              defaultValue={post?.start_date}
+              placeholder="Text (optional)"
             />
 
             <p className=" min-w-[90px]">End Date</p>
@@ -193,7 +197,7 @@ function EditpostBox({ post }: Props) {
               type="date"
               {...register("endDate")}
               className="m-2 bg-blue-50 p-2 outline-none"
-              defaultValue={post?.end_date}
+              placeholder="Text (optional)"
             />
           </div>
 
@@ -205,7 +209,6 @@ function EditpostBox({ post }: Props) {
               <input
                 type="search"
                 {...register("place", { required: true })}
-                defaultValue={post?.places?.name}
                 className="flex-1 m-2 bg-blue-50 p-2 outline-none"
                 placeholder="i.e. React"
               />
@@ -214,12 +217,11 @@ function EditpostBox({ post }: Props) {
             <div className="flex items-center">
               <p className=" min-w-[90px]">City</p>
               <select
-                defaultValue={post?.places?.city?.name}
                 {...register("city")}
                 className="flex-1 m-2 bg-blue-50 p-2 outline-none"
               >
                 {cities?.map((city) => (
-                  <option key={city.id} value={city.name}>
+                  <option key={city.id} value={city.id}>
                     {city.name}
                   </option>
                 ))}
@@ -227,15 +229,14 @@ function EditpostBox({ post }: Props) {
             </div>
           </div>
           {/* Body */}
-
-          <div className="flex  px-2">
+          <div className="flex items-center px-2">
             <p className=" min-w-[90px]">Details</p>
-
-            <textarea
+            <input
+              type="text"
               {...register("description")}
-              defaultValue={post?.description}
-              className="flex-1 m-2 w-full bg-blue-50 rounded-lg p-2 outline-none h-44 text-start"
-            ></textarea>
+              className="flex-1 m-2 bg-blue-50 p-2 outline-none"
+              placeholder="Text (optional) box lomba hobe"
+            />
           </div>
 
           {/* imagebox */}
@@ -270,7 +271,7 @@ function EditpostBox({ post }: Props) {
             type="submit"
             className="w-full rounded-full bg-blue-400 p-2 text-white"
           >
-            Save Post
+            Create Post
           </button>
         </div>
       </form>
@@ -278,4 +279,4 @@ function EditpostBox({ post }: Props) {
   );
 }
 
-export default EditpostBox;
+export default EditPostBox;

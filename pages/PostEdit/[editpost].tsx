@@ -16,11 +16,11 @@ function EditPost() {
 
   
   const post: Post = data?.getPost;
-  console.log(post);
   
   return (
     <div>
       <EditpostBox post={post} />
+      <Post post={post} />  
     </div>
   );
 }

@@ -34,7 +34,7 @@ function PostBox({ subreddit }: Props) {
   const { loading, data: cityData, error } = useQuery(GET_CITY_LIST);
 
   const cities: City[] = cityData?.getCityList;
-
+  
   const [addPlace] = useMutation(INSERT_PLACE);
   const [addPost] = useMutation(INSERT_POST, {
     refetchQueries: [GET_POST_LIST, "getPostList"],
@@ -65,24 +65,17 @@ function PostBox({ subreddit }: Props) {
         },
       });
 
-      const placeExists = placeNameData.length > 0;
+      let placeExists = true;
+      if (placeNameData === null) {
+        placeExists = false;
+      }
       console.log("place exists", placeExists);
       console.log(placeNameData);
 
-      const {
-        data: { getCityByCityName: cityNameData },
-      } = await client.query({
-        query: GET_CITY_BY_NAME,
-        variables: {
-          name: formData.city,
-        },
-      });
+     
 
-      console.log(formData.city);
+      console.log("formdata.city",formData.city);
 
-      const cityExists = cityNameData.length > 0;
-      console.log("city exists", cityExists);
-      console.log(cityNameData);
 
       if (!placeExists) {
         //create new place
@@ -94,9 +87,12 @@ function PostBox({ subreddit }: Props) {
           variables: {
             name: formData.place,
             description: formData.description,
-            city_id: cityNameData.id,
+            city_id: formData.city,
           },
         });
+
+        console.log("New place created -> ", newPlace);
+        
 
         console.log("Creating new post with new place", formData);
 
@@ -128,7 +124,7 @@ function PostBox({ subreddit }: Props) {
         } = await addPost({
           variables: {
             description: formData.description,
-            place_id: placeNameData[0].id,
+            place_id: placeNameData.id,
             title: formData.postTitle,
             user_id: 1,
             end_date: formData.endDate,
@@ -228,7 +224,7 @@ function PostBox({ subreddit }: Props) {
                 className="flex-1 m-2 bg-blue-50 p-2 outline-none"
               >
                 {cities?.map((city) => (
-                  <option key={city.id} value={city.name}>
+                  <option key={city.id} value={city.id}>
                     {city.name}
                   </option>
                 ))}
