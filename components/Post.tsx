@@ -3,6 +3,7 @@ import {
   ArrowUpIcon,
   ChatBubbleOvalLeftIcon,
 } from "@heroicons/react/24/solid";
+import {PencilSquareIcon} from "@heroicons/react/24/outline"
 import { NewtonsCradle } from "@uiball/loaders";
 import Link from "next/link";
 import React from "react";

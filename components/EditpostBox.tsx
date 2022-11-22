@@ -6,11 +6,14 @@ import { useForm } from "react-hook-form";
 import client from "../apollo-client";
 import { toast } from "react-hot-toast";
 import { UPDATE_POST } from "../graphql/mutations";
-import { GET_PLACES_BY_NAME, GET_CITY_BY_NAME,GET_CITY_LIST } from "../graphql/queries";
+import {
+  GET_PLACES_BY_NAME,
+  GET_CITY_BY_NAME,
+  GET_CITY_LIST,
+} from "../graphql/queries";
 import { INSERT_PLACE } from "../graphql/mutations";
 import { useSession } from "next-auth/react";
-
-
+import placesList from "../pages/placesList";
 
 type Props = {
   post?: Post;
@@ -58,7 +61,6 @@ function EditpostBox({ post }: Props) {
       console.log("place exists", placeExists);
       console.log(placeNameData);
 
-
       const {
         data: { getCityByCityName: cityNameData },
       } = await client.query({
@@ -98,6 +100,7 @@ function EditpostBox({ post }: Props) {
           variables: {
             description: formData.description,
             place_id: newPlace.id,
+
             title: formData.postTitle,
             user_id: 1,
             end_date: formData.endDate,
@@ -121,6 +124,7 @@ function EditpostBox({ post }: Props) {
             place_id: placeNameData[0].id,
             title: formData.postTitle,
             user_id: 1,
+            
             end_date: formData.endDate,
             start_date: formData.startDate,
           },
@@ -140,17 +144,13 @@ function EditpostBox({ post }: Props) {
       toast.success("New Post created!", {
         id: notification,
       });
-
-
     } catch (error) {
       console.log(error);
       toast.error("GG! Something went wrong!", {
         id: notification,
       });
     }
-    
-    
-  })
+  });
 
   return (
     <div className="flex flex-row justify-center w-full mt-5">
