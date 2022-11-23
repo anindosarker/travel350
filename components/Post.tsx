@@ -3,7 +3,7 @@ import {
   ArrowUpIcon,
   ChatBubbleOvalLeftIcon,
 } from "@heroicons/react/24/solid";
-import {PencilSquareIcon} from "@heroicons/react/24/outline"
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { NewtonsCradle } from "@uiball/loaders";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -24,44 +24,62 @@ function Post({ post }: Props) {
   const [vote, setVote] = useState<boolean>();
   const { data: session } = useSession();
 
-  const { data : voteData, loading } = useQuery(GET_VOTE_BY_POST_ID, {
+  const { data, loading,error } = useQuery(GET_VOTE_BY_POST_ID, {
     variables: {
-      postId: post?.id,
+      id: post?.id,
     },
   });
-  console.log("Vote query by id", voteData);
-  
+  console.log(error);
+  console.log("Vote query by id", data);
 
   const [addVote] = useMutation(ADD_VOTE, {
     refetchQueries: [GET_VOTE_BY_POST_ID, "getVotesByPostId"],
   });
 
   const upVote = async (isUpVote: boolean) => {
-    if (!session) {
-      toast("❌ You need to Sign in ");
-      return;
-    }
+    
+    // if (!session) {
+    //   toast("! You'll need to sign in to Vote!");
+    //   return;
+    // }
 
     if (vote && isUpVote) return;
     if (vote === false && !isUpVote) return;
 
-    console.log("Voting", isUpVote);
+    console.log("Voting....", isUpVote);
 
-    await addVote({
+    const {
+      data: { insertVote: newVote },
+    } = await addVote({
       variables: {
         post_id: post?.id,
         user_id: 1,
         upvote: isUpVote,
       },
     });
+    //console.log("Placed Vote :", data);
   };
   useEffect(() => {
-    const votes: Vote[] = voteData?.getVotesByPostId;
+    const votes: Vote[] = data?.getVotesByPostId;
 
     const vote = votes?.find((vote) => vote.user_id == 1)?.upvote;
 
     setVote(vote);
-  }, [voteData]);
+    
+  }, [data]);
+
+  const displayVotes = (data: any) => {
+    const votes: Vote[] = data;
+    const displayNumber = votes.reduce(
+      (total, vote) => (vote.upvote ? (total += 1) : (total -= 1)),
+      0
+    );
+    if (displayNumber === 0) {
+      return votes[0]?.upvote ? 1 : -1;
+    }
+
+    return displayNumber;
+  };
 
   // if (!post) {
   //   return (
@@ -93,12 +111,14 @@ function Post({ post }: Props) {
                 ⛔️ Posted by u/{post?.usertable?.name}{" "}
                 <ReactTimeago date={post?.created_at} />
               </p>
-              <Link href={`PostEdit/${post?.id}`}><div className="mt-4 flex justify-end">
-                <PencilSquareIcon className="w-5 cursor-pointer"/>
-                <button className="hover:bg-gray-200 p-1 rounded-lg ">Edit</button>
-              </div>
+              <Link href={`PostEdit/${post?.id}`}>
+                <div className="mt-4 flex justify-end">
+                  <PencilSquareIcon className="w-5 cursor-pointer" />
+                  <button className="hover:bg-gray-200 p-1 rounded-lg ">
+                    Edit
+                  </button>
+                </div>
               </Link>
-              
             </div>
           </div>
           <hr className="py-2 mt-2" />
@@ -123,7 +143,7 @@ function Post({ post }: Props) {
                 vote && "text-red-400"
               }`}
             />
-            <p className="text-xs font-bold text-black">0</p>
+            <p className="text-xs font-bold text-black">{displayVotes(data)}</p>
             <ArrowDownIcon
               onClick={() => upVote(false)}
               className={`voteButtons hover:text-blue-400 h-5 ${
