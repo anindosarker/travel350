@@ -13,11 +13,12 @@ const ImageUpload = () => {
       setUploadData(undefined);
     };
     reader?.readAsDataURL(changeEvent.target.files[0]);
+    console.log(changeEvent.target.files[0]);
   }
 
   async function handleOnSubmit(event: any) {
     event.preventDefault();
-    console.log(event.current);
+    console.log(event.currentTarget);
 
     const form = event.currentTarget;
     const fileInput: any = Array.from(form.elements).find(
@@ -41,6 +42,7 @@ const ImageUpload = () => {
 
     setImageSource(data.secure_url);
     setUploadData(data);
+    console.log(data.secure_url);
   }
 
   return (

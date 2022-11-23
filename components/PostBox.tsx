@@ -58,7 +58,7 @@ function PostBox({ subreddit }: Props) {
   const [imageSource, setImageSource] = useState();
   const [uploadData, setUploadData] = useState();
 
-  function handleOnChange(changeEvent: any) {
+  async function handleOnChange(changeEvent: any) {
     const reader = new FileReader();
 
     // const fallBack = undefined;
@@ -67,17 +67,21 @@ function PostBox({ subreddit }: Props) {
 
     reader.onload = function (onloadEvent: any) {
       setImageSource(onloadEvent.target.result);
-      setUploadData(undefined);
+      //setUploadData(undefined);
     };
     if (changeEvent.target.files) {
       console.log(changeEvent.target.files[0]);
       reader.readAsDataURL(changeEvent.target.files[0]);
     }
+    {
+      /* handling submit and genrating url*/
+    }
+
   }
 
   async function handleOnSubmit(event: any) {
     event.preventDefault();
-    console.log(event.current);
+    //console.log(event.currentTarget);
 
     const form = event.currentTarget;
     const fileInput: any = Array.from(form.elements).find(
@@ -103,7 +107,7 @@ function PostBox({ subreddit }: Props) {
     setUploadData(data);
 
     const imageURL = data.url;
-    console.log("image url",imageURL);
+    console.log("image url", data.secure_url);
     {
       /* <========== image URL  */
     }
@@ -114,8 +118,7 @@ function PostBox({ subreddit }: Props) {
     /*cloudinary Implementation */
   }
 
-  const onSubmit = handleSubmit(async (formData) => {
-    console.log(formData);
+  const onSubmit = handleSubmit(async (formData,event) => {
     const notification = toast.loading("Creating new post...");
 
     try {
@@ -133,7 +136,7 @@ function PostBox({ subreddit }: Props) {
         placeExists = false;
       }
       console.log("place exists", placeExists);
-      console.log(placeNameData);
+      //console.log(placeNameData);
 
       console.log("formdata.city", formData.city);
 
@@ -211,6 +214,8 @@ function PostBox({ subreddit }: Props) {
         id: notification,
       });
     }
+    console.log(formData);
+
   });
 
   const { data: placeData } = useQuery(GET_PLACES_LIST);
@@ -221,6 +226,7 @@ function PostBox({ subreddit }: Props) {
   return (
     <div className="flex flex-row justify-center w-full mt-5">
       <form
+        method="post"
         onSubmit={onSubmit || handleOnSubmit}
         className="focus:outline-none lg:w-1/2 lg:mr-7 lg:mb-0 mb-7 bg-white p-6 shadow rounded-lg border-gray-200 border-2 "
       >
@@ -324,11 +330,11 @@ function PostBox({ subreddit }: Props) {
               <input
                 type="file"
                 {...register("postImage")}
+                onChange={handleOnChange}
                 className="flex-1 m-2 bg-blue-50 p-2 outline-none"
                 placeholder="optional"
-                onChange={handleOnChange}
               />
-              <img src={imageSource} />
+              <img className="h-4 w-4" src={imageSource} />
 
               {uploadData && (
                 <code>
@@ -360,6 +366,12 @@ function PostBox({ subreddit }: Props) {
             Create Post
           </button>
         </div>
+
+        {uploadData && (
+          <code>
+            <pre>{JSON.stringify(uploadData, null, 2)}</pre>
+          </code>
+        )}
       </form>
     </div>
   );
