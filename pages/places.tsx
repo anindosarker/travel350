@@ -1,37 +1,18 @@
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
+import City from "../components/City";
+import Place from "../components/Place";
+import { GET_CITY_LIST, GET_PLACES_LIST } from "../graphql/queries";
 
-const GET_QUERY = gql`
-  query MyQuery {
-    getPostList {
-      created_at
-      description
-      end_date
-      id
-      place_id
-      start_date
-      title
-      user_id
-      comment {
-        text
-      }
-      places {
-        name
-        city {
-          name
-        }
-      }
-    }
-  }
-`;
+
 
 function places() {
-  const { loading, error, data } = useQuery(GET_QUERY);
 
-  if (loading) return <p>Loading ...</p>;
-
-  if (error) return <pre>{JSON.stringify(error, null, 2)}</pre>;
-
-  return <pre>{JSON.stringify(data, null, 2)}</pre>;
+  return (
+    <div>
+      <City/>
+      <Place/>
+    </div>
+  );
 }
 
 export default places;
