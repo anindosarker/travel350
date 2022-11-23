@@ -1,17 +1,51 @@
 import { LinkIcon, PhotoIcon, PlusIcon } from "@heroicons/react/24/solid";
 import { useSession } from "next-auth/react";
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@apollo/client";
 import client from "../apollo-client";
 import { toast } from "react-hot-toast";
 import CreatePost from "./CreatePost";
+import { ChangeEvent } from "react";
+import { Database } from "../utils/database.types";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 type Props = {
   subreddit?: string;
 };
 
+type Profiles = Database["public"]["Tables"]["profiles"]["Row"];
+
 function PostBox({ subreddit }: Props) {
+  //image
+  const supabase = useSupabaseClient<Database>();
+  const [avatar_url, setAvatarUrl] = useState<Profiles["avatar_url"]>(null);
+
+  const handleUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    let file;
+
+    if (e.target.files) {
+      file = e.target.files[0];
+    }
+
+    const { data, error } = await supabase.storage
+      .from("images")
+      .upload("public/" + file?.name, file as File);
+
+    if (data) {
+      console.log("Path", data.path);
+      setAvatarUrl(
+        "https://krgxdqkqhuqqerpwxuje.supabase.co/storage/v1/object/public/images/" +
+          data.path
+      );
+    } else if (error) {
+      console.log(error);
+    }
+  };
+
+  //image end
+
+
   const { data: session } = useSession();
   const [placeslist, setplaceslist] = useState([{ place: "" }]);
 
@@ -102,8 +136,6 @@ function PostBox({ subreddit }: Props) {
             />
           </div>
 
-         
-
           {/* imagebox */}
           {imageBoxOpen && (
             <div className="flex items-center px-2">
@@ -114,6 +146,21 @@ function PostBox({ subreddit }: Props) {
                 className="flex-1 m-2 bg-blue-50 p-2 outline-none"
                 placeholder="optional"
               />
+
+              {/* tapos */}
+              <div>
+                <img src={avatar_url} />
+
+                <label htmlFor="file_input">Image File</label>
+                <input
+                  id="file_input"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    handleUpload(e);
+                  }}
+                />
+              </div>
             </div>
           )}
 
