@@ -12,19 +12,17 @@ import toast from "react-hot-toast";
 import ReactTimeago from "react-timeago";
 import Avatar from "./Avatar";
 import { useMutation, useQuery } from "@apollo/client";
-import { GET_VOTE_BY_POST_ID } from "../graphql/queries";
+import { GET_VOTE_BY_POST_ID, GET_VOTE_BY_USER_ID } from "../graphql/queries";
 import { ADD_VOTE } from "../graphql/mutations";
 
 type Props = {
   post: Post;
 };
-//const vote = true;
 
 function Post({ post }: Props) {
   const [vote, setVote] = useState<boolean>();
-  const { data: session } = useSession();
 
-  const { data, loading,error } = useQuery(GET_VOTE_BY_POST_ID, {
+  const { data, loading, error } = useQuery(GET_VOTE_BY_POST_ID, {
     variables: {
       id: post?.id,
     },
@@ -33,62 +31,53 @@ function Post({ post }: Props) {
   console.log("Vote query by id", data);
 
   const [addVote] = useMutation(ADD_VOTE, {
-    refetchQueries: [GET_VOTE_BY_POST_ID, "getVotesByPostId"],
+    refetchQueries: [GET_VOTE_BY_POST_ID, "getVoteUsingVote_post_id_fkey"],
   });
 
-  const upVote = async (isUpVote: boolean) => {
-    
-    // if (!session) {
-    //   toast("! You'll need to sign in to Vote!");
-    //   return;
-    // }
+  const upVote = async (isUpvote: boolean) => {
+   
+    if (vote && isUpvote) {
+      return;
+    }
+    if (vote === false && !isUpvote) return;
 
-    if (vote && isUpVote) return;
-    if (vote === false && !isUpVote) return;
+    console.log("voting...", isUpvote);
 
-    console.log("Voting....", isUpVote);
-
-    const {
-      data: { insertVote: newVote },
-    } = await addVote({
+    await addVote({
       variables: {
-        post_id: post?.id,
+        post_id: post.id,
         user_id: 1,
-        upvote: isUpVote,
+        upvote: isUpvote,
       },
     });
-    //console.log("Placed Vote :", data);
   };
-  useEffect(() => {
-    const votes: Vote[] = data?.getVotesByPostId;
 
-    const vote = votes?.find((vote) => vote.user_id == 1)?.upvote;
+  useEffect(() => {
+    const votes: Vote[] = data?.getVoteUsingVote_post_id_fkey;
+
+    //latest vote as we sorted
+    const vote = votes?.find(
+      (vote) => vote.user_id == 1
+    )?.upvote;
 
     setVote(vote);
+    console.log("Vote", vote);
     
   }, [data]);
 
   const displayVotes = (data: any) => {
-    const votes: Vote[] = data;
-    const displayNumber = votes.reduce(
+    const votes: Vote[] = data?.getVotesByPostId;
+    const displayNumber = votes?.reduce(
       (total, vote) => (vote.upvote ? (total += 1) : (total -= 1)),
       0
     );
+
     if (displayNumber === 0) {
       return votes[0]?.upvote ? 1 : -1;
     }
 
     return displayNumber;
   };
-
-  // if (!post) {
-  //   return (
-  //     <div className="flex w-full items-center justify-center p-10 text-xl">
-  //       <NewtonsCradle size={50} />
-  //     </div>
-  //   );
-  // }
-
   return (
     <Link href={`/post/${post?.id}`}>
       <div className="flex flex-row justify-center w-full py-4">
@@ -143,7 +132,9 @@ function Post({ post }: Props) {
                 vote && "text-red-400"
               }`}
             />
+
             <p className="text-xs font-bold text-black">{displayVotes(data)}</p>
+
             <ArrowDownIcon
               onClick={() => upVote(false)}
               className={`voteButtons hover:text-blue-400 h-5 ${
