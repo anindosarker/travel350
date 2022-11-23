@@ -34,7 +34,7 @@ function PostBox({ subreddit }: Props) {
   const { loading, data: cityData, error } = useQuery(GET_CITY_LIST);
 
   const cities: City[] = cityData?.getCityList;
-  
+
   const [addPlace] = useMutation(INSERT_PLACE);
   const [addPost] = useMutation(INSERT_POST, {
     refetchQueries: [GET_POST_LIST, "getPostList"],
@@ -72,10 +72,7 @@ function PostBox({ subreddit }: Props) {
       console.log("place exists", placeExists);
       console.log(placeNameData);
 
-     
-
-      console.log("formdata.city",formData.city);
-
+      console.log("formdata.city", formData.city);
 
       if (!placeExists) {
         //create new place
@@ -92,7 +89,6 @@ function PostBox({ subreddit }: Props) {
         });
 
         console.log("New place created -> ", newPlace);
-        
 
         console.log("Creating new post with new place", formData);
 
@@ -214,8 +210,23 @@ function PostBox({ subreddit }: Props) {
                 {...register("place", { required: true })}
                 className="flex-1 m-2 bg-blue-50 p-2 outline-none"
                 placeholder="i.e. React"
+                onChange={(e) => setSearch(e.target.value)}
               />
             </div>
+
+            {search && (
+              <div>
+                {places
+                  ?.filter((item) => {
+                    return search === ""
+                      ? item
+                      : item.name.toLowerCase().includes(search.toLowerCase());
+                  })
+                  ?.map((place) => (
+                    <p key={place.id}>{place.name}</p>
+                  ))}
+              </div>
+            )}
 
             <div className="flex items-center">
               <p className=" min-w-[90px]">City</p>

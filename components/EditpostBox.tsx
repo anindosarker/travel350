@@ -10,9 +10,10 @@ import {
   GET_CITY_LIST,
   GET_PLACES_BY_NAME,
   GET_PLACES_LIST,
+  GET_POST_BY_POST_ID,
   GET_POST_LIST,
 } from "../graphql/queries";
-import { INSERT_PLACE, INSERT_POST, UPDATE_POST } from "../graphql/mutations";
+import { INSERT_PLACE, UPDATE_POST } from "../graphql/mutations";
 
 type Props = {
   post: Post;
@@ -31,17 +32,24 @@ type FormData = {
 function EditPostBox({ post }: Props) {
   const { data: session } = useSession();
   console.log(post?.id);
-  
 
   const { loading, data: cityData, error } = useQuery(GET_CITY_LIST);
 
   const cities: City[] = cityData?.getCityList;
 
   const [addPlace] = useMutation(INSERT_PLACE);
-  const [updatePost] = useMutation(UPDATE_POST);
+  const [updatePost] = useMutation(UPDATE_POST, {
+    refetchQueries: () => [
+      {
+        query: GET_POST_BY_POST_ID,
+        variables: {
+          id: post.id,
+        },
+      },
+    ],
+  });
 
   const [imageBoxOpen, setImageBoxOpen] = useState<boolean>(false);
-  const [isShown, setIsShown] = useState(false);
 
   const {
     register,
@@ -51,6 +59,7 @@ function EditPostBox({ post }: Props) {
     formState: { errors },
   } = useForm<FormData>();
 
+  // Onsubmit edit post handler
   const onSubmit = handleSubmit(async (formData) => {
     console.log(formData);
     const notification = toast.loading("Creating new post...");
@@ -150,11 +159,6 @@ function EditPostBox({ post }: Props) {
       });
     }
   });
-
-  const { data: placeData } = useQuery(GET_PLACES_LIST);
-  const places: Places[] = placeData?.getPlacesList;
-
-  const [search, setSearch] = useState("");
 
   return (
     <div className="flex flex-row justify-center w-full mt-5">
@@ -271,7 +275,7 @@ function EditPostBox({ post }: Props) {
             type="submit"
             className="w-full rounded-full bg-blue-400 p-2 text-white"
           >
-            Create Post
+            Update Post
           </button>
         </div>
       </form>
