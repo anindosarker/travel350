@@ -66,12 +66,14 @@ function Post({ post }: Props) {
   }, [data]);
 
   const displayVotes = (data: any) => {
-    const votes: Vote[] = data?.getVotesByPostId;
+    const votes: Vote[] = data?.getVoteUsingVote_post_id_fkey;
     const displayNumber = votes?.reduce(
       (total, vote) => (vote.upvote ? (total += 1) : (total -= 1)),
       0
     );
 
+    console.log("Display number", displayNumber);
+    
     if (displayNumber === 0) {
       return votes[0]?.upvote ? 1 : -1;
     }
