@@ -6,6 +6,7 @@ import Searchbox from "../components/Searchbox";
 import ForumPost from "../components/ForumPost";
 import { Auth, ThemeSupa } from "@supabase/auth-ui-react";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
+import Account from "../components/Account";
 
 const Home: NextPage = () => {
   const session = useSession();
@@ -21,6 +22,7 @@ const Home: NextPage = () => {
         />
       ) : (
         <>
+          <Account session={session} />
           <div className="flex min-h-screen flex-col items-center justify-center py-2">
             <Head>
               <title>Travel+</title>
