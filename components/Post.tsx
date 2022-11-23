@@ -17,6 +17,7 @@ import { INSERT_COMMENT } from "../graphql/mutations";
 import { GET_POST_BY_POST_ID } from "../graphql/queries";
 import toast from "react-hot-toast";
 import Router from "next/router";
+import { compact } from "@apollo/client/utilities";
 
 type Props = {
   post: Post;
@@ -142,7 +143,7 @@ function Post({ post }: Props) {
             />
             <div className="flex items-center justify-evenly space-x-4">
               <ChatBubbleOvalLeftIcon className="h-5" />
-              <p className="">12 Comments</p>
+              <p className=""> Comments</p>
             </div>
           </div>
         </div>
@@ -187,6 +188,7 @@ function Post({ post }: Props) {
                       <ReactTimeago date={singleComment.created_at} />
                     </div>
                     <div>{singleComment.text}</div>
+                    
                   </div>
                 </div>
               </div>
