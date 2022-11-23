@@ -495,7 +495,6 @@ type Mutation {
     post_id: ID
     text: String
     user_id: ID
-    created_at: DateTime
   ): Comment
     @dbquery(
       type: "postgresql"

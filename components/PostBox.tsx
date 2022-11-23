@@ -150,6 +150,7 @@ function PostBox({ subreddit }: Props) {
     }
   });
 
+
   const { data: placeData } = useQuery(GET_PLACES_LIST);
   const places: Places[] = placeData?.getPlacesList;
 
@@ -159,7 +160,7 @@ function PostBox({ subreddit }: Props) {
     <div className="flex flex-row justify-center w-full mt-5">
       <form
         onSubmit={onSubmit}
-        className="focus:outline-none lg:w-1/2 lg:mr-7 lg:mb-0 mb-7 bg-white p-6 shadow rounded-lg border-gray-200 border-2 "
+        className="focus:outline-none lg:w-1/2  lg:mb-0 mb-7 bg-white p-6 shadow rounded-lg border-gray-200 border-2 "
       >
         <div>Share Trip Expereinces</div>
 
@@ -215,7 +216,7 @@ function PostBox({ subreddit }: Props) {
             </div>
 
             {search && (
-              <div>
+              <div className="flex flex-col">
                 {places
                   ?.filter((item) => {
                     return search === ""
@@ -223,7 +224,12 @@ function PostBox({ subreddit }: Props) {
                       : item.name.toLowerCase().includes(search.toLowerCase());
                   })
                   ?.map((place) => (
-                    <p key={place.id}>{place.name}</p>
+                    <p
+                      key={place.id}
+                      onClick={() =>setValue("place", `${place.name}`)}
+                    >
+                      {place.name}
+                    </p>
                   ))}
               </div>
             )}

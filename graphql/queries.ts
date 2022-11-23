@@ -20,6 +20,13 @@ export const GET_POST_LIST = gql`
           name
         }
       }
+      comment {
+        created_at
+        id
+        post_id
+        text
+        user_id
+      }
     }
   }
 `;
@@ -91,6 +98,19 @@ export const GET_POST_BY_POST_ID = gql`
         city {
           name
         }
+      }
+      comment {
+        id
+        created_at
+        post_id
+        text
+        user_id
+        usertable {
+          name
+        }
+      }
+      usertable {
+        name
       }
     }
   }

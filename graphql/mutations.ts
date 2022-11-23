@@ -93,3 +93,14 @@ export const ADD_VOTE = gql`
     }
   }
 `;
+
+export const INSERT_COMMENT = gql`
+  mutation MyMutation($post_id: ID, $text: String, $user_id: ID) {
+    insertComment(post_id: $post_id, text: $text, user_id: $user_id) {
+      id
+      post_id
+      text
+      user_id
+    }
+  }
+`;
