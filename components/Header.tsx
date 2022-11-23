@@ -34,27 +34,39 @@ function Header() {
         <Image objectFit="contain" src={logo} layout="fill" />
       </a>
 
-      <div className="flex items-center mx-7 xl:min-w-[300px]">
-        <ul className="space-x-4">
-          <Link href="/" className=" m-2 hidden flex-1 lg:inline">
-            Home
-          </Link>
-
-          <Link href="/forum" className=" m-2 hidden flex-1 lg:inline">
-            Forum
-          </Link>
-
-          <Link href="/travelplanner" className=" m-2 hidden flex-1 lg:inline">
-            Travel Planner
-          </Link>
-          <Link href="/places" className=" m-2 hidden flex-1 lg:inline">
-            Places
-          </Link>
-
-          <Link href="/profile" className=" m-2 hidden flex-1 lg:inline">
-            Profile
-          </Link>
-        </ul>
+      <div className="flex items-center ">
+        <div className="uppercase  ">
+          <ul className=" flex space-x-6 mx-6 ">
+            <li>
+              <Link href="/" className=" m-2 hidden lg:inline">
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link href="/forum" className=" m-2 hidden lg:inline">
+                Forum
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/travelplanner"
+                className=" m-2 hidden lg:inline"
+              >
+                Travel Planner
+              </Link>
+            </li>
+            <li>
+              <Link href="/places" className=" m-2 hidden lg:inline">
+                Places
+              </Link>
+            </li>
+            <li>
+              <Link href="/profile" className=" m-2 hidden lg:inline">
+                Profile
+              </Link>
+            </li>
+          </ul>
+        </div>
 
         <div className="mx-2">
           {/* sign in sign out */}

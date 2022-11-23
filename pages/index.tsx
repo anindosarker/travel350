@@ -14,9 +14,9 @@ const Home: NextPage = () => {
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
-        <div>
+        <div className="flex items-center justify-center">
           <Image objectFit="cover" className="z-0" src={homebg} layout="fill" />
-          <Searchbox />
+          <Searchbox  />
         </div>
       </div>
       <div className="text-3xl text-center font-bold pb-8">
