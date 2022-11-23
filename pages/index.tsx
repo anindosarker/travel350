@@ -3,7 +3,7 @@ import Head from "next/head";
 import homebg from "../public/homeBackground.jpg";
 import Image from "next/image";
 import Searchbox from "../components/Searchbox";
-import ForumPost from "../components/ForumPost";
+import Test from "../components/Test";
 
 const Home: NextPage = () => {
   return (

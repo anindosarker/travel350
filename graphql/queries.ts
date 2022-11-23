@@ -160,3 +160,16 @@ export const GET_PLACES_BY_NAME = gql`
     }
   }
 `;
+
+export const GET_VOTE_BY_POST_ID = gql`
+  query MyQuery($id: ID!) {
+    getVoteUsingVote_post_id_fkey(id: $id) {
+      id
+      created_at
+      post_id
+      upvote
+      user_id
+    }
+  }
+`;
+

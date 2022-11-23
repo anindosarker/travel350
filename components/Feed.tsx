@@ -22,7 +22,6 @@ function Feed({ placeName }: Props) {
     ? data?.getPostList
     : data?.getPlacesByPlaceName?.post;
 
-  console.log(posts);
 
   return (
     <div>
