@@ -17,6 +17,7 @@ import { INSERT_COMMENT } from "../graphql/mutations";
 import { GET_POST_BY_POST_ID } from "../graphql/queries";
 import toast from "react-hot-toast";
 import Router from "next/router";
+import { compact } from "@apollo/client/utilities";
 
 type Props = {
   post: Post;
@@ -79,35 +80,34 @@ function Post({ post }: Props) {
         <div className="focus:outline-none  lg:w-1/2  lg:mb-0 mb-7 bg-white p-6 rounded-lg border-gray-200 border-2">
           {/* Header */}
           <Link href={`/post/${post?.id}`}>
-          <div className="flex items-center justify-between space-x-2">
-            <div className="flex justify-end space-x-4 items-center">
-              <Avatar seed={post?.usertable?.name} />
-              <span className="font-bold text-black hover:text-blue-400">
-                <Link href={`/places/${post?.places?.name}`}>
-                  <p>Place : {post?.places?.name}</p>
-                </Link>{" "}
-                <Link href={`/cities/${post?.places?.city?.name}`}>
-                  <p>City : {post?.places?.city?.name}</p>
+            <div className="flex items-center justify-between space-x-2">
+              <div className="flex justify-end space-x-4 items-center">
+                <Avatar seed={post?.usertable?.name} />
+                <span className="font-bold text-black hover:text-blue-400">
+                  <Link href={`/places/${post?.places?.name}`}>
+                    <p>Place : {post?.places?.name}</p>
+                  </Link>{" "}
+                  <Link href={`/cities/${post?.places?.city?.name}`}>
+                    <p>City : {post?.places?.city?.name}</p>
+                  </Link>
+                </span>
+              </div>
+
+              <div className="flex flex-col text-right">
+                <p className="text-xs text-gray-400">
+                  ⛔️ Posted by u/{post?.usertable?.name}{" "}
+                  <ReactTimeago date={post?.created_at} />
+                </p>
+                <Link href={`PostEdit/${post?.id}`}>
+                  <div className="mt-4 flex justify-end">
+                    <PencilSquareIcon className="w-5 cursor-pointer" />
+                    <button className="hover:bg-gray-200 p-1 rounded-lg ">
+                      Edit
+                    </button>
+                  </div>
                 </Link>
-              </span>
+              </div>
             </div>
-            
-            <div className="flex flex-col text-right">
-              <p className="text-xs text-gray-400">
-                ⛔️ Posted by u/{post?.usertable?.name}{" "}
-                <ReactTimeago date={post?.created_at} />
-              </p>
-              <Link href={`PostEdit/${post?.id}`}>
-                <div className="mt-4 flex justify-end">
-                  <PencilSquareIcon className="w-5 cursor-pointer" />
-                  <button className="hover:bg-gray-200 p-1 rounded-lg ">
-                    Edit
-                  </button>
-                </div>
-              </Link>
-            </div>
-            
-          </div>
           </Link>
           <hr className="py-2 mt-2" />
           {/* Body */}
@@ -138,7 +138,7 @@ function Post({ post }: Props) {
             />
             <div className="flex items-center justify-evenly space-x-4">
               <ChatBubbleOvalLeftIcon className="h-5" />
-              <p className="">12 Comments</p>
+              <p className=""> Comments</p>
             </div>
           </div>
         </div>
@@ -176,13 +176,14 @@ function Post({ post }: Props) {
                 <div className="flex items-center py-2">
                   <div className="mr-2 flex flex-col items-center justify-center">
                     <Avatar seed={"" + post.user_id} />
-                    
                   </div>
                   <div className="flex flex-col">
-                    <div><p className="text-[10px]">{session?.user?.name}</p></div>
+                    <div>
+                      <p className="text-[10px]">{session?.user?.name}</p>
+                    </div>
                     <div>{singleComment.text}</div>
+                    
                   </div>
-                  
                 </div>
               </div>
             );
