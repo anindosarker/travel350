@@ -3,6 +3,7 @@ import {
   ArrowUpIcon,
   ChatBubbleOvalLeftIcon,
 } from "@heroicons/react/24/solid";
+import {PencilSquareIcon} from "@heroicons/react/24/outline"
 import { NewtonsCradle } from "@uiball/loaders";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -85,10 +86,18 @@ function Post({ post }: Props) {
                 </Link>
               </span>
             </div>
-            <p className="text-xs text-gray-400">
-              ⛔️ Posted by u/{post?.usertable?.name}{" "}
-              <ReactTimeago date={post?.created_at} />
-            </p>
+            <div className="flex flex-col text-right">
+              <p className="text-xs text-gray-400">
+                ⛔️ Posted by u/{post?.usertable?.name}{" "}
+                <ReactTimeago date={post?.created_at} />
+              </p>
+              <Link href={`PostEdit/${post?.id}`}><div className="mt-4 flex justify-end">
+                <PencilSquareIcon className="w-5 cursor-pointer"/>
+                <button className="hover:bg-gray-200 p-1 rounded-lg ">Edit</button>
+              </div>
+              </Link>
+              
+            </div>
           </div>
           <hr className="py-2 mt-2" />
           {/* Body */}
