@@ -23,29 +23,6 @@ const Home: NextPage = () => {
       ) : (
         <>
           <Account session={session} />
-          <div className="flex min-h-screen flex-col items-center justify-center py-2">
-            <Head>
-              <title>Travel+</title>
-              <link rel="icon" href="/favicon.ico" />
-            </Head>
-
-            <div>
-              <Image
-                objectFit="cover"
-                className="z-0"
-                src={homebg}
-                layout="fill"
-              />
-              <Searchbox />
-            </div>
-          </div>
-          <div className="text-3xl text-center font-bold pb-8">
-            Top posts on forum
-          </div>
-          <div className="">
-            <ForumPost />
-            <ForumPost />
-          </div>
         </>
       )}
     </div>

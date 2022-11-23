@@ -6,6 +6,7 @@ import {
 } from "@supabase/auth-helpers-react";
 import { Database } from "../utils/database.types";
 type Profiles = Database["public"]["Tables"]["profiles"]["Row"];
+import Avatar from "./Avatar";
 
 export default function Account({ session }: { session: Session }) {
   const supabase = useSupabaseClient<Database>();
@@ -81,6 +82,15 @@ export default function Account({ session }: { session: Session }) {
 
   return (
     <div className="form-widget">
+      <Avatar
+      uid={user.id}
+      url={avatar_url}
+      size={150}
+      onUpload={(url) => {
+        setAvatarUrl(url)
+        updateProfile({ username, website, avatar_url: url })
+      }}
+    />
       <div>
         <label htmlFor="email">Email</label>
         <input id="email" type="text" value={session.user.email} disabled />
