@@ -12,7 +12,7 @@ import toast from "react-hot-toast";
 import ReactTimeago from "react-timeago";
 import Avatar from "./Avatar";
 import { useMutation, useQuery } from "@apollo/client";
-import { GET_VOTE_BY_POST_ID, GET_VOTE_BY_USER_ID } from "../graphql/queries";
+import { GET_VOTE_BY_POST_ID } from "../graphql/queries";
 import { ADD_VOTE } from "../graphql/mutations";
 
 type Props = {
@@ -35,7 +35,6 @@ function Post({ post }: Props) {
   });
 
   const upVote = async (isUpvote: boolean) => {
-   
     if (vote && isUpvote) {
       return;
     }
@@ -56,13 +55,10 @@ function Post({ post }: Props) {
     const votes: Vote[] = data?.getVoteUsingVote_post_id_fkey;
 
     //latest vote as we sorted
-    const vote = votes?.find(
-      (vote) => vote.user_id == 1
-    )?.upvote;
+    const vote = votes?.find((vote) => vote.user_id == 1)?.upvote;
 
     setVote(vote);
     console.log("Vote", vote);
-    
   }, [data]);
 
   const displayVotes = (data: any) => {
@@ -73,7 +69,7 @@ function Post({ post }: Props) {
     );
 
     console.log("Display number", displayNumber);
-    
+
     if (displayNumber === 0) {
       return votes[0]?.upvote ? 1 : -1;
     }
