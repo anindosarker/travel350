@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import { GET_CITY_LIST, GET_PLACES_LIST } from "../graphql/queries";
+import Searchbox from "./Searchbox";
 
 function City() {
   const { loading, error, data } = useQuery(GET_CITY_LIST);
@@ -12,7 +13,11 @@ function City() {
   if (error) return <pre>{JSON.stringify(error, null, 2)}</pre>;
 
   return (
-    <div className="max-w-[1240px] mx-auto">
+    <div className="flex flex-col">
+      <div className="flex items-center justify-center mt-24 mr-28">
+        <Searchbox/>
+      </div>
+      <div className="max-w-[1240px] mx-auto">
       <p className="text-center text-4xl m-6 mt-20 uppercase tracking-widest">
         browse by cities
       </p>
@@ -23,7 +28,7 @@ function City() {
               <Link href="../pages/cities/[cityposts].tsx">
               <div
                 key={city.id}
-                className="bg-gray-50 text-center  text-xl p-8 rounded-lg m-4 shadow-xl hover:bg-white ease-in duration-100 border-gray-500 border-b md:text-3xl  "
+                className="bg-gray-50 text-center  text-lg p-4 rounded-lg m-4 shadow-xl hover:bg-white ease-in duration-100 border-gray-500 border-b md:text-xl  "
               >
                 {city.name}
               </div>
@@ -34,6 +39,8 @@ function City() {
         ))}
       </div>
     </div>
+    </div>
+    
   );
 }
 

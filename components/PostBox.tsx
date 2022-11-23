@@ -238,12 +238,12 @@ function PostBox({ subreddit }: Props) {
           {/* Body */}
           <div className="flex items-center px-2">
             <p className=" min-w-[90px]">Details</p>
-            <input
-              type="text"
+            <textarea
+              
               {...register("description")}
-              className="flex-1 m-2 bg-blue-50 p-2 outline-none"
+              className="flex-1 m-2 w-full bg-blue-50 rounded-lg p-2 outline-none h-44 text-start"
               placeholder="Text (optional) box lomba hobe"
-            />
+            ></textarea>
           </div>
 
           {/* imagebox */}

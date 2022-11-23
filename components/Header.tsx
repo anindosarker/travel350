@@ -37,31 +37,31 @@ function Header() {
       <div className="flex items-center ">
         <div className="uppercase  ">
           <ul className=" flex space-x-6 mx-6 ">
-            <li>
-              <Link href="/" className=" m-2 hidden lg:inline">
+            <li className="hover:text-blue-600 ">
+              <Link href="/" className=" m-2 hidden lg:inline cursor-pointer  ">
                 Home
               </Link>
             </li>
-            <li>
-              <Link href="/forum" className=" m-2 hidden lg:inline">
+            <li className="hover:text-blue-600 ">
+              <Link href="/forum" className=" m-2 hidden lg:inline cursor-pointer">
                 Forum
               </Link>
             </li>
-            <li>
+            <li className="hover:text-blue-600 ">
               <Link
                 href="/travelplanner"
-                className=" m-2 hidden lg:inline"
+                className=" m-2 hidden lg:inline cursor-pointer"
               >
                 Travel Planner
               </Link>
             </li>
-            <li>
-              <Link href="/places" className=" m-2 hidden lg:inline">
+            <li className="hover:text-blue-600 ">
+              <Link href="/places" className=" m-2 hidden lg:inline cursor-pointer">
                 Places
               </Link>
             </li>
-            <li>
-              <Link href="/profile" className=" m-2 hidden lg:inline">
+            <li className="hover:text-blue-600 ">
+              <Link href="/profile" className=" m-2 hidden lg:inline cursor-pointer">
                 Profile
               </Link>
             </li>
