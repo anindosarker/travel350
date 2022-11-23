@@ -96,12 +96,12 @@ function Post({ post }: Props) {
               </div>
 
               <div className="flex flex-col text-right">
-                <p className="text-sm text-gray-400">
-                  ⛔️ Posted by u/{post?.usertable?.name}{" "}
+                <p className="text-sm text-gray-500">
+                   Posted by u/{post?.usertable?.name}{" "}
                   <ReactTimeago date={post?.created_at} />
                 </p>
                 <Link href={`PostEdit/${post?.id}`}>
-                  <div className="mt-4 flex justify-end">
+                  <div className="mt-4 flex justify-end" >
                     <PencilSquareIcon className="w-5 cursor-pointer" />
                     <button className="hover:bg-gray-200 p-1 rounded-lg ">
                       Edit
