@@ -4,7 +4,7 @@ import Image from "next/image";
 import { MagnifyingGlassCircleIcon } from "@heroicons/react/24/solid";
 const Searchbox = () => {
   return (
-    <div className="scale-110 m-auto absolute">
+    <div className="scale-110 m-auto ">
       <form action="" className="w-full max-w-sm" >
         <div className="relative flex items-center text-black ">
           <MagnifyingGlassCircleIcon className="w-7 absolute ml-1 pointer-events-none " />

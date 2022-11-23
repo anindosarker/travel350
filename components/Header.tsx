@@ -1,22 +1,9 @@
 import Image from "next/image";
 import React from "react";
+
 import {
-  BeakerIcon,
-  ChevronDownIcon,
-  HomeIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/24/solid";
-import {
-  Bars4Icon,
-  BellIcon,
-  ChatBubbleLeftIcon,
-  GlobeAltIcon,
-  PlusIcon,
-  SparklesIcon,
-  SpeakerWaveIcon,
-  StarIcon,
+ 
   UserCircleIcon,
-  VideoCameraIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
 import { signIn, signOut, useSession } from "next-auth/react";
@@ -34,9 +21,9 @@ function Header() {
         <Image objectFit="contain" src={logo} layout="fill" />
       </a>
 
-      <div className="flex items-center ">
-        <div className="uppercase  ">
-          <ul className=" flex space-x-6 mx-6 ">
+      <div className="flex justify-center items-center   ">
+        
+          <ul className=" flex space-x-6 mx-6 items-end flex-col md:flex-row uppercase">
             <li className="hover:text-blue-600 ">
               <Link href="/" className=" m-2 hidden lg:inline cursor-pointer  ">
                 Home
@@ -66,9 +53,7 @@ function Header() {
               </Link>
             </li>
           </ul>
-        </div>
-
-        <div className="mx-2">
+          <div className="mx-2">
           {/* sign in sign out */}
           {session ? (
             <Link href="/profile">
@@ -93,8 +78,11 @@ function Header() {
             </div>
           )}
         </div>
+        </div>
+
+       
       </div>
-    </div>
+   
   );
 }
 

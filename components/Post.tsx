@@ -77,7 +77,7 @@ function Post({ post }: Props) {
   console.log("Comments", comments);
 
   return (
-    <div>
+    <div className="">
       <div className="flex flex-col items-center justify-center w-full py-4">
         <div className="focus:outline-none  lg:w-1/2  lg:mb-0 mb-7 bg-white p-6 rounded-lg border-gray-200 border-2">
           {/* Header */}
@@ -85,12 +85,12 @@ function Post({ post }: Props) {
             <div className="flex items-center justify-between space-x-2">
               <div className="flex justify-end space-x-4 items-center">
                 <Avatar seed={post?.usertable?.name} />
-                <span className="font-bold text-black hover:text-blue-400">
+                <span className="font-bold text-black ">
                   <Link href={`/places/${post?.places?.name}`}>
-                    <p>Place : {post?.places?.name}</p>
+                    <p className="hover:text-blue-400 cursor-pointer">Place : {post?.places?.name}</p>
                   </Link>{" "}
                   <Link href={`/cities/${post?.places?.city?.name}`}>
-                    <p>City : {post?.places?.city?.name}</p>
+                    <p className="hover:text-blue-400 cursor-pointer">City : {post?.places?.city?.name}</p>
                   </Link>
                 </span>
               </div>
@@ -143,8 +143,7 @@ function Post({ post }: Props) {
               <p className="cursor-pointer">{post?.comment?.length} Comments</p>
             </div>
           </div>
-        </div>
-        <div className="-mt-1 rounded-b-lg border-t-0 border-2 border-gray-200 bg-white p-6  w-1/2  ">
+          <div className="mt-4  ">
           <p className="text-xs">
             Comment as{" "}
             <span className="text-red-500">{session?.user?.name}</span>
@@ -169,7 +168,7 @@ function Post({ post }: Props) {
             </button>
           </form>
         </div>
-        <div className="bg-white -my-5 rounded-b-md border-t-0 border-2 border-gray-200 py-5 px-10 w-1/2   ">
+        <div className="mt-7 ">
           <hr />
           {comments?.map((singleComment: any) => {
             return (
@@ -197,6 +196,10 @@ function Post({ post }: Props) {
             );
           })}
         </div>
+        </div>
+        
+        
+       
       </div>
     </div>
   );

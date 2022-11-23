@@ -22,10 +22,7 @@ const Home: NextPage = () => {
       <div className="text-3xl text-center font-bold pb-8">
         Top posts on forum
       </div>
-      <div className="">
-        <ForumPost />
-        <ForumPost />
-      </div>
+     
     </div>
   );
 };
