@@ -97,13 +97,13 @@ function PostBox({ subreddit }: Props) {
         body: formData,
       }
     ).then((res) => res.json());
-    console.log("data", data);
+    console.log("image data", data);
 
     setImageSource(data.secure_url);
     setUploadData(data);
 
     const imageURL = data.url;
-    console.log(imageURL);
+    console.log("image url",imageURL);
     {
       /* <========== image URL  */
     }
