@@ -75,11 +75,10 @@ function Post({ post }: Props) {
 
   return (
     <div>
-      {/* <Link href={`/post/${post?.id}`}> */}
       <div className="flex flex-col items-center justify-center w-full py-4">
         <div className="focus:outline-none  lg:w-1/2  lg:mb-0 mb-7 bg-white p-6 rounded-lg border-gray-200 border-2">
           {/* Header */}
-
+          <Link href={`/post/${post?.id}`}>
           <div className="flex items-center justify-between space-x-2">
             <div className="flex justify-end space-x-4 items-center">
               <Avatar seed={post?.usertable?.name} />
@@ -92,6 +91,7 @@ function Post({ post }: Props) {
                 </Link>
               </span>
             </div>
+            
             <div className="flex flex-col text-right">
               <p className="text-xs text-gray-400">
                 ⛔️ Posted by u/{post?.usertable?.name}{" "}
@@ -106,7 +106,9 @@ function Post({ post }: Props) {
                 </div>
               </Link>
             </div>
+            
           </div>
+          </Link>
           <hr className="py-2 mt-2" />
           {/* Body */}
           <div className="py-4">
@@ -172,21 +174,21 @@ function Post({ post }: Props) {
               <div key={singleComment.id}>
                 <hr />
                 <div className="flex items-center py-2">
-
-                <div className="mr-2 flex flex-col items-center justify-center">
-                  <Avatar seed={"" + post.user_id} />
-                  <p className="text-[10px]">{session?.user?.name}</p>
-                </div>
-                <div>
-                
-                  {singleComment.text}</div>
+                  <div className="mr-2 flex flex-col items-center justify-center">
+                    <Avatar seed={"" + post.user_id} />
+                    
+                  </div>
+                  <div className="flex flex-col">
+                    <div><p className="text-[10px]">{session?.user?.name}</p></div>
+                    <div>{singleComment.text}</div>
+                  </div>
+                  
                 </div>
               </div>
             );
           })}
         </div>
       </div>
-      {/* </Link> */}
     </div>
   );
 }
