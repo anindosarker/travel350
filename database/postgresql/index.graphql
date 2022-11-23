@@ -19,8 +19,9 @@ type Comment {
   post: Post @materializer(query: "getPostUsingComment_post_id_fkey")
   post_id: ID
   text: String
-  user: User @materializer(query: "getUserUsingComment_user_id_fkey")
   user_id: ID
+  usertable: Usertable
+    @materializer(query: "getUsertableUsingComment_user_id_fkey")
 }
 
 """
@@ -33,19 +34,6 @@ type Hotel {
   description: String
   id: ID!
   name: String
-  place_id: ID
-  places: Places @materializer(query: "getPlacesUsingHotel_place_id_fkey")
-}
-
-"""
-Table 'moderator' aliased as GQLName: 'Moderator'
-"""
-type Moderator {
-  created_at: DateTime
-  id: ID!
-  role: String
-  user: User @materializer(query: "getUserUsingModerator_user_id_fkey")
-  user_id: ID
 }
 
 """
@@ -56,47 +44,43 @@ type Places {
   city_id: ID
   created_at: DateTime
   description: String
-  hotel: [Hotel] @materializer(query: "getHotelUsingHotel_place_id_fkey")
   id: ID!
-  name: String!
+  name: String
   post: [Post] @materializer(query: "getPostUsingPost_place_id_fkey")
 }
 
 """
 Table 'post' aliased as GQLName: 'Post'
+Column: 'image'
+  DB Type '_json' is not supported. Column omitted
 """
 type Post {
   comment: [Comment] @materializer(query: "getCommentUsingComment_post_id_fkey")
   created_at: DateTime
   description: String
-  end: Date
+  end_date: Date
   id: ID!
-  image: String
   place_id: ID
   places: Places @materializer(query: "getPlacesUsingPost_place_id_fkey")
-  start: Date
+  start_date: Date
   title: String
-  user: User @materializer(query: "getUserUsingPost_user_id_fkey")
   user_id: ID
+  usertable: Usertable
+    @materializer(query: "getUsertableUsingPost_user_id_fkey")
   vote: [Vote] @materializer(query: "getVoteUsingVote_post_id_fkey")
 }
 
 """
-Table 'user' aliased as GQLName: 'User'
+Table 'usertable' aliased as GQLName: 'Usertable'
 """
-type User {
+type Usertable {
   comment: [Comment] @materializer(query: "getCommentUsingComment_user_id_fkey")
   created_at: DateTime
   email: String
-  first_Name: String
   id: ID!
-  last_Name: String
-  moderator: [Moderator]
-    @materializer(query: "getModeratorUsingModerator_user_id_fkey")
+  name: String
   password: String
-  phone_num: Float
   post: [Post] @materializer(query: "getPostUsingPost_user_id_fkey")
-  username: String
   vote: [Vote] @materializer(query: "getVoteUsingVote_user_id_fkey")
 }
 
@@ -109,8 +93,9 @@ type Vote {
   post: Post @materializer(query: "getPostUsingVote_post_id_fkey")
   post_id: ID
   upvote: Boolean
-  user: User @materializer(query: "getUserUsingVote_user_id_fkey")
   user_id: ID
+  usertable: Usertable
+    @materializer(query: "getUsertableUsingVote_user_id_fkey")
 }
 
 """
@@ -124,6 +109,16 @@ type Query {
       type: "postgresql"
       schema: "public"
       table: "city"
+      configuration: "postgresql_config"
+    )
+
+  getCityByCityName(name: String!): City
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT * FROM "city" WHERE "name" = $1
+      """
       configuration: "postgresql_config"
     )
   getCityList: [City]
@@ -222,7 +217,7 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "city_id", "created_at", "description", "id", "name", "place_id" FROM "hotel" ORDER BY "id" LIMIT $1 OFFSET $2
+      SELECT "city_id", "created_at", "description", "id", "name" FROM "hotel" ORDER BY "id" LIMIT $1 OFFSET $2
       """
       configuration: "postgresql_config"
     )
@@ -231,49 +226,7 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "city_id", "created_at", "description", "id", "name", "place_id" FROM "hotel" WHERE "city_id" = $1
-      """
-      configuration: "postgresql_config"
-    )
-  getHotelUsingHotel_place_id_fkey(id: ID!): [Hotel]
-    @dbquery(
-      type: "postgresql"
-      schema: "public"
-      query: """
-      SELECT "city_id", "created_at", "description", "id", "name", "place_id" FROM "hotel" WHERE "place_id" = $1
-      """
-      configuration: "postgresql_config"
-    )
-  " Queries for type 'Moderator' "
-  getModerator(id: ID!): Moderator
-    @dbquery(
-      type: "postgresql"
-      schema: "public"
-      table: "moderator"
-      configuration: "postgresql_config"
-    )
-  getModeratorList: [Moderator]
-    @dbquery(
-      type: "postgresql"
-      schema: "public"
-      table: "moderator"
-      configuration: "postgresql_config"
-    )
-  getModeratorPaginatedList(first: Int, after: Int): [Moderator]
-    @dbquery(
-      type: "postgresql"
-      schema: "public"
-      query: """
-      SELECT "created_at", "id", "role", "user_id" FROM "moderator" ORDER BY "id" LIMIT $1 OFFSET $2
-      """
-      configuration: "postgresql_config"
-    )
-  getModeratorUsingModerator_user_id_fkey(id: ID!): [Moderator]
-    @dbquery(
-      type: "postgresql"
-      schema: "public"
-      query: """
-      SELECT "created_at", "id", "role", "user_id" FROM "moderator" WHERE "user_id" = $1
+      SELECT "city_id", "created_at", "description", "id", "name" FROM "hotel" WHERE "city_id" = $1
       """
       configuration: "postgresql_config"
     )
@@ -283,6 +236,16 @@ type Query {
       type: "postgresql"
       schema: "public"
       table: "places"
+      configuration: "postgresql_config"
+    )
+
+  getPlacesByPlaceName(name: String!): Places
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT * FROM "places" WHERE "name" = $1
+      """
       configuration: "postgresql_config"
     )
   getPlacesList: [Places]
@@ -298,15 +261,6 @@ type Query {
       schema: "public"
       query: """
       SELECT "city_id", "created_at", "description", "id", "name" FROM "places" ORDER BY "id" LIMIT $1 OFFSET $2
-      """
-      configuration: "postgresql_config"
-    )
-  getPlacesUsingHotel_place_id_fkey(place_id: ID!): Places
-    @dbquery(
-      type: "postgresql"
-      schema: "public"
-      query: """
-      SELECT "city_id", "created_at", "description", "id", "name" FROM "places" WHERE "id" = $1
       """
       configuration: "postgresql_config"
     )
@@ -340,7 +294,9 @@ type Query {
     @dbquery(
       type: "postgresql"
       schema: "public"
-      table: "post"
+      query: """
+      SELECT * FROM "post" order by "created_at" desc
+      """
       configuration: "postgresql_config"
     )
   getPostPaginatedList(first: Int, after: Int): [Post]
@@ -348,7 +304,7 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "description", "end", "id", "image", "place_id", "start", "title", "user_id" FROM "post" ORDER BY "id" LIMIT $1 OFFSET $2
+      SELECT "created_at", "description", "end_date", "id", "place_id", "start_date", "title", "user_id" FROM "post" ORDER BY "id" LIMIT $1 OFFSET $2
       """
       configuration: "postgresql_config"
     )
@@ -357,7 +313,7 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "description", "end", "id", "image", "place_id", "start", "title", "user_id" FROM "post" WHERE "id" = $1
+      SELECT "created_at", "description", "end_date", "id", "place_id", "start_date", "title", "user_id" FROM "post" WHERE "id" = $1
       """
       configuration: "postgresql_config"
     )
@@ -366,7 +322,7 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "description", "end", "id", "image", "place_id", "start", "title", "user_id" FROM "post" WHERE "place_id" = $1
+      SELECT "created_at", "description", "end_date", "id", "place_id", "start_date", "title", "user_id" FROM "post" WHERE "place_id" = $1
       """
       configuration: "postgresql_config"
     )
@@ -375,76 +331,68 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "description", "end", "id", "image", "place_id", "start", "title", "user_id" FROM "post" WHERE "user_id" = $1
+      SELECT "created_at", "description", "end_date", "id", "place_id", "start_date", "title", "user_id" FROM "post" WHERE "user_id" = $1
       """
       configuration: "postgresql_config"
     )
+
   getPostUsingVote_post_id_fkey(post_id: ID!): Post
     @dbquery(
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "description", "end", "id", "image", "place_id", "start", "title", "user_id" FROM "post" WHERE "id" = $1
+      SELECT "created_at", "description", "end_date", "id", "place_id", "start_date", "title", "user_id" FROM "post" WHERE "id" = $1
       """
       configuration: "postgresql_config"
     )
-  " Queries for type 'User' "
-  getUser(id: ID!): User
+  " Queries for type 'Usertable' "
+  getUsertable(id: ID!): Usertable
     @dbquery(
       type: "postgresql"
       schema: "public"
-      table: "user"
+      table: "usertable"
       configuration: "postgresql_config"
     )
-  getUserList: [User]
+  getUsertableList: [Usertable]
     @dbquery(
       type: "postgresql"
       schema: "public"
-      table: "user"
+      table: "usertable"
       configuration: "postgresql_config"
     )
-  getUserPaginatedList(first: Int, after: Int): [User]
+  getUsertablePaginatedList(first: Int, after: Int): [Usertable]
     @dbquery(
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "email", "first_Name", "id", "last_Name", "password", "phone_num", "username" FROM "user" ORDER BY "id" LIMIT $1 OFFSET $2
+      SELECT "created_at", "email", "id", "name", "password" FROM "usertable" ORDER BY "id" LIMIT $1 OFFSET $2
       """
       configuration: "postgresql_config"
     )
-  getUserUsingComment_user_id_fkey(user_id: ID!): User
+  getUsertableUsingComment_user_id_fkey(user_id: ID!): Usertable
     @dbquery(
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "email", "first_Name", "id", "last_Name", "password", "phone_num", "username" FROM "user" WHERE "id" = $1
+      SELECT "created_at", "email", "id", "name", "password" FROM "usertable" WHERE "id" = $1
       """
       configuration: "postgresql_config"
     )
-  getUserUsingModerator_user_id_fkey(user_id: ID!): User
+  getUsertableUsingPost_user_id_fkey(user_id: ID!): Usertable
     @dbquery(
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "email", "first_Name", "id", "last_Name", "password", "phone_num", "username" FROM "user" WHERE "id" = $1
+      SELECT "created_at", "email", "id", "name", "password" FROM "usertable" WHERE "id" = $1
       """
       configuration: "postgresql_config"
     )
-  getUserUsingPost_user_id_fkey(user_id: ID!): User
+  getUsertableUsingVote_user_id_fkey(user_id: ID!): Usertable
     @dbquery(
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "email", "first_Name", "id", "last_Name", "password", "phone_num", "username" FROM "user" WHERE "id" = $1
-      """
-      configuration: "postgresql_config"
-    )
-  getUserUsingVote_user_id_fkey(user_id: ID!): User
-    @dbquery(
-      type: "postgresql"
-      schema: "public"
-      query: """
-      SELECT "created_at", "email", "first_Name", "id", "last_Name", "password", "phone_num", "username" FROM "user" WHERE "id" = $1
+      SELECT "created_at", "email", "id", "name", "password" FROM "usertable" WHERE "id" = $1
       """
       configuration: "postgresql_config"
     )
@@ -506,7 +454,7 @@ type Mutation {
       dml: DELETE
       configuration: "postgresql_config"
     )
-  insertCity(description: String, name: String, created_at: DateTime): City
+  insertCity(description: String, name: String): City
     @dbquery(
       type: "postgresql"
       schema: "public"
@@ -592,7 +540,6 @@ type Mutation {
     description: String
     created_at: DateTime
     city_id: ID
-    place_id: ID
   ): Hotel
     @dbquery(
       type: "postgresql"
@@ -607,7 +554,6 @@ type Mutation {
     created_at: DateTime
     description: String
     name: String
-    place_id: ID
   ): Hotel
     @dbquery(
       type: "postgresql"
@@ -617,45 +563,7 @@ type Mutation {
         "city_id" = COALESCE($2, "city_id"),
         "created_at" = COALESCE($3, "created_at"),
         "description" = COALESCE($4, "description"),
-        "name" = COALESCE($5, "name"),
-        "place_id" = COALESCE($6, "place_id")
-      WHERE
-        "id" = $1
-      RETURNING *
-      """
-      configuration: "postgresql_config"
-    )
-  " Mutations for type 'Moderator' "
-  deleteModerator(id: ID!): Moderator
-    @dbquery(
-      type: "postgresql"
-      schema: "public"
-      table: "moderator"
-      dml: DELETE
-      configuration: "postgresql_config"
-    )
-  insertModerator(role: String, user_id: ID, created_at: DateTime): Moderator
-    @dbquery(
-      type: "postgresql"
-      schema: "public"
-      table: "moderator"
-      dml: INSERT
-      configuration: "postgresql_config"
-    )
-  updateModerator(
-    id: ID!
-    created_at: DateTime
-    role: String
-    user_id: ID
-  ): Moderator
-    @dbquery(
-      type: "postgresql"
-      schema: "public"
-      query: """
-      UPDATE "moderator" SET
-        "created_at" = COALESCE($2, "created_at"),
-        "role" = COALESCE($3, "role"),
-        "user_id" = COALESCE($4, "user_id")
+        "name" = COALESCE($5, "name")
       WHERE
         "id" = $1
       RETURNING *
@@ -671,12 +579,7 @@ type Mutation {
       dml: DELETE
       configuration: "postgresql_config"
     )
-  insertPlaces(
-    name: String!
-    description: String
-    created_at: DateTime
-    city_id: ID
-  ): Places
+  insertPlaces(name: String, description: String, city_id: ID): Places
     @dbquery(
       type: "postgresql"
       schema: "public"
@@ -716,14 +619,12 @@ type Mutation {
       configuration: "postgresql_config"
     )
   insertPost(
-    image: String
+    start_date: Date
     description: String
     user_id: ID
+    end_date: Date
     title: String
-    start: Date
     place_id: ID
-    end: Date
-    created_at: DateTime
   ): Post
     @dbquery(
       type: "postgresql"
@@ -734,12 +635,10 @@ type Mutation {
     )
   updatePost(
     id: ID!
-    created_at: DateTime
     description: String
-    end: Date
-    image: String
+    end_date: Date
     place_id: ID
-    start: Date
+    start_date: Date
     title: String
     user_id: ID
   ): Post
@@ -748,67 +647,56 @@ type Mutation {
       schema: "public"
       query: """
       UPDATE "post" SET
-        "created_at" = COALESCE($2, "created_at"),
-        "description" = COALESCE($3, "description"),
-        "end" = COALESCE($4, "end"),
-        "image" = COALESCE($5, "image"),
-        "place_id" = COALESCE($6, "place_id"),
-        "start" = COALESCE($7, "start"),
-        "title" = COALESCE($8, "title"),
-        "user_id" = COALESCE($9, "user_id")
+        "description" = COALESCE($2, "description"),
+        "end_date" = COALESCE($3, "end_date"),
+        "place_id" = COALESCE($4, "place_id"),
+        "start_date" = COALESCE($5, "start_date"),
+        "title" = COALESCE($6, "title"),
+        "user_id" = COALESCE($7, "user_id")
       WHERE
         "id" = $1
       RETURNING *
       """
       configuration: "postgresql_config"
     )
-  " Mutations for type 'User' "
-  deleteUser(id: ID!): User
+  " Mutations for type 'Usertable' "
+  deleteUsertable(id: ID!): Usertable
     @dbquery(
       type: "postgresql"
       schema: "public"
-      table: "user"
+      table: "usertable"
       dml: DELETE
       configuration: "postgresql_config"
     )
-  insertUser(
-    first_Name: String
+  insertUsertable(
+    name: String
     email: String
-    username: String
-    phone_num: Float
-    password: String
     created_at: DateTime
-    last_Name: String
-  ): User
+    password: String
+  ): Usertable
     @dbquery(
       type: "postgresql"
       schema: "public"
-      table: "user"
+      table: "usertable"
       dml: INSERT
       configuration: "postgresql_config"
     )
-  updateUser(
+  updateUsertable(
     id: ID!
     created_at: DateTime
     email: String
-    first_Name: String
-    last_Name: String
+    name: String
     password: String
-    phone_num: Float
-    username: String
-  ): User
+  ): Usertable
     @dbquery(
       type: "postgresql"
       schema: "public"
       query: """
-      UPDATE "user" SET
+      UPDATE "usertable" SET
         "created_at" = COALESCE($2, "created_at"),
         "email" = COALESCE($3, "email"),
-        "first_Name" = COALESCE($4, "first_Name"),
-        "last_Name" = COALESCE($5, "last_Name"),
-        "password" = COALESCE($6, "password"),
-        "phone_num" = COALESCE($7, "phone_num"),
-        "username" = COALESCE($8, "username")
+        "name" = COALESCE($4, "name"),
+        "password" = COALESCE($5, "password")
       WHERE
         "id" = $1
       RETURNING *

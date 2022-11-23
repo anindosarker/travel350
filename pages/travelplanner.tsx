@@ -3,7 +3,7 @@ import CreatePost from "../components/CreatePost";
 import Image from "next/image";
 import PostBox from "../components/PostBox";
 
-const forum = () => {
+const travelplanner = () => {
   return (
     <div>
       <div className="relative w-full h-[220px] bg-slate-400 flex ">
@@ -19,6 +19,8 @@ const forum = () => {
         </div>
         <div className="absolute top-0 right-0  h-3/4 w-2/4 cursor-pointer flex">
           <Image
+            width="200"
+            height="200"
             src="/../public/Online world-pana 1.png"
             alt=""
             objectFit="contain"
@@ -31,4 +33,4 @@ const forum = () => {
   );
 };
 
-export default forum;
+export default travelplanner;

@@ -1,20 +1,37 @@
-import { useQuery } from '@apollo/client'
-import React from 'react'
-import { GET_ALL_POST } from '../graphql/queries'
+import { useQuery } from "@apollo/client";
+import {
+  GET_CITY_BY_NAME,
+  GET_PLACES_BY_NAME,
+  GET_POST_LIST,
+} from "../graphql/queries";
+import Post from "./Post";
+type Props = {
+  placeName?: string;
+};
 
-function Feed() {
+function Feed({ placeName }: Props) {
+  const { loading, error, data } = !placeName
+    ? useQuery(GET_POST_LIST)
+    : useQuery(GET_PLACES_BY_NAME, { variables: { name: placeName } });
 
-  const { data, error} = useQuery(GET_ALL_POST);
+  if (loading) return <p>Loading ...</p>;
 
-  const posts: Post[] = data?.getPostList;
+  if (error) return <pre>{JSON.stringify(error, null, 2)}</pre>;
 
-  console.log("post", posts,"data", data,"error", error);
-  
+  const posts: Post[] = !placeName
+    ? data?.getPostList
+    : data?.getPlacesByPlaceName?.post;
 
-  
+  console.log(posts);
+
   return (
-    <div>Feed</div>
-  )
+    <div>
+      {placeName ? <div>Feed for {placeName}</div> : <div>Feed</div>}
+      {posts?.map((post) => (
+        <Post key={post.id} post={post} />
+      ))}
+    </div>
+  );
 }
 
-export default Feed
+export default Feed;

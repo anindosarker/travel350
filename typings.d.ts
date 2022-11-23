@@ -1,90 +1,72 @@
+type Post = {
+  comment: Comment[]
+  created_at: string
+  description: string
+  end_date: string
+  id: number
+  place_id: number
+  places: Places
+  start_date: string
+  title: string
+  user_id: number
+  usertable: Usertable
+  vote: Vote[]
+}
+
 type City = {
-  created_at: string;
-  description: string;
-  hotel: Hotel[];
-  id: number;
-  name: string;
-  places: Places[];
-};
-
-type Comment = {
-  created_at: string;
-  id: number;
-  post: Post;
-  post_id: number;
-  text: string;
-  user: User;
-  user_id: number;
-};
-
+  created_at: string
+  description: string
+  hotel: Hotel[]
+  id: number
+  name: string
+  places: Places[]
+}
+type Comment=  {
+  created_at: string
+  id: number
+  post: Post[]
+  post_id: number
+  text: string
+  user_id: number
+  usertable: Usertable
+    
+}
 type Hotel = {
-  city: City;
-  city_id: number;
-  created_at: string;
-  description: string;
-  id: number;
-  name: string;
-  place_id: number;
-  places: Places;
-};
-
-type Moderator = {
-  created_at: string;
-  id: number;
-  role: string;
-  user: User;
-  user_id: number;
-};
+  city: City 
+  city_id: number
+  created_at: string
+  description: String
+  id: number
+  name: string
+}
 
 type Places = {
-  city: City;
-  city_id: number;
-  created_at: string;
-  description: string;
-  hotel: Hotel[];
-  id: number;
-  name: string;
-  post: Post[];
-};
+  city: City 
+  city_id: number
+  created_at: string
+  description: string
+  id: number
+  name: string
+  post: Post[]
+}
 
-type Post = {
-  comment: Comment[];
-  created_at: string;
-  description: string;
-  end: Date;
-  id: number;
-  image: string;
-  place_id: number;
-  places: Places;
-  start: Date;
-  title: string;
-  user: User;
-  user_id: number;
-  vote: Vote[];
-};
-
-type User = {
-  comment: Comment[];
-  created_at: string;
-  email: String;
-  first_Name: String;
-  id: number;
-  last_Name: String;
-  moderator: Moderator[];
-
-  password: String;
-  phone_num: Float;
-  post: Post[];
-  username: String;
-  vote: Vote[];
-};
-
-type Vote = {
-  created_at: string;
-  id: number;
-  post: Post;
-  post_id: number;
-  upvote: Boolean;
-  user: User;
-  user_id: number;
-};
+type Usertable = {
+  comment: Comment[]
+  created_at: DateTime
+  email: string
+  id: number
+  name: string
+  password: string
+  post: Post[]
+  vote:Vote[]
+}
+type Vote= {
+  created_at: string
+  id: number
+  post: Post 
+  post_id: ID
+  upvote: Boolean
+  user_id: ID
+  usertable: Usertable
+   
+}
