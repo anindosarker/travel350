@@ -8,9 +8,6 @@ const ImageUpload = () => {
   function handleOnChange(changeEvent: any) {
     const reader = new FileReader();
 
-    const fallBack: any = undefined;
-    changeEvent.target.files = fallBack ?? [];
-
     reader.onload = function (onloadEvent: any) {
       setImageSource(onloadEvent.target.result);
       setUploadData(undefined);
@@ -61,7 +58,6 @@ const ImageUpload = () => {
               name="file"
             />
           </p>
-
           <img src={imageSource} />
 
           {imageSource && !uploadData && (

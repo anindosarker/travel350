@@ -101,6 +101,12 @@ function PostBox({ subreddit }: Props) {
 
     setImageSource(data.secure_url);
     setUploadData(data);
+
+    const imageURL = data.url;
+    console.log(imageURL);
+    {
+      /* <========== image URL  */
+    }
   }
 
   {
@@ -315,6 +321,13 @@ function PostBox({ subreddit }: Props) {
                 placeholder="optional"
                 onChange={handleOnChange}
               />
+              <img src={imageSource} />
+
+              {uploadData && (
+                <code>
+                  <pre>{JSON.stringify(uploadData, null, 2)}</pre>
+                </code>
+              )}
             </div>
           )}
 
