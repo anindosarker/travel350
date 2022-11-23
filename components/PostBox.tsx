@@ -59,10 +59,12 @@ function PostBox({ subreddit }: Props) {
     } else if (error) {
       console.log(error);
     }
+
   };
 
   //image end
 
+  supabase.auth.getUser(session)
 
   const { data: session } = useSession();
   const [placeslist, setplaceslist] = useState([{ place: "" }]);
