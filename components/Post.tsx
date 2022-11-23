@@ -72,7 +72,12 @@ function Post({ post }: Props) {
       id: notification,
     });
     console.log(data);
+
   };
+
+
+  const comments: Comment[] = post?.comment;
+  console.log("Comments", comments);
 
   return (
     <div>
@@ -169,7 +174,7 @@ function Post({ post }: Props) {
         </div>
         <div className="bg-white -my-5 rounded-b-md border-t-0 border-2 border-gray-200 py-5 px-10 w-1/2  ">
           <hr className="py-2" />
-          {post?.comment.map((singleComment: any) => {
+          {comments?.map((singleComment: any) => {
             return (
               <div key={singleComment.id}>
                 <hr />
@@ -180,6 +185,7 @@ function Post({ post }: Props) {
                   <div className="flex flex-col">
                     <div>
                       <p className="text-[10px]">{session?.user?.name}</p>
+                      <ReactTimeago date={singleComment.created_at} />
                     </div>
                     <div>{singleComment.text}</div>
                     
