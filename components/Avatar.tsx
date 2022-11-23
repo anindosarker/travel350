@@ -17,6 +17,8 @@ function Avatar({ seed, large }: Props) {
       }`}
     >
       <Image
+        alt="img"
+        objectFit="cover"
         layout="fill"
         src={`https://avatars.dicebear.com/api/bottts/${
           seed || session?.user?.name

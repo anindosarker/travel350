@@ -7,6 +7,8 @@ import {
 import { Database } from "../utils/database.types";
 type Profiles = Database["public"]["Tables"]["profiles"]["Row"];
 import Avatar from "./Avatar";
+import { ChangeEvent } from "react";
+import { supabase } from "../utils/database.types";
 
 export default function Account({ session }: { session: Session }) {
   const supabase = useSupabaseClient<Database>();
@@ -15,6 +17,28 @@ export default function Account({ session }: { session: Session }) {
   const [username, setUsername] = useState<Profiles["username"]>(null);
   const [website, setWebsite] = useState<Profiles["website"]>(null);
   const [avatar_url, setAvatarUrl] = useState<Profiles["avatar_url"]>(null);
+
+  const handleUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    let file;
+
+    if (e.target.files) {
+      file = e.target.files[0];
+    }
+
+    const { data, error } = await supabase.storage
+      .from("images")
+      .upload("public/" + file?.name, file as File);
+
+    if (data) {
+      console.log(data);
+      setAvatarUrl(
+        "https://krgxdqkqhuqqerpwxuje.supabase.co/storage/v1/object/public/images/" +
+          data.path
+      );
+    } else if (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     getProfile();
@@ -83,14 +107,28 @@ export default function Account({ session }: { session: Session }) {
   return (
     <div className="form-widget">
       <Avatar
-      uid={user.id}
-      url={avatar_url}
-      size={150}
-      onUpload={(url) => {
-        setAvatarUrl(url)
-        updateProfile({ username, website, avatar_url: url })
-      }}
-    />
+        uid={user?.id}
+        url={avatar_url}
+        size={150}
+        onUpload={(url) => {
+          setAvatarUrl(url);
+          updateProfile({ username, website, avatar_url: url });
+        }}
+      />
+      <div>
+        <img src={avatar_url} />
+        
+
+        <label htmlFor="file_input">Image File</label>
+        <input
+          id="file_input"
+          type="file"
+          accept="image/*"
+          onChange={(e) => {
+            handleUpload(e);
+          }}
+        />
+      </div>
       <div>
         <label htmlFor="email">Email</label>
         <input id="email" type="text" value={session.user.email} disabled />
