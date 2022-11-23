@@ -109,6 +109,16 @@ type Query {
       table: "city"
       configuration: "postgresql_config"
     )
+  getCityByCityName(name: String!): City
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT * FROM "city" WHERE "name" = $1
+      """
+      configuration: "postgresql_config"
+    )
+
   getCityList: [City]
     @dbquery(
       type: "postgresql"
@@ -226,6 +236,15 @@ type Query {
       table: "places"
       configuration: "postgresql_config"
     )
+  getPlacesByPlaceName(name: String!): Places
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT * FROM "places" WHERE "name" = $1
+      """
+      configuration: "postgresql_config"
+    )
   getPlacesList: [Places]
     @dbquery(
       type: "postgresql"
@@ -272,7 +291,9 @@ type Query {
     @dbquery(
       type: "postgresql"
       schema: "public"
-      table: "post"
+      query: """
+      SELECT * FROM "post" order by "created_at" desc
+      """
       configuration: "postgresql_config"
     )
   getPostPaginatedList(first: Int, after: Int): [Post]
@@ -429,7 +450,7 @@ type Mutation {
       dml: DELETE
       configuration: "postgresql_config"
     )
-  insertCity(description: String, name: String, created_at: DateTime): City
+  insertCity(description: String, name: String): City
     @dbquery(
       type: "postgresql"
       schema: "public"
@@ -466,12 +487,7 @@ type Mutation {
       dml: DELETE
       configuration: "postgresql_config"
     )
-  insertComment(
-    post_id: ID
-    text: String
-    user_id: ID
-    created_at: DateTime
-  ): Comment
+  insertComment(post_id: ID, text: String, user_id: ID): Comment
     @dbquery(
       type: "postgresql"
       schema: "public"
@@ -554,12 +570,7 @@ type Mutation {
       dml: DELETE
       configuration: "postgresql_config"
     )
-  insertPlaces(
-    name: String
-    description: String
-    created_at: DateTime
-    city_id: ID
-  ): Places
+  insertPlaces(name: String, description: String, city_id: ID): Places
     @dbquery(
       type: "postgresql"
       schema: "public"
@@ -604,7 +615,6 @@ type Mutation {
     description: String
     user_id: ID
     end_date: Date
-    created_at: DateTime
     title: String
     place_id: ID
   ): Post
@@ -631,14 +641,13 @@ type Mutation {
       schema: "public"
       query: """
       UPDATE "post" SET
-        "created_at" = COALESCE($2, "created_at"),
-        "description" = COALESCE($3, "description"),
-        "end_date" = COALESCE($4, "end_date"),
-        "image" = COALESCE($5, "image"),
-        "place_id" = COALESCE($6, "place_id"),
-        "start_date" = COALESCE($7, "start_date"),
-        "title" = COALESCE($8, "title"),
-        "user_id" = COALESCE($9, "user_id")
+        "description" = COALESCE($2, "description"),
+        "end_date" = COALESCE($3, "end_date"),
+        "image" = COALESCE($4, "image"),
+        "place_id" = COALESCE($5, "place_id"),
+        "start_date" = COALESCE($6, "start_date"),
+        "title" = COALESCE($7, "title"),
+        "user_id" = COALESCE($8, "user_id")
       WHERE
         "id" = $1
       RETURNING *
