@@ -62,7 +62,6 @@ function Post({ post }: Props) {
     await addComment({
       variables: {
         post_id: post.id,
-
         user_id: 1,
         text: data.comment,
       },
@@ -72,9 +71,7 @@ function Post({ post }: Props) {
       id: notification,
     });
     console.log(data);
-
   };
-
 
   const comments: Comment[] = post?.comment;
   console.log("Comments", comments);
@@ -99,7 +96,7 @@ function Post({ post }: Props) {
               </div>
 
               <div className="flex flex-col text-right">
-                <p className="text-xs text-gray-400">
+                <p className="text-sm text-gray-400">
                   ⛔️ Posted by u/{post?.usertable?.name}{" "}
                   <ReactTimeago date={post?.created_at} />
                 </p>
@@ -143,7 +140,7 @@ function Post({ post }: Props) {
             />
             <div className="flex items-center justify-evenly space-x-4">
               <ChatBubbleOvalLeftIcon className="h-5" />
-              <p className=""> Comments</p>
+              <p className="cursor-pointer">{post?.comment?.length} Comments</p>
             </div>
           </div>
         </div>
@@ -172,23 +169,28 @@ function Post({ post }: Props) {
             </button>
           </form>
         </div>
-        <div className="bg-white -my-5 rounded-b-md border-t-0 border-2 border-gray-200 py-5 px-10 w-1/2  ">
-          <hr className="py-2" />
+        <div className="bg-white -my-5 rounded-b-md border-t-0 border-2 border-gray-200 py-5 px-10 w-1/2   ">
+          <hr />
           {comments?.map((singleComment: any) => {
             return (
               <div key={singleComment.id}>
-                <hr />
-                <div className="flex items-center py-2">
+                <hr className=" border-1"/>
+                <div className="flex items-center py-3">
                   <div className="mr-2 flex flex-col items-center justify-center">
-                    <Avatar seed={"" + post.user_id} />
+                    <Avatar seed={"" + post.user_id}  />
                   </div>
-                  <div className="flex flex-col">
-                    <div>
-                      <p className="text-[10px]">{singleComment?.usertable?.name}</p>
-                      <ReactTimeago date={singleComment.created_at} />
+                  <div className="flex flex-col w-full">
+                    <div className="flex justify-between">
+                      <div>
+                        <p className="text-sm font-semibold">
+                          {singleComment?.usertable?.name}
+                        </p>
+                      </div>
+                      <div>
+                        <ReactTimeago date={singleComment.created_at} className="text-[15px] text-gray-500" />
+                      </div>
                     </div>
                     <div>{singleComment.text}</div>
-                    
                   </div>
                 </div>
               </div>
