@@ -24,11 +24,13 @@ function Post({ post }: Props) {
   const [vote, setVote] = useState<boolean>();
   const { data: session } = useSession();
 
-  const { data, loading } = useQuery(GET_VOTE_BY_POST_ID, {
+  const { data : voteData, loading } = useQuery(GET_VOTE_BY_POST_ID, {
     variables: {
       postId: post?.id,
     },
   });
+  console.log("Vote query by id", voteData);
+  
 
   const [addVote] = useMutation(ADD_VOTE, {
     refetchQueries: [GET_VOTE_BY_POST_ID, "getVotesByPostId"],
@@ -54,12 +56,12 @@ function Post({ post }: Props) {
     });
   };
   useEffect(() => {
-    const votes: Vote[] = data?.getVotesByPostId;
+    const votes: Vote[] = voteData?.getVotesByPostId;
 
     const vote = votes?.find((vote) => vote.user_id == 1)?.upvote;
 
     setVote(vote);
-  }, [data]);
+  }, [voteData]);
 
   // if (!post) {
   //   return (
