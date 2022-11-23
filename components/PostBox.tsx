@@ -6,7 +6,6 @@ import { useMutation, useQuery } from "@apollo/client";
 import client from "../apollo-client";
 import { toast } from "react-hot-toast";
 import CreatePost from "./CreatePost";
-import { ChangeEvent } from "react";
 import { Database } from "../utils/database.types";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import {
@@ -59,12 +58,10 @@ function PostBox({ subreddit }: Props) {
     } else if (error) {
       console.log(error);
     }
-
   };
 
   //image end
 
-  supabase.auth.getUser(session)
 
   const { data: session } = useSession();
   const [placeslist, setplaceslist] = useState([{ place: "" }]);
