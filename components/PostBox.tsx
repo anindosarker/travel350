@@ -61,15 +61,18 @@ function PostBox({ subreddit }: Props) {
   function handleOnChange(changeEvent: any) {
     const reader = new FileReader();
 
-    const fallBack = undefined;
-    changeEvent.Target = fallBack || {};
-    const file: any = (changeEvent.target.files = fallBack || []);
+    // const fallBack = undefined;
+    // changeEvent.Target = fallBack || {};
+    // const file: any = (changeEvent.target.files = fallBack || []);
 
     reader.onload = function (onloadEvent: any) {
       setImageSource(onloadEvent.target.result);
       setUploadData(undefined);
     };
-    reader.readAsDataURL(file[0]);
+    if (changeEvent.target.files) {
+      console.log(changeEvent.target.files[0]);
+      reader.readAsDataURL(changeEvent.target.files[0]);
+    }
   }
 
   async function handleOnSubmit(event: any) {
@@ -220,7 +223,6 @@ function PostBox({ subreddit }: Props) {
   return (
     <div className="flex flex-row justify-center w-full mt-5">
       <form
-        onChange={handleOnChange}
         onSubmit={onSubmit || handleOnSubmit}
         className="focus:outline-none lg:w-1/2 lg:mr-7 lg:mb-0 mb-7 bg-white p-6 shadow rounded-lg border-gray-200 border-2 "
       >
@@ -311,14 +313,8 @@ function PostBox({ subreddit }: Props) {
                 {...register("postImage")}
                 className="flex-1 m-2 bg-blue-50 p-2 outline-none"
                 placeholder="optional"
+                onChange={handleOnChange}
               />
-              <button
-                onClick={handleOnChange}
-                type="submit"
-                className="w-full rounded-full bg-blue-400 p-2 text-white"
-              >
-                Upload Images
-              </button>
             </div>
           )}
 

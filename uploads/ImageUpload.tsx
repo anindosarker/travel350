@@ -8,11 +8,14 @@ const ImageUpload = () => {
   function handleOnChange(changeEvent: any) {
     const reader = new FileReader();
 
+    const fallBack: any = undefined;
+    changeEvent.target.files = fallBack ?? [];
+
     reader.onload = function (onloadEvent: any) {
       setImageSource(onloadEvent.target.result);
       setUploadData(undefined);
     };
-    reader.readAsDataURL(changeEvent.target.files[0]);
+    reader?.readAsDataURL(changeEvent.target.files[0]);
   }
 
   async function handleOnSubmit(event: any) {
@@ -46,17 +49,17 @@ const ImageUpload = () => {
   return (
     <div>
       <div className="w-1/3 h-aut0 m-auto flex flex-col">
-      <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Upload file</label>
-        
+        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          Upload file
+        </label>
 
-        <form
-          method="post"
-          onChange={handleOnChange}
-          onSubmit={handleOnSubmit}
-        >
+        <form method="post" onChange={handleOnChange} onSubmit={handleOnSubmit}>
           <p>
-          
-        <input className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" type="file" name="file" />
+            <input
+              className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+              type="file"
+              name="file"
+            />
           </p>
 
           <img src={imageSource} />
