@@ -184,7 +184,7 @@ function Post({ post }: Props) {
                   </div>
                   <div className="flex flex-col">
                     <div>
-                      <p className="text-[10px]">{session?.user?.name}</p>
+                      <p className="text-[10px]">{singleComment?.usertable?.name}</p>
                       <ReactTimeago date={singleComment.created_at} />
                     </div>
                     <div>{singleComment.text}</div>
