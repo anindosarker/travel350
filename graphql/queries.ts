@@ -105,6 +105,9 @@ export const GET_POST_BY_POST_ID = gql`
         post_id
         text
         user_id
+        usertable {
+          name
+        }
       }
     }
   }
