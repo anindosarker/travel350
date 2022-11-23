@@ -11,16 +11,13 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import ReactTimeago from "react-timeago";
 import Avatar from "./Avatar";
-import { useSession } from "next-auth/react";
 import { useMutation, useQuery } from "@apollo/client";
 import { GET_VOTE_BY_POST_ID } from "../graphql/queries";
 import { ADD_VOTE } from "../graphql/mutations";
 
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useMutation } from "@apollo/client";
 import { INSERT_COMMENT } from "../graphql/mutations";
 import { GET_POST_BY_POST_ID } from "../graphql/queries";
-import toast from "react-hot-toast";
 import Router from "next/router";
 import { compact } from "@apollo/client/utilities";
 
