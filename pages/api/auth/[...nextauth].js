@@ -3,6 +3,7 @@ import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import RedditProvider from "next-auth/providers/reddit";
 import CredentialProvider from "next-auth/providers/credentials";
+import { gql, useQuery } from "@apollo/client";
 
 export const authOptions = {
   // Configure one or more authentication providers
@@ -32,6 +33,7 @@ export const authOptions = {
       },
       authorize: (credentials) => {
         //database look up here
+        const GET_QUERY = ``;
         if (
           credentials.username === "john" &&
           credentials.password === "test"

@@ -4,28 +4,48 @@ import homebg from "../public/homeBackground.jpg";
 import Image from "next/image";
 import Searchbox from "../components/Searchbox";
 import ForumPost from "../components/ForumPost";
+import { Auth, ThemeSupa } from "@supabase/auth-ui-react";
+import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 
 const Home: NextPage = () => {
+  const session = useSession();
+  const supabase = useSupabaseClient();
+
   return (
     <div className="">
-      <div className="flex min-h-screen flex-col items-center justify-center py-2">
-        <Head>
-          <title>Travel+</title>
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
+      {!session ? (
+        <Auth
+          supabaseClient={supabase}
+          appearance={{ theme: ThemeSupa }}
+          theme="dark"
+        />
+      ) : (
+        <>
+          <div className="flex min-h-screen flex-col items-center justify-center py-2">
+            <Head>
+              <title>Travel+</title>
+              <link rel="icon" href="/favicon.ico" />
+            </Head>
 
-        <div>
-          <Image objectFit="cover" className="z-0" src={homebg} layout="fill" />
-          <Searchbox />
-        </div>
-      </div>
-      <div className="text-3xl text-center font-bold pb-8">
-        Top posts on forum
-      </div>
-      <div className="">
-        <ForumPost />
-        <ForumPost />
-      </div>
+            <div>
+              <Image
+                objectFit="cover"
+                className="z-0"
+                src={homebg}
+                layout="fill"
+              />
+              <Searchbox />
+            </div>
+          </div>
+          <div className="text-3xl text-center font-bold pb-8">
+            Top posts on forum
+          </div>
+          <div className="">
+            <ForumPost />
+            <ForumPost />
+          </div>
+        </>
+      )}
     </div>
   );
 };
