@@ -71,7 +71,12 @@ function Post({ post }: Props) {
       id: notification,
     });
     console.log(data);
+
   };
+
+
+  const comments: Comment[] = post?.comment;
+  console.log("Comments", comments);
 
   return (
     <div>
@@ -79,35 +84,34 @@ function Post({ post }: Props) {
         <div className="focus:outline-none  lg:w-1/2  lg:mb-0 mb-7 bg-white p-6 rounded-lg border-gray-200 border-2">
           {/* Header */}
           <Link href={`/post/${post?.id}`}>
-          <div className="flex items-center justify-between space-x-2">
-            <div className="flex justify-end space-x-4 items-center">
-              <Avatar seed={post?.usertable?.name} />
-              <span className="font-bold text-black hover:text-blue-400">
-                <Link href={`/places/${post?.places?.name}`}>
-                  <p>Place : {post?.places?.name}</p>
-                </Link>{" "}
-                <Link href={`/cities/${post?.places?.city?.name}`}>
-                  <p>City : {post?.places?.city?.name}</p>
+            <div className="flex items-center justify-between space-x-2">
+              <div className="flex justify-end space-x-4 items-center">
+                <Avatar seed={post?.usertable?.name} />
+                <span className="font-bold text-black hover:text-blue-400">
+                  <Link href={`/places/${post?.places?.name}`}>
+                    <p>Place : {post?.places?.name}</p>
+                  </Link>{" "}
+                  <Link href={`/cities/${post?.places?.city?.name}`}>
+                    <p>City : {post?.places?.city?.name}</p>
+                  </Link>
+                </span>
+              </div>
+
+              <div className="flex flex-col text-right">
+                <p className="text-xs text-gray-400">
+                  ⛔️ Posted by u/{post?.usertable?.name}{" "}
+                  <ReactTimeago date={post?.created_at} />
+                </p>
+                <Link href={`PostEdit/${post?.id}`}>
+                  <div className="mt-4 flex justify-end">
+                    <PencilSquareIcon className="w-5 cursor-pointer" />
+                    <button className="hover:bg-gray-200 p-1 rounded-lg ">
+                      Edit
+                    </button>
+                  </div>
                 </Link>
-              </span>
+              </div>
             </div>
-            
-            <div className="flex flex-col text-right">
-              <p className="text-xs text-gray-400">
-                ⛔️ Posted by u/{post?.usertable?.name}{" "}
-                <ReactTimeago date={post?.created_at} />
-              </p>
-              <Link href={`PostEdit/${post?.id}`}>
-                <div className="mt-4 flex justify-end">
-                  <PencilSquareIcon className="w-5 cursor-pointer" />
-                  <button className="hover:bg-gray-200 p-1 rounded-lg ">
-                    Edit
-                  </button>
-                </div>
-              </Link>
-            </div>
-            
-          </div>
           </Link>
           <hr className="py-2 mt-2" />
           {/* Body */}
@@ -169,20 +173,21 @@ function Post({ post }: Props) {
         </div>
         <div className="bg-white -my-5 rounded-b-md border-t-0 border-2 border-gray-200 py-5 px-10 w-1/2  ">
           <hr className="py-2" />
-          {post?.comment.map((singleComment: any) => {
+          {comments?.map((singleComment: any) => {
             return (
               <div key={singleComment.id}>
                 <hr />
                 <div className="flex items-center py-2">
                   <div className="mr-2 flex flex-col items-center justify-center">
                     <Avatar seed={"" + post.user_id} />
-                    
                   </div>
                   <div className="flex flex-col">
-                    <div><p className="text-[10px]">{session?.user?.name}</p></div>
+                    <div>
+                      <p className="text-[10px]">{session?.user?.name}</p>
+                      <ReactTimeago date={singleComment.created_at} />
+                    </div>
                     <div>{singleComment.text}</div>
                   </div>
-                  
                 </div>
               </div>
             );
