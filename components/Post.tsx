@@ -6,12 +6,12 @@ import {
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { NewtonsCradle } from "@uiball/loaders";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import ReactTimeago from "react-timeago";
 import Avatar from "./Avatar";
 import { useSession } from "next-auth/react";
+
 import { SubmitHandler, useForm } from "react-hook-form";
-import { type } from "os";
 import { useMutation } from "@apollo/client";
 import { INSERT_COMMENT } from "../graphql/mutations";
 import { GET_POST_BY_POST_ID } from "../graphql/queries";
@@ -27,8 +27,6 @@ type FormData = {
 const vote = true;
 
 function Post({ post }: Props) {
-  console.log(post?.id);
-  
   // if (!post) {
   //   return (
   //     <div className="flex w-full items-center justify-center p-10 text-xl">
@@ -40,6 +38,10 @@ function Post({ post }: Props) {
   const [addComment] = useMutation(INSERT_COMMENT, {
     refetchQueries: [GET_POST_BY_POST_ID, "getPost"],
   });
+
+  useEffect(() => {
+    console.log(post);
+  }, [post]);
 
   const {
     register,
@@ -53,12 +55,14 @@ function Post({ post }: Props) {
     //post comment here
 
     console.log(data);
+    console.log(post);
+
     const notification = toast.loading("Posting your comment...");
     await addComment({
       variables: {
         post_id: post.id,
 
-        user_id:1,
+        user_id: 1,
         text: data.comment,
       },
     });
@@ -67,7 +71,6 @@ function Post({ post }: Props) {
       id: notification,
     });
     console.log(data);
-    
   };
 
   return (
@@ -162,15 +165,24 @@ function Post({ post }: Props) {
             </button>
           </form>
         </div>
-        <div className="bg-white -my-5 rounded-b-md border-t-0 border-gray-300 py-5 px-10">
+        <div className="bg-white -my-5 rounded-b-md border-t-0 border-2 border-gray-200 py-5 px-10 w-1/2  ">
           <hr className="py-2" />
-          {post?.comment.map((comment) => {
-            <div key={post.comment.id}>
-              <hr />
-              <div>
-                <Avatar seed={post.title} />
+          {post?.comment.map((singleComment: any) => {
+            return (
+              <div key={singleComment.id}>
+                <hr />
+                <div className="flex items-center py-2">
+
+                <div className="mr-2 flex flex-col items-center justify-center">
+                  <Avatar seed={"" + post.user_id} />
+                  <p className="text-[10px]">{session?.user?.name}</p>
+                </div>
+                <div>
+                
+                  {singleComment.text}</div>
+                </div>
               </div>
-            </div>;
+            );
           })}
         </div>
       </div>
