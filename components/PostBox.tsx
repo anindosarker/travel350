@@ -162,7 +162,7 @@ function PostBox({ subreddit }: Props) {
         className="focus:outline-none lg:w-1/2  lg:mb-0 mb-7 bg-white p-6 shadow rounded-lg border-gray-200 border-2 "
       >
         <div>
-          <p className="text-xl p-1 text-center tracking-widest font-semibold bg-blue-100 py-4 rounded-full mb-9">Share Trip Expereinces</p>
+          <p className="text-xl p-1 text-center tracking-widest font-semibold bg-blue-100 py-4 rounded-full mb-9">Share Trip Experiences</p>
         </div>
 
         <div className="flex items-center space-x-3">
