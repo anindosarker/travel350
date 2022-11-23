@@ -150,7 +150,6 @@ function PostBox({ subreddit }: Props) {
     }
   });
 
-
   const { data: placeData } = useQuery(GET_PLACES_LIST);
   const places: Places[] = placeData?.getPlacesList;
 
@@ -162,20 +161,22 @@ function PostBox({ subreddit }: Props) {
         onSubmit={onSubmit}
         className="focus:outline-none lg:w-1/2  lg:mb-0 mb-7 bg-white p-6 shadow rounded-lg border-gray-200 border-2 "
       >
-        <div>Share Trip Expereinces</div>
+        <div>
+          <p className="text-xl p-1 text-center tracking-widest font-semibold bg-blue-100 py-4 rounded-full mb-9">Share Trip Expereinces</p>
+        </div>
 
         <div className="flex items-center space-x-3">
           <input
             {...register("postTitle", { required: true })}
             type="text"
             disabled={!session}
-            className="rounded-md flex-1 bg-gray-50 p-2 pl-5 outline-none"
+            className="rounded-md flex-1 bg-blue-50  p-2 pl-5 outline-none"
             placeholder="Add Title"
           />
 
           <PhotoIcon
             onClick={() => setImageBoxOpen(!imageBoxOpen)}
-            className={`h-6 text-gray-300 cursor-pointer ${
+            className={`h-6 text-gray-500  cursor-pointer ${
               imageBoxOpen && `text-blue-300`
             }`}
           />
@@ -188,7 +189,7 @@ function PostBox({ subreddit }: Props) {
             <input
               type="date"
               {...register("startDate")}
-              className="m-2 bg-blue-50 p-2 outline-none"
+              className="m-2 bg-blue-50 p-2 outline-none rounded-md"
               placeholder="Text (optional)"
             />
 
@@ -196,52 +197,60 @@ function PostBox({ subreddit }: Props) {
             <input
               type="date"
               {...register("endDate")}
-              className="m-2 bg-blue-50 p-2 outline-none"
+              className="m-2 bg-blue-50 p-2 outline-none rounded-md"
               placeholder="Text (optional)"
             />
           </div>
 
           {/* Location*/}
 
-          <div className="flex items-center justify-between px-2">
-            <div className="flex items-center">
-              <p className=" min-w-[90px]">Place</p>
-              <input
-                type="search"
-                {...register("place", { required: true })}
-                className="flex-1 m-2 bg-blue-50 p-2 outline-none"
-                placeholder="i.e. React"
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
-
-            {search && (
-              <div className="flex flex-col">
-                {places
-                  ?.filter((item) => {
-                    return search === ""
-                      ? item
-                      : item.name.toLowerCase().includes(search.toLowerCase());
-                  })
-                  ?.map((place) => (
-                    <p
-                      key={place.id}
-                      onClick={() =>setValue("place", `${place.name}`)}
-                    >
-                      {place.name}
-                    </p>
-                  ))}
+          <div className="flex  justify-between px-2 relative">
+            <div className="flex  items-center">
+              <div className="flex items-center">
+                <p className=" min-w-[90px]">Place</p>
+                <input
+                  type="search"
+                  {...register("place", { required: true })}
+                  className="flex-1 m-2 -mr-1 bg-blue-50 p-2  outline-none rounded-md"
+                  placeholder="i.e. React"
+                  onChange={(e) => setSearch(e.target.value)}
+                />
               </div>
-            )}
+              <div className=" ease-in duration-75 ">
+                {search && (
+                  <div className=" bg-blue-50 p-2  rounded-md ease-in duration-75 ml-2 absolute  shadow-lg shadow-gray-500  ">
+                    {places
+                      ?.filter((item) => {
+                        return search === ""
+                          ? item
+                          : item.name
+                              .toLowerCase()
+                              .includes(search.toLowerCase());
+                      })
+                      ?.map((place) => (
+                        <p
+                        className="text-gray-500 cursor-pointer hover:underline hover:text-black"
+                          key={place.id}
+                          onClick={() => {setValue("place", `${place.name}`)
+                          setSearch("")
+                        }}
+                        >
+                          {place.name}
+                        </p>
+                      ))}
+                  </div>
+                )}
+              </div>
+            </div>
 
             <div className="flex items-center">
               <p className=" min-w-[90px]">City</p>
               <select
                 {...register("city")}
-                className="flex-1 m-2 bg-blue-50 p-2 outline-none"
+                className="flex-1 m-2 bg-blue-50 p-2 outline-none rounded-md"
               >
                 {cities?.map((city) => (
-                  <option key={city.id} value={city.id}>
+                  <option key={city.id} value={city.id}  >
                     {city.name}
                   </option>
                 ))}
@@ -252,7 +261,6 @@ function PostBox({ subreddit }: Props) {
           <div className="flex items-center px-2">
             <p className=" min-w-[90px]">Details</p>
             <textarea
-              
               {...register("description")}
               className="flex-1 m-2 w-full bg-blue-50 rounded-lg p-2 outline-none h-44 text-start"
               placeholder="Text (optional) box lomba hobe"
