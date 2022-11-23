@@ -150,6 +150,7 @@ function PostBox({ subreddit }: Props) {
     }
   });
 
+
   const { data: placeData } = useQuery(GET_PLACES_LIST);
   const places: Places[] = placeData?.getPlacesList;
 
@@ -215,7 +216,7 @@ function PostBox({ subreddit }: Props) {
             </div>
 
             {search && (
-              <div>
+              <div className="flex flex-col">
                 {places
                   ?.filter((item) => {
                     return search === ""
@@ -223,7 +224,12 @@ function PostBox({ subreddit }: Props) {
                       : item.name.toLowerCase().includes(search.toLowerCase());
                   })
                   ?.map((place) => (
-                    <p key={place.id}>{place.name}</p>
+                    <p
+                      key={place.id}
+                      onClick={() =>setValue("place", `${place.name}`)}
+                    >
+                      {place.name}
+                    </p>
                   ))}
               </div>
             )}
