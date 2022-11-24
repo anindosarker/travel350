@@ -3,25 +3,31 @@ import Head from "next/head";
 import homebg from "../public/homeBackground.jpg";
 import Image from "next/image";
 import Searchbox from "../components/Searchbox";
-import Test from "../components/Test";
+import ForumPost from "../components/ForumPost";
+import Feed from "../components/Feed";
 
 const Home: NextPage = () => {
   return (
-    <div className="">
-      <div className="flex min-h-screen flex-col items-center justify-center py-2">
+    <div className="bg-[url('../public/homeBackground.jpg')]  bg-contain  bg-no-repeat ">
+      <div className=" h-20">
+      
+      </div>
+      <div className="flex  flex-col items-center justify-center py-2 bg-gradient-to-b from-transparent to-white">
         <Head>
           <title>Travel+</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
-        <div className="flex items-center justify-center">
-          <Image objectFit="cover" className="z-0" src={homebg} layout="fill" />
-          <Searchbox  />
+        <div className="my-64  ">
+          
+          <Searchbox />
         </div>
       </div>
-      <div >
-       <p className="text-3xl text-center font-bold pb-8">Top posts on forum</p> 
+      
+      
+      <div className="bg-white  p-1">
         
+        <Feed/>
       </div>
      
     </div>
