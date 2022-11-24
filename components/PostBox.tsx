@@ -73,6 +73,9 @@ function PostBox({ subreddit }: Props) {
     }
   });
   console.log(userExists);
+  if(!userExists){
+    
+  }
 
   //console.log("emailFind", emailFind);
 

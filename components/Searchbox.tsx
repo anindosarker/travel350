@@ -1,14 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import homebg from "../public/homeBackground.jpg";
 import Image from "next/image";
 import { MagnifyingGlassCircleIcon } from "@heroicons/react/24/solid";
 import { useForm } from "react-hook-form";
+import { useQuery } from "@apollo/client";
+import { GET_PLACES_LIST } from "../graphql/queries";
 
 type FormData = {
   searchbox: string;
 };
-
-
 
 const Searchbox = () => {
   const {
@@ -20,16 +20,17 @@ const Searchbox = () => {
   } = useForm<FormData>();
 
   const [search, setSearch] = useState("");
+  const { data: placeData } = useQuery(GET_PLACES_LIST);
+  const places: Places[] = placeData?.getPlacesList;
 
   return (
     <div className="scale-110 m-auto ">
-      <form onSubmit={onSubmit} className="w-full max-w-sm" >
+      <form onSubmit={onSubmit} className="w-full max-w-sm">
         <div className="relative flex items-center text-black ">
           <MagnifyingGlassCircleIcon className="w-7 absolute ml-1 pointer-events-none " />
           <input
             type="search"
             {...register("searchbox")}
-           
             placeholder="Search"
             autoComplete="on"
             aria-aria-label="Search"
