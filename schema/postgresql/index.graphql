@@ -349,6 +349,7 @@ type Query {
       table: "usertable"
       configuration: "postgresql_config"
     )
+
   getUsertableList: [Usertable]
     @dbquery(
       type: "postgresql"
@@ -380,6 +381,15 @@ type Query {
       schema: "public"
       query: """
       SELECT "created_at", "email", "id", "name" FROM "usertable" WHERE "id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getUsertablebyNamepassword(name: String, password: String): Usertable
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "email", "id", "name", "password" FROM "usertable" WHERE "name" = name AND "password"=password
       """
       configuration: "postgresql_config"
     )

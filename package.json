@@ -8,14 +8,22 @@
   "dependencies": {
     "@apollo/client": "^3.7.1",
     "@heroicons/react": "^2.0.12",
+    "@supabase/auth-helpers-nextjs": "^0.5.2",
+    "@supabase/auth-helpers-react": "^0.3.1",
+    "@supabase/auth-ui-react": "^0.2.6",
+    "@supabase/supabase-js": "^2.1.1",
     "@uiball/loaders": "^1.2.6",
-    "next": "latest",
-    "next-auth": "^4.14.0",
-    "react": "18.1.0",
-    "react-dom": "18.1.0",
+    "graphql": "^16.6.0",
+    "next": "^13.0.4",
+    "next-auth": "^4.17.0",
+    "nextjs-api-utils": "^0.1.0",
+    "qs": "^6.11.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.1.0",
     "react-hook-form": "^7.39.3",
     "react-hot-toast": "^2.4.0",
-    "react-timeago": "^7.1.0"
+    "react-timeago": "^7.1.0",
+    "utils": "^0.3.1"
   },
   "devDependencies": {
     "@types/node": "17.0.35",

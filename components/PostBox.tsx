@@ -30,6 +30,7 @@ type FormData = {
 
 function PostBox({ subreddit }: Props) {
   const { data: session } = useSession();
+  const [placeslist, setplaceslist] = useState([{ place: "" }]);
 
   const { loading, data: cityData, error } = useQuery(GET_CITY_LIST);
 
