@@ -1,22 +1,9 @@
 import Image from "next/image";
 import React from "react";
+
 import {
-  BeakerIcon,
-  ChevronDownIcon,
-  HomeIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/24/solid";
-import {
-  Bars4Icon,
-  BellIcon,
-  ChatBubbleLeftIcon,
-  GlobeAltIcon,
-  PlusIcon,
-  SparklesIcon,
-  SpeakerWaveIcon,
-  StarIcon,
+ 
   UserCircleIcon,
-  VideoCameraIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
 import { signIn, signOut, useSession } from "next-auth/react";
@@ -34,29 +21,39 @@ function Header() {
         <Image objectFit="contain" src={logo} layout="fill" />
       </a>
 
-      <div className="flex items-center mx-7 xl:min-w-[300px]">
-        <ul className="space-x-4">
-          <Link href="/" className=" m-2 hidden flex-1 lg:inline">
-            Home
-          </Link>
-
-          <Link href="/forum" className=" m-2 hidden flex-1 lg:inline">
-            Forum
-          </Link>
-
-          <Link href="/travelplanner" className=" m-2 hidden flex-1 lg:inline">
-            Travel Planner
-          </Link>
-          <Link href="/places" className=" m-2 hidden flex-1 lg:inline">
-            Places
-          </Link>
-
-          <Link href="/profile" className=" m-2 hidden flex-1 lg:inline">
-            Profile
-          </Link>
-        </ul>
-
-        <div className="mx-2">
+      <div className="flex justify-center items-center   ">
+        
+          <ul className=" flex space-x-6 mx-6 items-end flex-col md:flex-row uppercase">
+            <li className="hover:text-blue-600 ">
+              <Link href="/" className=" m-2 hidden lg:inline cursor-pointer  ">
+                Home
+              </Link>
+            </li>
+            <li className="hover:text-blue-600 ">
+              <Link href="/forum" className=" m-2 hidden lg:inline cursor-pointer">
+                Forum
+              </Link>
+            </li>
+            <li className="hover:text-blue-600 ">
+              <Link
+                href="/travelplanner"
+                className=" m-2 hidden lg:inline cursor-pointer"
+              >
+                Travel Planner
+              </Link>
+            </li>
+            <li className="hover:text-blue-600 ">
+              <Link href="/places" className=" m-2 hidden lg:inline cursor-pointer">
+                Places
+              </Link>
+            </li>
+            <li className="hover:text-blue-600 ">
+              <Link href="/profile" className=" m-2 hidden lg:inline cursor-pointer">
+                Profile
+              </Link>
+            </li>
+          </ul>
+          <div className="mx-2">
           {/* sign in sign out */}
           {session ? (
             <Link href="/profile">
@@ -81,8 +78,11 @@ function Header() {
             </div>
           )}
         </div>
+        </div>
+
+       
       </div>
-    </div>
+   
   );
 }
 

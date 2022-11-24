@@ -10,12 +10,13 @@ import {
   GET_CITY_LIST,
   GET_PLACES_BY_NAME,
   GET_PLACES_LIST,
+  GET_POST_BY_POST_ID,
   GET_POST_LIST,
 } from "../graphql/queries";
-import { INSERT_PLACE, INSERT_POST } from "../graphql/mutations";
+import { INSERT_PLACE, UPDATE_POST } from "../graphql/mutations";
 
 type Props = {
-  subreddit?: string;
+  post: Post;
 };
 
 type FormData = {
@@ -28,20 +29,27 @@ type FormData = {
   postImage: string;
 };
 
-function PostBox({ subreddit }: Props) {
+function EditPostBox({ post }: Props) {
   const { data: session } = useSession();
+  console.log(post?.id);
 
   const { loading, data: cityData, error } = useQuery(GET_CITY_LIST);
 
   const cities: City[] = cityData?.getCityList;
 
   const [addPlace] = useMutation(INSERT_PLACE);
-  const [addPost] = useMutation(INSERT_POST, {
-    refetchQueries: [GET_POST_LIST, "getPostList"],
+  const [updatePost] = useMutation(UPDATE_POST, {
+    refetchQueries: () => [
+      {
+        query: GET_POST_BY_POST_ID,
+        variables: {
+          id: post.id,
+        },
+      },
+    ],
   });
 
   const [imageBoxOpen, setImageBoxOpen] = useState<boolean>(false);
-  const [isShown, setIsShown] = useState(false);
 
   const {
     register,
@@ -51,6 +59,7 @@ function PostBox({ subreddit }: Props) {
     formState: { errors },
   } = useForm<FormData>();
 
+  // Onsubmit edit post handler
   const onSubmit = handleSubmit(async (formData) => {
     console.log(formData);
     const notification = toast.loading("Creating new post...");
@@ -90,45 +99,46 @@ function PostBox({ subreddit }: Props) {
 
         console.log("New place created -> ", newPlace);
 
-        console.log("Creating new post with new place", formData);
+        console.log("Updating new post with new place", formData);
 
         const image = formData.postImage || "";
 
         const {
-          data: { insertPost: newPost },
-        } = await addPost({
+          data: { updatePost: newUpdatedPost },
+        } = await updatePost({
           variables: {
-            description: formData.description,
-            place_id: newPlace.id,
             title: formData.postTitle,
-            user_id: 1,
-            end_date: formData.endDate,
+            place_id: newPlace.id,
             start_date: formData.startDate,
+            end_date: formData.endDate,
+            description: formData.description,
+            id: post.id,
+            user_id: 1,
           },
         });
 
-        console.log("New post added", newPost);
+        console.log("New post added", newUpdatedPost);
       } else {
         //use existing
         console.log("Using existing");
-        console.log(placeNameData);
 
         const image = formData.postImage || "";
 
         const {
-          data: { insertPost: newPost },
-        } = await addPost({
+          data: { updatePost: newUpdatedPost },
+        } = await updatePost({
           variables: {
-            description: formData.description,
-            place_id: placeNameData.id,
             title: formData.postTitle,
-            user_id: 1,
-            end_date: formData.endDate,
+            place_id: placeNameData.id,
             start_date: formData.startDate,
+            end_date: formData.endDate,
+            description: formData.description,
+            id: post.id,
+            user_id: 1,
           },
         });
 
-        console.log("New post added with old place", newPost);
+        console.log("New post added with old place", newUpdatedPost);
       }
 
       setValue("city", "");
@@ -150,35 +160,26 @@ function PostBox({ subreddit }: Props) {
     }
   });
 
-  const { data: placeData } = useQuery(GET_PLACES_LIST);
-  const places: Places[] = placeData?.getPlacesList;
-
-  const [search, setSearch] = useState("");
-
   return (
-    <div className="flex flex-col md:flex-row justify-center w-full mt-5 ">
+    <div className="flex flex-row justify-center w-full mt-5">
       <form
         onSubmit={onSubmit}
-        className="focus:outline-none lg:w-1/2  lg:mb-0 mb-7 bg-white p-6 shadow rounded-lg border-gray-200 border-2 "
+        className="focus:outline-none lg:w-1/2 lg:mr-7 lg:mb-0 mb-7 bg-white p-6 shadow rounded-lg border-gray-200 border-2 "
       >
-        <div>
-          <p className="text-2xl p-1 text-center tracking-widest font-semibold  py-4 rounded-full mb-9">
-            Share Your Trip Experiences
-          </p>
-        </div>
+        <div>Share Trip Expereinces</div>
 
         <div className="flex items-center space-x-3">
           <input
             {...register("postTitle", { required: true })}
             type="text"
             disabled={!session}
-            className="rounded-md flex-1 bg-blue-50  p-2 pl-5 outline-none"
+            className="rounded-md flex-1 bg-gray-50 p-2 pl-5 outline-none"
             placeholder="Add Title"
           />
 
           <PhotoIcon
             onClick={() => setImageBoxOpen(!imageBoxOpen)}
-            className={`h-6 text-gray-500  cursor-pointer ${
+            className={`h-6 text-gray-300 cursor-pointer ${
               imageBoxOpen && `text-blue-300`
             }`}
           />
@@ -186,75 +187,42 @@ function PostBox({ subreddit }: Props) {
         <div className="flex flex-col py-2">
           {/* Date */}
 
-          <div className="flex md:flex-row flex-col items-start md:items-center justify-between px-2">
-            <div className="flex items-center">
-              <p className=" min-w-[90px]">Start Date</p>
-              <input
-                type="date"
-                {...register("startDate")}
-                className="m-2 bg-blue-50 p-2 pr-20 outline-none rounded-md"
-                placeholder="Text (optional)"
-              />
-            </div>
-            <div className="flex items-center">
-              {" "}
-              <p className=" min-w-[90px]">End Date</p>
-              <input
-                type="date"
-                {...register("endDate")}
-                className="m-2 bg-blue-50 p-2 pr-12 outline-none rounded-md flex-1"
-                placeholder="Text (optional)"
-              />
-            </div>
+          <div className="flex items-center justify-between px-2">
+            <p className=" min-w-[90px]">Start Date</p>
+            <input
+              type="date"
+              {...register("startDate")}
+              className="m-2 bg-blue-50 p-2 outline-none"
+              placeholder="Text (optional)"
+            />
+
+            <p className=" min-w-[90px]">End Date</p>
+            <input
+              type="date"
+              {...register("endDate")}
+              className="m-2 bg-blue-50 p-2 outline-none"
+              placeholder="Text (optional)"
+            />
           </div>
 
           {/* Location*/}
 
-          <div className="flex flex-col md:flex-row justify-between px-2 relative">
-            <div className="flex  items-center">
-              <div className="flex items-center">
-                <p className=" min-w-[90px]">Place</p>
-                <input
-                  type="search"
-                  {...register("place", { required: true })}
-                  className="flex-1 m-2 -mr-1 bg-blue-50 p-2  outline-none rounded-md"
-                  placeholder="i.e. React"
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-              </div>
-              <div className=" ease-in duration-75 ">
-                {search && (
-                  <div className=" bg-blue-50 p-2  rounded-md ease-in duration-75 ml-2 absolute  shadow-lg shadow-gray-500  ">
-                    {places
-                      ?.filter((item) => {
-                        return search === ""
-                          ? item
-                          : item.name
-                              .toLowerCase()
-                              .includes(search.toLowerCase());
-                      })
-                      ?.map((place) => (
-                        <p
-                          className="text-gray-500 cursor-pointer hover:underline hover:text-black"
-                          key={place.id}
-                          onClick={() => {
-                            setValue("place", `${place.name}`);
-                            setSearch("");
-                          }}
-                        >
-                          {place.name}
-                        </p>
-                      ))}
-                  </div>
-                )}
-              </div>
+          <div className="flex items-center justify-between px-2">
+            <div className="flex items-center">
+              <p className=" min-w-[90px]">Place</p>
+              <input
+                type="search"
+                {...register("place", { required: true })}
+                className="flex-1 m-2 bg-blue-50 p-2 outline-none"
+                placeholder="i.e. React"
+              />
             </div>
 
             <div className="flex items-center">
               <p className=" min-w-[90px]">City</p>
               <select
                 {...register("city")}
-                className="flex-1 m-2 bg-blue-50 p-2 outline-none rounded-md "
+                className="flex-1 m-2 bg-blue-50 p-2 outline-none"
               >
                 {cities?.map((city) => (
                   <option key={city.id} value={city.id}>
@@ -267,11 +235,12 @@ function PostBox({ subreddit }: Props) {
           {/* Body */}
           <div className="flex items-center px-2">
             <p className=" min-w-[90px]">Details</p>
-            <textarea
+            <input
+              type="text"
               {...register("description")}
-              className="flex-1 m-2 w-full bg-blue-50 rounded-lg p-2 outline-none h-44 text-start"
+              className="flex-1 m-2 bg-blue-50 p-2 outline-none"
               placeholder="Text (optional) box lomba hobe"
-            ></textarea>
+            />
           </div>
 
           {/* imagebox */}
@@ -306,7 +275,7 @@ function PostBox({ subreddit }: Props) {
             type="submit"
             className="w-full rounded-full bg-blue-400 p-2 text-white"
           >
-            Create Post
+            Update Post
           </button>
         </div>
       </form>
@@ -314,4 +283,4 @@ function PostBox({ subreddit }: Props) {
   );
 }
 
-export default PostBox;
+export default EditPostBox;
