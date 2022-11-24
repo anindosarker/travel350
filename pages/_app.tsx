@@ -19,7 +19,6 @@ function MyApp({
   const [supabase] = useState(() => createBrowserSupabaseClient());
   return (
     <ApolloProvider client={client}>
-      <SessionProvider>
         <SessionContextProvider
           supabaseClient={supabase}
           initialSession={pageProps.initialSession}
@@ -30,7 +29,6 @@ function MyApp({
             <Component {...pageProps} />
           </div>
         </SessionContextProvider>
-      </SessionProvider>
     </ApolloProvider>
   );
 }

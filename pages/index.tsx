@@ -16,6 +16,7 @@ const Home: NextPage = () => {
     <div className="">
       {!session ? (
         <Auth
+          providers={["google"]}
           supabaseClient={supabase}
           appearance={{ theme: ThemeSupa }}
           theme="dark"

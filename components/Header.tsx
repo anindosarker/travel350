@@ -6,6 +6,7 @@ import {
   HomeIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/solid";
+import homebg from "../public/homeBackground.jpg";
 import {
   Bars4Icon,
   BellIcon,
@@ -19,12 +20,16 @@ import {
   VideoCameraIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
-import { signIn, signOut, useSession } from "next-auth/react";
 import logo from "../public/logo_black.png";
 import Link from "next/link";
+import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
+import { supabase } from "@supabase/auth-ui-react/dist/esm/common/theming";
+import Account from "./Account";
+import { Auth, ThemeSupa } from "@supabase/auth-ui-react";
 
 function Header() {
-  const { data: session } = useSession();
+  const session = useSession();
+  const supabase = useSupabaseClient();
   return (
     <div className=" sticky top-0 z-50 flex bg-white px-4 py-2 shadow-md items-center justify-between text-gray-600">
       <a
@@ -59,26 +64,26 @@ function Header() {
         <div className="mx-2">
           {/* sign in sign out */}
           {session ? (
-            <Link href="/profile">
-              <div className="hidden lg:flex items-center cursor-pointer space-x-2 border border-gray-400 p-2 rounded-md hover:bg-gray-200">
-                <p className="truncate font-semibold">{session?.user?.name}</p>
-                <XCircleIcon
-                  className="h-5 flex-shrink-0 hover:text-red-500"
-                  onClick={() => signOut()}
-                />
-              </div>
-            </Link>
+            <Auth
+              providers={["google"]}
+              supabaseClient={supabase}
+              appearance={{ theme: ThemeSupa }}
+              theme="dark"
+            />
           ) : (
-            <div
-              onClick={() => signIn()}
-              className="hidden lg:flex items-center cursor-pointer space-x-2 border rounded-full p-2"
-            >
-              <div className="relative h-5 w-5 flex-shrink-0">
-                <UserCircleIcon />
+            <>
+              <Account session={session} />
+              <div className="flex min-h-screen flex-col items-center justify-center py-2">
+               
+            
               </div>
-
-              <p className="text-gray-400">Sign In</p>
-            </div>
+              <div className="text-3xl text-center font-bold pb-8">
+                Top posts on forum
+              </div>
+              <div className="">
+              
+              </div>
+            </>
           )}
         </div>
       </div>
