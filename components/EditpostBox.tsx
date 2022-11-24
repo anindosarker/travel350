@@ -31,7 +31,6 @@ type FormData = {
 
 function EditPostBox({ post }: Props) {
   const { data: session } = useSession();
-  console.log(post?.id);
 
   const { loading, data: cityData, error } = useQuery(GET_CITY_LIST);
 
@@ -61,7 +60,6 @@ function EditPostBox({ post }: Props) {
 
   // Onsubmit edit post handler
   const onSubmit = handleSubmit(async (formData) => {
-    console.log(formData);
     const notification = toast.loading("Creating new post...");
 
     try {
@@ -78,14 +76,9 @@ function EditPostBox({ post }: Props) {
       if (placeNameData === null) {
         placeExists = false;
       }
-      console.log("place exists", placeExists);
-      console.log(placeNameData);
-
-      console.log("formdata.city", formData.city);
 
       if (!placeExists) {
         //create new place
-        console.log("Creating new place -> ");
 
         const {
           data: { insertPlaces: newPlace },
@@ -97,10 +90,7 @@ function EditPostBox({ post }: Props) {
           },
         });
 
-        console.log("New place created -> ", newPlace);
-
-        console.log("Updating new post with new place", formData);
-
+     
         const image = formData.postImage || "";
 
         const {
@@ -117,10 +107,8 @@ function EditPostBox({ post }: Props) {
           },
         });
 
-        console.log("New post added", newUpdatedPost);
       } else {
         //use existing
-        console.log("Using existing");
 
         const image = formData.postImage || "";
 
@@ -138,7 +126,6 @@ function EditPostBox({ post }: Props) {
           },
         });
 
-        console.log("New post added with old place", newUpdatedPost);
       }
 
       setValue("city", "");
@@ -153,7 +140,6 @@ function EditPostBox({ post }: Props) {
         id: notification,
       });
     } catch (error) {
-      console.log(error);
       toast.error("GG! Something went wrong!", {
         id: notification,
       });

@@ -25,7 +25,6 @@ function CommentBox({ post }: Props) {
     });
 
     useEffect(() => {
-      console.log(post);
     }, [post]);
 
     const {
@@ -39,8 +38,6 @@ function CommentBox({ post }: Props) {
     const onSubmit: SubmitHandler<FormData> = async (data) => {
       //post comment here
 
-      console.log(data);
-      console.log(post);
 
       const notification = toast.loading("Posting your comment...");
       await addComment({
@@ -54,11 +51,9 @@ function CommentBox({ post }: Props) {
       toast.success("Comment posted", {
         id: notification,
       });
-      console.log(data);
     };
 
     const comments: Comment[] = post?.comment;
-    console.log("Comments", comments);
   return (
     <div>
       {" "}

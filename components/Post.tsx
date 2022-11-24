@@ -38,8 +38,6 @@ function Post({ post }: Props) {
       id: post?.id,
     },
   });
-  console.log(error);
-  console.log("Vote query by id", data);
 
   const [addVote] = useMutation(ADD_VOTE, {
     refetchQueries: [GET_VOTE_BY_POST_ID, "getVoteUsingVote_post_id_fkey"],
@@ -51,7 +49,7 @@ function Post({ post }: Props) {
     }
     if (vote === false && !isUpvote) return;
 
-    console.log("voting...", isUpvote);
+  
 
     await addVote({
       variables: {
@@ -69,7 +67,6 @@ function Post({ post }: Props) {
     const vote = votes?.find((vote) => vote.user_id == 1)?.upvote;
 
     setVote(vote);
-    console.log("Vote", vote);
   }, [data]);
 
   const displayVotes = (data: any) => {
@@ -79,7 +76,6 @@ function Post({ post }: Props) {
       0
     );
 
-    console.log("Display number", displayNumber);
 
     if (displayNumber === 0) {
       return votes[0]?.upvote ? 1 : -1;
