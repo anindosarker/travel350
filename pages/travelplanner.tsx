@@ -17,16 +17,7 @@ const travelplanner = () => {
             </p>
           </div>
         </div>
-        <div className="absolute top-0 right-0  h-3/4 w-2/4 cursor-pointer flex">
-          <Image
-            width="200"
-            height="200"
-            src="/../public/Online world-pana 1.png"
-            alt=""
-            objectFit="contain"
-            layout="fill"
-          />
-        </div>
+       
       </div>
       <PostBox />
     </div>
