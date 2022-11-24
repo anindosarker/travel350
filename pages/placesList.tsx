@@ -15,7 +15,6 @@ const GET_QUERY = gql`
 
 function placesList() {
   const { loading, error, data } = useQuery(GET_QUERY);
-  console.log(data?.getPlacesList[0]);
   return (
     <div className="bg-white w-screen">
       <h1 className="text-center mt-5 text-[22px] font-bold mb-5">

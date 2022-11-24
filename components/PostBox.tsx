@@ -77,7 +77,6 @@ function PostBox({ subreddit }: Props) {
   //console.log("emailFind", emailFind);
 
   const onSubmit = handleSubmit(async (formData) => {
-    console.log(formData);
     const notification = toast.loading("Creating new post...");
 
     try {
@@ -94,14 +93,11 @@ function PostBox({ subreddit }: Props) {
       if (placeNameData === null) {
         placeExists = false;
       }
-      console.log("place exists", placeExists);
-      console.log(placeNameData);
+    
 
-      console.log("formdata.city", formData.city);
 
       if (!placeExists) {
         //create new place
-        console.log("Creating new place -> ");
 
         const {
           data: { insertPlaces: newPlace },
@@ -113,10 +109,7 @@ function PostBox({ subreddit }: Props) {
           },
         });
 
-        console.log("New place created -> ", newPlace);
-
-        console.log("Creating new post with new place", formData);
-
+      
         const image = formData.postImage || "";
 
         const {
@@ -132,12 +125,10 @@ function PostBox({ subreddit }: Props) {
           },
         });
 
-        console.log("New post added", newPost);
+      
       } else {
         //use existing
-        console.log("Using existing");
-        console.log(placeNameData);
-
+     
         const image = formData.postImage || "";
 
         const {
@@ -153,7 +144,6 @@ function PostBox({ subreddit }: Props) {
           },
         });
 
-        console.log("New post added with old place", newPost);
       }
 
       setValue("city", "");
@@ -168,7 +158,6 @@ function PostBox({ subreddit }: Props) {
         id: notification,
       });
     } catch (error) {
-      console.log(error);
       toast.error("GG! Something went wrong!", {
         id: notification,
       });

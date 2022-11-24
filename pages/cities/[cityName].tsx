@@ -16,7 +16,6 @@ function CityPage() {
   });
 
   const places: Places[] = data?.getCityByCityName?.places;
-  console.log(places);
   
 
 
