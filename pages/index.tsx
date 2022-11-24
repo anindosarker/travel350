@@ -9,19 +9,22 @@ import Feed from "../components/Feed";
 const Home: NextPage = () => {
   return (
     <div className="bg-[url('../public/homeBackground.jpg')]  bg-contain  bg-no-repeat ">
-      <div className="flex  flex-col items-center justify-center py-2">
+      <div className="flex  flex-col items-center justify-center py-2 bg-gradient-to-b from-transparent to-white">
         <Head>
           <title>Travel+</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
-        <div className="my-64 ">
+        <div className="my-64 mb-68 ">
           
           <Searchbox />
         </div>
       </div>
+      {/* <div className="bg-white opacity-70  h-20">
       
-      <div className="">
+      </div> */}
+      
+      <div className="bg-white  p-8 ">
         
         <Feed/>
       </div>
