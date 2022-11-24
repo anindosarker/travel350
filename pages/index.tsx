@@ -8,15 +8,15 @@ import Feed from "../components/Feed";
 
 const Home: NextPage = () => {
   return (
-    <div className="">
+    <div className="bg-[url('../public/homeBackground.jpg')]  bg-contain  bg-no-repeat ">
       <div className="flex  flex-col items-center justify-center py-2">
         <Head>
           <title>Travel+</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
-        <div className="my-64">
-          {/* <Image objectFit="cover" src={homebg} layout="fill" /> */}
+        <div className="my-64 ">
+          
           <Searchbox />
         </div>
       </div>
