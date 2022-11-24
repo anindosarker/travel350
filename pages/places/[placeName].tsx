@@ -9,10 +9,12 @@ function PlacesPage() {
     query: { placeName },
   } = useRouter();
 
-  const {data, error, loading} =useQuery(GET_PLACES_BY_NAME)
+  const { data, error, loading } = useQuery(GET_PLACES_BY_NAME);
   return (
     <div>
-      Welcome to {placeName} homepage
+      <div className="text-center text-4xl m-6 mt-20 uppercase tracking-widest">
+        Welcome to {placeName} Spot Page
+      </div>
       <Feed placeName={placeName as string} />
       <pre>{JSON.stringify(data, null, 2)}</pre>{" "}
     </div>

@@ -16,9 +16,6 @@ function CityPage() {
   });
 
   const places: Places[] = data?.getCityByCityName?.places;
-  
-
-
 
   if (loading) return <p>Loading ...</p>;
 
@@ -26,9 +23,11 @@ function CityPage() {
 
   return (
     <div>
-      <div>Welcome to {cityName} City Page</div>
+      <div className="text-center text-4xl m-6 mt-20 uppercase tracking-widest">
+        Welcome to {cityName} City Page
+      </div>
       {places?.map((place) => (
-      <Feed key={place.id} placeName={place.name as string}/>
+        <Feed key={place.id} placeName={place.name as string} />
       ))}
     </div>
   );
