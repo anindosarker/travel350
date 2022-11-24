@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Post from "../components/CreatePost";
 import SingleTripCard from "../components/SingleTripCard";
 
 export default function Profile() {
@@ -133,10 +134,7 @@ export default function Profile() {
         <div className="w-11/12 bg-white mt-5 rounded-md">
           <h1 className="font-bold text-[26px]">My Trip Plans:</h1>
           <div className="mt-5 space-x-4 flex py-4">
-            <SingleTripCard />
-            <SingleTripCard />
-            <SingleTripCard />
-            <SingleTripCard />
+           <Post/>
           </div>
         </div>
       </div>
