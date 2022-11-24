@@ -20,6 +20,7 @@ export const INSERT_POST = gql`
     $start_date: Date
     $title: String
     $user_id: ID
+    $image: String
   ) {
     insertPost(
       description: $description
@@ -28,6 +29,7 @@ export const INSERT_POST = gql`
       user_id: $user_id
       end_date: $end_date
       start_date: $start_date
+      image: $image
     ) {
       created_at
       description
@@ -37,6 +39,7 @@ export const INSERT_POST = gql`
       start_date
       title
       user_id
+      image
       places {
         city {
           name

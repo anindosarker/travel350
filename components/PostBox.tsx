@@ -21,7 +21,7 @@ type Props = {
   subreddit?: string;
 };
 
-type Profiles = Database["public"]["Tables"]["profiles"]["Row"];
+type Profiles = Database["public"]["Tables"]["post"]["Row"];
 
 type FormData = {
   postTitle: string;
@@ -36,7 +36,7 @@ type FormData = {
 function PostBox({ subreddit }: Props) {
   //image
   const supabase = useSupabaseClient<Database>();
-  const [avatar_url, setAvatarUrl] = useState<Profiles["avatar_url"]>(null);
+  const [avatar_url, setAvatarUrl] = useState<Profiles["image"]>(null);
 
   const handleUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     let file;
@@ -61,7 +61,6 @@ function PostBox({ subreddit }: Props) {
   };
 
   //image end
-
 
   const { data: session } = useSession();
   const [placeslist, setplaceslist] = useState([{ place: "" }]);
@@ -127,7 +126,7 @@ function PostBox({ subreddit }: Props) {
 
         console.log("Creating new post with new place", formData);
 
-        const image = formData.postImage || "";
+        const imageUrl = avatar_url || "";
 
         const {
           data: { insertPost: newPost },
@@ -139,6 +138,7 @@ function PostBox({ subreddit }: Props) {
             user_id: 1,
             end_date: formData.endDate,
             start_date: formData.startDate,
+            image: imageUrl,
           },
         });
 
@@ -148,7 +148,7 @@ function PostBox({ subreddit }: Props) {
         console.log("Using existing");
         console.log(placeNameData);
 
-        const image = formData.postImage || "";
+        const imageUrl = avatar_url || "";
 
         const {
           data: { insertPost: newPost },
@@ -312,14 +312,6 @@ function PostBox({ subreddit }: Props) {
           {/* imagebox */}
           {imageBoxOpen && (
             <div className="flex items-center px-2">
-              <p className=" min-w-[90px]">Image URL:</p>
-              <input
-                type="text"
-                {...register("postImage")}
-                className="flex-1 m-2 bg-blue-50 p-2 outline-none"
-                placeholder="optional"
-              />
-
               {/* tapos */}
               <div>
                 <img src={avatar_url} />
