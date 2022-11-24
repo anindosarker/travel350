@@ -59,19 +59,22 @@ function PostBox({ subreddit }: Props) {
     formState: { errors },
   } = useForm<FormData>();
 
-
   let userExists = false;
   const { data: userList } = useQuery(GET_USER_LIST);
 
-  console.log("Userlist", userList);
-  console.log("type Userlist", typeof(userList?.getUsertableList));
+  //console.log("Userlist", userList);
+  console.log("get Userlist", userList?.getUsertableList);
+  //console.log("type Userlist", typeof userList?.getUsertableList);
 
-  const emailFind = userList?.getUsertableList?.email?.find(
-    userList?.email === session?.user?.email
-  );
-  console.log("emailFind", emailFind);
-  
+  const emailFind = userList?.getUsertableList?.map((p :any) => {
+    console.log(p.email);
+    if (p.email == session?.user?.email) {
+      userExists = true;
+    }
+  });
+  console.log(userExists);
 
+  //console.log("emailFind", emailFind);
 
   const onSubmit = handleSubmit(async (formData) => {
     console.log(formData);
@@ -86,10 +89,6 @@ function PostBox({ subreddit }: Props) {
           name: formData.place,
         },
       });
-
-      
-      
-
 
       let placeExists = true;
       if (placeNameData === null) {
