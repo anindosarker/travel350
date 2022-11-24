@@ -11,8 +11,9 @@ import {
   GET_PLACES_BY_NAME,
   GET_PLACES_LIST,
   GET_POST_LIST,
+  GET_USER_LIST,
 } from "../graphql/queries";
-import { INSERT_PLACE, INSERT_POST } from "../graphql/mutations";
+import { INSERT_PLACE, INSERT_POST, INSERT_USER } from "../graphql/mutations";
 
 type Props = {
   subreddit?: string;
@@ -40,6 +41,13 @@ function PostBox({ subreddit }: Props) {
     refetchQueries: [GET_POST_LIST, "getPostList"],
   });
 
+  const [addUser] = useMutation(INSERT_USER, {
+    variables: {
+      email: session?.user?.email,
+      name: session?.user?.name,
+    },
+  });
+
   const [imageBoxOpen, setImageBoxOpen] = useState<boolean>(false);
   const [isShown, setIsShown] = useState(false);
 
@@ -50,6 +58,19 @@ function PostBox({ subreddit }: Props) {
     watch,
     formState: { errors },
   } = useForm<FormData>();
+
+
+  let userExists = false;
+  const { data: userList } = useQuery(GET_USER_LIST);
+
+  console.log("Userlist", userList);
+
+  const emailFind = userList.email?.find(
+    userList?.email === session?.user?.email
+  );
+  console.log("emailFind", emailFind);
+  
+
 
   const onSubmit = handleSubmit(async (formData) => {
     console.log(formData);
@@ -64,6 +85,10 @@ function PostBox({ subreddit }: Props) {
           name: formData.place,
         },
       });
+
+      
+      
+
 
       let placeExists = true;
       if (placeNameData === null) {

@@ -173,3 +173,11 @@ export const GET_VOTE_BY_POST_ID = gql`
   }
 `;
 
+
+export const GET_USER_LIST = gql`
+  query MyQuery {
+    getUsertableList {
+      email
+    }
+  }
+`;

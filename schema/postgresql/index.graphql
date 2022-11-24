@@ -663,7 +663,7 @@ type Mutation {
       dml: DELETE
       configuration: "postgresql_config"
     )
-  insertUsertable(name: String, created_at: DateTime, email: String): Usertable
+  insertUsertable(name: String, email: String): Usertable
     @dbquery(
       type: "postgresql"
       schema: "public"

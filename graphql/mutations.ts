@@ -104,3 +104,14 @@ export const INSERT_COMMENT = gql`
     }
   }
 `;
+
+export const INSERT_USER = gql`
+  mutation MyMutation($email: String, $name: String) {
+    insertUsertable(email: $email, name: $name) {
+      created_at
+      email
+      id
+      name
+    }
+  }
+`;
