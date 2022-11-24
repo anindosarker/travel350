@@ -64,8 +64,9 @@ function PostBox({ subreddit }: Props) {
   const { data: userList } = useQuery(GET_USER_LIST);
 
   console.log("Userlist", userList);
+  console.log("type Userlist", typeof(userList?.getUsertableList));
 
-  const emailFind = userList.email?.find(
+  const emailFind = userList?.getUsertableList?.email?.find(
     userList?.email === session?.user?.email
   );
   console.log("emailFind", emailFind);
