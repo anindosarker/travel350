@@ -25,6 +25,7 @@ const Home: NextPage = () => {
         
         <Feed/>
       </div>
+     
     </div>
   );
 };

@@ -51,8 +51,6 @@ type Places {
 
 """
 Table 'post' aliased as GQLName: 'Post'
-Column: 'image'
-  DB Type '_json' is not supported. Column omitted
 """
 type Post {
   comment: [Comment] @materializer(query: "getCommentUsingComment_post_id_fkey")
@@ -60,6 +58,7 @@ type Post {
   description: String
   end_date: Date
   id: ID!
+  image: String
   place_id: ID
   places: Places @materializer(query: "getPlacesUsingPost_place_id_fkey")
   start_date: Date
@@ -79,7 +78,6 @@ type Usertable {
   email: String
   id: ID!
   name: String
-  password: String
   post: [Post] @materializer(query: "getPostUsingPost_user_id_fkey")
   vote: [Vote] @materializer(query: "getVoteUsingVote_user_id_fkey")
 }
@@ -111,7 +109,6 @@ type Query {
       table: "city"
       configuration: "postgresql_config"
     )
-
   getCityByCityName(name: String!): City
     @dbquery(
       type: "postgresql"
@@ -121,6 +118,7 @@ type Query {
       """
       configuration: "postgresql_config"
     )
+
   getCityList: [City]
     @dbquery(
       type: "postgresql"
@@ -238,7 +236,6 @@ type Query {
       table: "places"
       configuration: "postgresql_config"
     )
-
   getPlacesByPlaceName(name: String!): Places
     @dbquery(
       type: "postgresql"
@@ -304,7 +301,7 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "description", "end_date", "id", "place_id", "start_date", "title", "user_id" FROM "post" ORDER BY "id" LIMIT $1 OFFSET $2
+      SELECT "created_at", "description", "end_date", "id", "image", "place_id", "start_date", "title", "user_id" FROM "post" ORDER BY "id" LIMIT $1 OFFSET $2
       """
       configuration: "postgresql_config"
     )
@@ -313,7 +310,7 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "description", "end_date", "id", "place_id", "start_date", "title", "user_id" FROM "post" WHERE "id" = $1
+      SELECT "created_at", "description", "end_date", "id", "image", "place_id", "start_date", "title", "user_id" FROM "post" WHERE "id" = $1
       """
       configuration: "postgresql_config"
     )
@@ -322,7 +319,7 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "description", "end_date", "id", "place_id", "start_date", "title", "user_id" FROM "post" WHERE "place_id" = $1
+      SELECT "created_at", "description", "end_date", "id", "image", "place_id", "start_date", "title", "user_id" FROM "post" WHERE "place_id" = $1
       """
       configuration: "postgresql_config"
     )
@@ -331,17 +328,16 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "description", "end_date", "id", "place_id", "start_date", "title", "user_id" FROM "post" WHERE "user_id" = $1
+      SELECT "created_at", "description", "end_date", "id", "image", "place_id", "start_date", "title", "user_id" FROM "post" WHERE "user_id" = $1
       """
       configuration: "postgresql_config"
     )
-
   getPostUsingVote_post_id_fkey(post_id: ID!): Post
     @dbquery(
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "description", "end_date", "id", "place_id", "start_date", "title", "user_id" FROM "post" WHERE "id" = $1
+      SELECT "created_at", "description", "end_date", "id", "image", "place_id", "start_date", "title", "user_id" FROM "post" WHERE "id" = $1
       """
       configuration: "postgresql_config"
     )
@@ -365,7 +361,7 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "email", "id", "name", "password" FROM "usertable" ORDER BY "id" LIMIT $1 OFFSET $2
+      SELECT "created_at", "email", "id", "name" FROM "usertable" ORDER BY "id" LIMIT $1 OFFSET $2
       """
       configuration: "postgresql_config"
     )
@@ -374,7 +370,7 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "email", "id", "name", "password" FROM "usertable" WHERE "id" = $1
+      SELECT "created_at", "email", "id", "name" FROM "usertable" WHERE "id" = $1
       """
       configuration: "postgresql_config"
     )
@@ -383,7 +379,7 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "email", "id", "name", "password" FROM "usertable" WHERE "id" = $1
+      SELECT "created_at", "email", "id", "name" FROM "usertable" WHERE "id" = $1
       """
       configuration: "postgresql_config"
     )
@@ -392,7 +388,7 @@ type Query {
       type: "postgresql"
       schema: "public"
       query: """
-      SELECT "created_at", "email", "id", "name", "password" FROM "usertable" WHERE "id" = $1
+      SELECT "created_at", "email", "id", "name" FROM "usertable" WHERE "id" = $1
       """
       configuration: "postgresql_config"
     )
@@ -491,12 +487,7 @@ type Mutation {
       dml: DELETE
       configuration: "postgresql_config"
     )
-  insertComment(
-    post_id: ID
-    text: String
-    user_id: ID
-    created_at: DateTime
-  ): Comment
+  insertComment(post_id: ID, text: String, user_id: ID): Comment
     @dbquery(
       type: "postgresql"
       schema: "public"
@@ -620,6 +611,7 @@ type Mutation {
     )
   insertPost(
     start_date: Date
+    image: String
     description: String
     user_id: ID
     end_date: Date
@@ -638,6 +630,7 @@ type Mutation {
     created_at: DateTime
     description: String
     end_date: Date
+    image: String
     place_id: ID
     start_date: Date
     title: String
@@ -648,9 +641,9 @@ type Mutation {
       schema: "public"
       query: """
       UPDATE "post" SET
-        "created_at" = COALESCE($2, "created_at"),
-        "description" = COALESCE($3, "description"),
-        "end_date" = COALESCE($4, "end_date"),
+        "description" = COALESCE($2, "description"),
+        "end_date" = COALESCE($3, "end_date"),
+        "image" = COALESCE($4, "image"),
         "place_id" = COALESCE($5, "place_id"),
         "start_date" = COALESCE($6, "start_date"),
         "title" = COALESCE($7, "title"),
@@ -670,12 +663,7 @@ type Mutation {
       dml: DELETE
       configuration: "postgresql_config"
     )
-  insertUsertable(
-    name: String
-    email: String
-    created_at: DateTime
-    password: String
-  ): Usertable
+  insertUsertable(name: String, created_at: DateTime, email: String): Usertable
     @dbquery(
       type: "postgresql"
       schema: "public"
@@ -688,7 +676,6 @@ type Mutation {
     created_at: DateTime
     email: String
     name: String
-    password: String
   ): Usertable
     @dbquery(
       type: "postgresql"
@@ -697,8 +684,7 @@ type Mutation {
       UPDATE "usertable" SET
         "created_at" = COALESCE($2, "created_at"),
         "email" = COALESCE($3, "email"),
-        "name" = COALESCE($4, "name"),
-        "password" = COALESCE($5, "password")
+        "name" = COALESCE($4, "name")
       WHERE
         "id" = $1
       RETURNING *

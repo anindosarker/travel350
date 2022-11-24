@@ -15,13 +15,13 @@ function Place() {
       <p className="text-center text-4xl m-6 mt-20 uppercase tracking-widest">
         browse by tourist spots
       </p>
-      <div className="grid md:grid-cols-4 grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-6 grid-cols-2 gap-4">
         {cities?.map((city) => (
           <div className="w-full">
             <div className="max-w-[680px] mx-auto px-2 py-2   ">
               <div
                 key={city.id}
-                className="bg-gray-50 text-center  text-xl p-8 rounded-lg m-4 shadow-xl hover:bg-white ease-in duration-100 border-gray-500 border-b md:text-3xl  "
+                className="bg-gray-50 text-center  text-lg p-4 rounded-lg m-4 shadow-xl hover:bg-white ease-in duration-100 border-gray-500 border-b md:text-xl  "
               >
                 {city.name}
               </div>
