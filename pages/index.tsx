@@ -19,8 +19,9 @@ const Home: NextPage = () => {
           <Searchbox  />
         </div>
       </div>
-      <div className="text-3xl text-center font-bold pb-8">
-        Top posts on forum
+      <div >
+       <p className="text-3xl text-center font-bold pb-8">Top posts on forum</p> 
+        
       </div>
      
     </div>

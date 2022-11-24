@@ -99,6 +99,7 @@ function CommentBox({ post }: Props) {
                     <div>
                       <p className="text-sm font-semibold">
                         {singleComment?.usertable?.name}
+                        
                       </p>
                     </div>
                     <div>

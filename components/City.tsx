@@ -21,7 +21,7 @@ function City() {
       <p className="text-center text-4xl m-6 mt-20 uppercase tracking-widest">
         browse by cities
       </p>
-      <div className="grid md:grid-cols-4 grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-6 grid-cols-2 gap-4">
         {cities?.map((city) => (
           <div className="w-full">
             <div className="max-w-[680px] mx-auto px-2 py-2   ">
