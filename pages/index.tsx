@@ -8,28 +8,24 @@ import Feed from "../components/Feed";
 
 const Home: NextPage = () => {
   return (
-    <div className="bg-[url('../public/homeBackground.jpg')]  bg-contain  bg-no-repeat ">
-      <div className=" h-20">
-      
-      </div>
-      <div className="flex  flex-col items-center justify-center py-2 bg-gradient-to-b from-transparent to-white">
-        <Head>
-          <title>Travel+</title>
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
+    <div>
+      <div className="bg-[url('../public/homeBackground.jpg')]  bg-cover  bg-no-repeat ">
+        <div className="w-full h-20"></div>
+        <div className="flex  flex-col items-center justify-center py-2 bg-gradient-to-b from-transparent to-white">
+          <Head>
+            <title>Travel+</title>
+            <link rel="icon" href="/favicon.ico" />
+          </Head>
 
-        <div className="my-64  ">
-          
-          <Searchbox />
+          <div className="my-64  ">
+            <Searchbox />
+          </div>
         </div>
+
       </div>
-      
-      
-      <div className="bg-white  p-1">
-        
-        <Feed/>
-      </div>
-     
+        <div className="bg-white p-1">
+          <Feed />
+        </div>
     </div>
   );
 };
