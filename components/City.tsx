@@ -24,8 +24,10 @@ function City() {
         <div className="grid md:grid-cols-6 grid-cols-2 gap-4">
           {cities?.map((city) => (
             <div className="w-full">
-              <div className="max-w-[680px] mx-auto px-2 py-2   ">
-                <Link href={`/cities/${city?.name}`}>
+                <Link
+                  href={`/cities/${city?.name}`}
+                  className="max-w-[680px] mx-auto px-2 py-2  cursor-pointer "
+                >
                   <div
                     key={city.id}
                     className="bg-gray-50 text-center  text-lg p-4 rounded-lg m-4 shadow-xl hover:bg-white ease-in duration-100 border-gray-500 border-b md:text-xl  "
@@ -33,7 +35,6 @@ function City() {
                     {city.name}
                   </div>
                 </Link>
-              </div>
             </div>
           ))}
         </div>
