@@ -4,7 +4,7 @@ import EditpostBox from '../components/EditpostBox'
 const editposts = () => {
   return (
     <div>
-        <EditpostBox/>
+        {/* <EditpostBox/> */}
     </div>
   )
 }

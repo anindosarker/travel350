@@ -30,9 +30,9 @@ type FormData = {
 };
 
 function Post({ post }: Props) {
-    //votes
-  const [vote, setVote] = useState<boolean>();
- 
+  //votes
+  const [vote, setVote] = useState(false);
+
   const { data, loading, error } = useQuery(GET_VOTE_BY_POST_ID, {
     variables: {
       id: post?.id,
@@ -49,8 +49,6 @@ function Post({ post }: Props) {
     }
     if (vote === false && !isUpvote) return;
 
-  
-
     await addVote({
       variables: {
         post_id: post.id,
@@ -64,9 +62,9 @@ function Post({ post }: Props) {
     const votes: Vote[] = data?.getVoteUsingVote_post_id_fkey;
 
     //latest vote as we sorted
-    const vote = votes?.find((vote) => vote.user_id == 1)?.upvote;
+    const vote = votes?.find((vote) => vote.user_id == 1)?.upvote || false;
 
-    setVote(vote);
+    vote ? setVote(true) : setVote(false);
   }, [data]);
 
   const displayVotes = (data: any) => {
@@ -76,15 +74,12 @@ function Post({ post }: Props) {
       0
     );
 
-
     if (displayNumber === 0) {
       return votes[0]?.upvote ? 1 : -1;
     }
 
     return displayNumber;
   };
-
-
 
   return (
     <div className="">
@@ -97,27 +92,31 @@ function Post({ post }: Props) {
                 <Avatar seed={post?.usertable?.name} />
                 <span className="font-bold text-black ">
                   <Link href={`/places/${post?.places?.name}`}>
-                    <p className="hover:text-blue-400 cursor-pointer">Place : {post?.places?.name}</p>
+                    <p className="hover:text-blue-400 cursor-pointer">
+                      Place : {post?.places?.name}
+                    </p>
                   </Link>{" "}
                   <Link href={`/cities/${post?.places?.city?.name}`}>
-                    <p className="hover:text-blue-400 cursor-pointer">City : {post?.places?.city?.name}</p>
+                    <p className="hover:text-blue-400 cursor-pointer">
+                      City : {post?.places?.city?.name}
+                    </p>
                   </Link>
                 </span>
               </div>
 
               <div className="flex flex-col text-right">
                 <p className="text-sm text-gray-500">
-                   Posted by u/{post?.usertable?.name}{" "}
+                  Posted by u/{post?.usertable?.name}{" "}
                   <ReactTimeago date={post?.created_at} />
                 </p>
-                <Link href={`PostEdit/${post?.id}`}>
-                  <div className="mt-4 flex justify-end" >
+                {/* <Link href={`PostEdit/${post?.id}`}>
+                  <div className="mt-4 flex justify-end">
                     <PencilSquareIcon className="w-5 cursor-pointer" />
                     <button className="hover:bg-gray-200 p-1 rounded-lg ">
                       Edit
                     </button>
                   </div>
-                </Link>
+                </Link> */}
               </div>
             </div>
           </Link>
@@ -157,13 +156,9 @@ function Post({ post }: Props) {
               <p className="cursor-pointer">{post?.comment?.length} Comments</p>
             </div>
           </div>
-          
+
           <CommentBox post={post} />
- 
         </div>
-        
-        
-       
       </div>
     </div>
   );
