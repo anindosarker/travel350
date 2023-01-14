@@ -41,14 +41,14 @@ function Header() {
               Places
             </Link>
           </li>
-          <li className="hover:text-blue-600 ">
+          {/* <li className="hover:text-blue-600 ">
             <Link
               href="/profile"
               className=" m-2 hidden lg:inline cursor-pointer"
             >
               Profile
             </Link>
-          </li>
+          </li> */}
         </ul>
         <div className="mx-2">
           {/* sign in sign out */}
