@@ -51,7 +51,7 @@ function PostBox({ subreddit }: Props) {
     formState: { errors },
   } = useForm<FormData>();
 
-  const onSubmit = handleSubmit(async (formData) => {
+  const onSubmitHandler = handleSubmit(async (formData) => {
     const notification = toast.loading("Creating new post...");
 
     try {
@@ -147,7 +147,7 @@ function PostBox({ subreddit }: Props) {
   return (
     <div className="flex flex-col md:flex-row justify-center w-full mt-5 ">
       <form
-        onSubmit={onSubmit}
+        onSubmit={onSubmitHandler}
         className="focus:outline-none lg:w-1/2  lg:mb-0 mb-7 bg-white p-6 shadow rounded-lg border-gray-200 border-2 "
       >
         <div>
@@ -210,6 +210,11 @@ function PostBox({ subreddit }: Props) {
                   onChange={(e) => setSearch(e.target.value)}
                 />
               </div>
+              
+              
+              {/* Search for cities autocomplete */}
+
+
               <div className=" ease-in duration-75 ">
                 {search && (
                   <div className=" bg-blue-50 p-2  rounded-md ease-in duration-75 ml-2 absolute  shadow-lg shadow-gray-500  ">
@@ -289,7 +294,7 @@ function PostBox({ subreddit }: Props) {
         </div>
         <div>
           <button
-            onClick={onSubmit}
+            onClick={onSubmitHandler}
             type="submit"
             className="w-full rounded-full bg-blue-400 p-2 text-white"
           >
